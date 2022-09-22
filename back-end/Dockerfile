@@ -1,6 +1,6 @@
 FROM python:3.9
 
-WORKDIR /code
+WORKDIR /code/app
 
 #RUN export PYTHONPATH=$PWD
 
@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./app /code/app
 
-CMD ["python", "./app/main.py"]
+CMD ["uvicorn", "server.app:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8090", "--reload"]
