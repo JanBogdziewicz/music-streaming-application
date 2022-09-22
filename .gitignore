@@ -4,3 +4,6 @@ front-end/.angular
 
 # back-end
 **/__pycache__/
+
+# data
+data/mongo
