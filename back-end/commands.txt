@@ -1,0 +1,16 @@
+// create-network
+docker network create test_network
+
+// start docker with mongo
+docker run -d --network test_network -p 27017:27017 --name test-mongo mongo:latest
+
+// start mongo shell
+docker exec -it test-mongo bash
+mongosh
+
+// create docker image for server
+docker build -t myimage .
+
+// run server
+docker run -d --network test_network --name mycontainer -p 80:80 myimage
+

@@ -1,0 +1,6 @@
+# front-end
+front-end/node_modules
+front-end/.angular
+
+# back-end
+**/__pycache__/
