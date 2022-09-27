@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
-from server.database import (
+from server.database.song import (
     add_song,
     delete_song,
     retrieve_song,
     retrieve_songs,
     update_song,
 )
+
 from server.models.song import (
     ErrorResponseModel,
     ResponseModel,
