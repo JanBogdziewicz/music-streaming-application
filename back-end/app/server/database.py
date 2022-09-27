@@ -2,7 +2,7 @@ from typing import Union
 from bson.objectid import ObjectId
 import motor.motor_asyncio
 
-MONGO_DETAILS = "test-mongo:27017"
+MONGO_DETAILS = "mongodb:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
