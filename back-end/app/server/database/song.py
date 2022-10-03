@@ -1,14 +1,9 @@
 from typing import Union
 from bson.objectid import ObjectId
-import motor.motor_asyncio
+from server.config import client, database
+from pymongo.collection import Collection
 
-MONGO_DETAILS = "mongodb:27017"
-
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
-
-database = client.music
-
-songs_collection = database.get_collection("songs")
+songs_collection: Collection = database.get_collection("songs")
 
 # helpers
 
