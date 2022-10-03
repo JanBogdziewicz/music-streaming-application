@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from server.routes.song import SongRouter
-import server.database.initialize as init
+from server.database.init import initialize_db_schema
 import logging
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
@@ -30,4 +30,4 @@ async def read_root():
 
 @app.on_event('startup')
 async def startup():
-    await init.initialize_db_schema()
+    await initialize_db_schema()
