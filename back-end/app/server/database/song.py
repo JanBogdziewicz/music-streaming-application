@@ -1,7 +1,8 @@
 from bson.objectid import ObjectId
-from server.database.database import database
+from server.config import database
+from pymongo.collection import Collection
 
-songs_collection = database.get_collection("songs")
+songs_collection: Collection = database.get_collection("songs")
 
 # helper
 def song_helper(song) -> dict:

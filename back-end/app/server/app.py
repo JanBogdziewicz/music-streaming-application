@@ -6,6 +6,13 @@ from server.routes.library import LibraryRouter
 from server.routes.song import SongRouter
 from server.routes.user import UserRouter
 
+from server.database.init import initialize_db_schema
+import logging
+
+logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
+
+logger = logging.getLogger(__name__)
+
 app = FastAPI()
 
 origins = ["*"]
@@ -27,3 +34,8 @@ app.include_router(SearchRouter, tags=["Search"], prefix="/searches")
 @app.get("/", tags=["Root"])
 async def read_root():
     return {"message": "Welcome to this fantastic app!"}
+
+
+@app.on_event("startup")
+async def startup():
+    await initialize_db_schema()
