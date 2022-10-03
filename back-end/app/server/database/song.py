@@ -1,18 +1,9 @@
-from typing import Union
 from bson.objectid import ObjectId
-import motor.motor_asyncio
-
-MONGO_DETAILS = "mongodb:27017"
-
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
-
-database = client.music
+from server.database.database import database
 
 songs_collection = database.get_collection("songs")
 
-# helpers
-
-
+# helper
 def song_helper(song) -> dict:
     return {
         "id": str(song["_id"]),
@@ -26,8 +17,6 @@ def song_helper(song) -> dict:
 
 
 # Retrieve all songs present in the database
-
-
 async def retrieve_songs():
     songs = []
     async for song in songs_collection.find():
@@ -43,7 +32,7 @@ async def add_song(song_data: dict) -> dict:
 
 
 # Retrieve a song with a matching ID
-async def retrieve_song(id: str) -> Union[dict, bool]:
+async def retrieve_song(id: str):
     song = await songs_collection.find_one({"_id": ObjectId(id)})
     if song:
         return song_helper(song)

@@ -51,7 +51,7 @@ async def update_song_data(id: str, req: UpdateSongModel = Body(...)):
     updated_song = await update_song(id, req)
     if updated_song:
         return ResponseModel(
-            "Song with ID: {} update is successful".format(id),
+            "Song with ID: {0} update is successful".format(id),
             "Song updated successfully",
         )
     return ErrorResponseModel(
@@ -67,7 +67,7 @@ async def delete_song_data(id: str):
     deleted_song = await delete_song(id)
     if deleted_song:
         return ResponseModel(
-            "Song with ID: {} removed".format(id), "Song deleted successfully"
+            "Song with ID: {0} removed".format(id), "Song deleted successfully"
         )
     return ErrorResponseModel(
         "An error occurred", 404, "Song with id {0} doesn't exist".format(id)
