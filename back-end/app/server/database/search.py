@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from server.database.database import database
+from server.config import database
 
 searches_collection = database.get_collection("searches")
 

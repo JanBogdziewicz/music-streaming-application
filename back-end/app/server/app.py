@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from server.routes.search import SearchRouter
 
-from server.routes.library import LibraryRouter
 from server.routes.song import SongRouter
 from server.routes.user import UserRouter
 
@@ -27,7 +26,6 @@ app.add_middleware(
 
 app.include_router(SongRouter, tags=["Song"], prefix="/songs")
 app.include_router(UserRouter, tags=["User"], prefix="/users")
-app.include_router(LibraryRouter, tags=["Library"], prefix="/libraries")
 app.include_router(SearchRouter, tags=["Search"], prefix="/searches")
 
 

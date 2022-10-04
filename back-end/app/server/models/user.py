@@ -9,10 +9,10 @@ class UserSchema(BaseModel):
     birth_date: date = Field(...)
     join_date: datetime = datetime.now()
     country: str = Field(...)
-    listenings: str = Field(...)
-    playlists: str = Field(...)
-    queue: str = Field(...)
-    library: str = None
+    listenings: list[str] = []
+    playlists: list[str] = []
+    queue: list[str] = []
+    library: list[str] = []
     settings: str = Field(...)
 
     @validator("birth_date")
@@ -33,9 +33,6 @@ class UserSchema(BaseModel):
                 "username": "joe17",
                 "birth_date": date(1990, 12, 30),
                 "country": "United States",
-                "listenings": "test",
-                "playlists": "test",
-                "queue": "test",
                 "settings": "test",
             }
         }
