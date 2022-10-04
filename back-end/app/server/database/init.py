@@ -17,3 +17,12 @@ async def create_unique_constraint(collection_name: str, fields: list[str]):
 
 async def initialize_db_schema():
     await create_unique_constraint("songs", ["name", "artist"])
+    await create_unique_constraint("artists", ["name"])
+    await create_unique_constraint("albums", ["name", "artist"])
+    await create_unique_constraint("playlists", ["name", "user"])
+    await create_unique_constraint("users", ["username"])
+    await create_unique_constraint("search", ["user", "timestamp"])
+    # still have to figure out time
+    # await create_unique_constraint("time", [])
+
+    
