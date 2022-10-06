@@ -33,7 +33,7 @@ async def get_searches():
     return ResponseModel(searches, "Empty list returned")
 
 
-# Get a search with a matching ID
+# Get a search request with a matching ID
 @SearchRouter.get("/{id}", response_description="Search request retrieved")
 async def get_search_data(id):
     search = await retrieve_search(id)
@@ -44,7 +44,7 @@ async def get_search_data(id):
     )
 
 
-# Delete a search with a matching ID
+# Delete a search request with a matching ID
 @SearchRouter.delete(
     "/{id}", response_description="Search request deleted from the database"
 )

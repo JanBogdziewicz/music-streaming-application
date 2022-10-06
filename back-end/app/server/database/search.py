@@ -12,7 +12,7 @@ def search_helper(search) -> dict:
     }
 
 
-# Retrieve all searches present in the database
+# Retrieve all searche requests present in the database
 async def retrieve_searches():
     searches = []
     async for search in searches_collection.find():
@@ -20,14 +20,14 @@ async def retrieve_searches():
     return searches
 
 
-# Add a new search to the database
+# Add a new search request to the database
 async def add_search(search_data: dict) -> dict:
     search = await searches_collection.insert_one(search_data)
     new_search = await searches_collection.find_one({"_id": search.inserted_id})
     return search_helper(new_search)
 
 
-# Retrieve a search with a matching ID
+# Retrieve a search request with a matching ID
 async def retrieve_search(id: str):
     search = await searches_collection.find_one({"_id": ObjectId(id)})
     if search:
@@ -36,7 +36,7 @@ async def retrieve_search(id: str):
         return False
 
 
-# Delete a search from the database
+# Delete a search request from the database
 async def delete_search(id: str):
     search = await searches_collection.find_one({"_id": ObjectId(id)})
     if search:

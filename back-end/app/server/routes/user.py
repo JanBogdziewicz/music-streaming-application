@@ -9,7 +9,8 @@ from server.database.user import (
     retrieve_user,
     retrieve_users,
     update_user,
-    append_list,
+    append_library,
+    pull_library,
 )
 
 from server.models.user import (
@@ -17,6 +18,7 @@ from server.models.user import (
     ResponseModel,
     UserSchema,
     UpdateUserModel,
+    UpdateLibraryModel,
 )
 
 UserRouter = APIRouter()
@@ -77,40 +79,49 @@ async def delete_user_data(id: str):
     )
 
 
-# Add a new song to user's library
+# Append new item/s to user's library
 @UserRouter.post(
-    "/{user_id}/library", response_description="Song added to the user's library"
+    "/{user_id}/append_library",
+    response_description="Item/s appended to the user's library",
 )
-async def append_library_data(user_id: str, song_ids: list[str] = Body(...)):
-    req = {"library": song_ids}
-    updated_user = await append_list(user_id, req)
+async def append_library_data(user_id: str, req: UpdateLibraryModel = Body(...)):
+    req = req.dict()
+    collection = req["collection_name"]
+    ids = req["item_ids"]
+    updated_user = await append_library(user_id, collection, ids)
     if updated_user:
         return ResponseModel(
-            "Songs with IDs: {0} added to library of user with ID: {1}".format(
-                song_ids, user_id
+            "{0} with IDs: {1} added to library of user with ID: {2}".format(
+                collection, ids, user_id
             ),
-            "Song added succesfully to user's library",
+            "{0} added succesfully to user's library".format(collection),
         )
     return ErrorResponseModel(
         "An error occurred.",
         404,
-        "There was an error while adding the song to user's library",
+        "There was an error while appending to user's library",
     )
 
 
-# Delete a song from user's library
-@UserRouter.delete(
-    "/{user_id}/library/{song_id}",
-    response_description="Song deleted from user's library",
+# Pull item/s from user's library
+@UserRouter.post(
+    "/{user_id}/pull_library",
+    response_description="Item/s pulled from user's library",
 )
-async def remove_library_data(user_id: str, song_id: str):
-    user = await retrieve_user(user_id)
-    if user:
-        user["library"].remove(song_id)
+async def pull_library_data(user_id: str, req: UpdateLibraryModel = Body(...)):
+    req = req.dict()
+    collection = req["collection_name"]
+    ids = req["item_ids"]
+    updated_user = await pull_library(user_id, collection, ids)
+    if updated_user:
         return ResponseModel(
-            "Song with ID: {0} deleted from library of user with ID: {1}".format(
-                song_id, user_id
+            "{0} with IDs: {1} deleted from library of user with ID: {2}".format(
+                collection, ids, user_id
             ),
-            "Song deleted succesfully from user's library",
+            "{0} deleted succesfully from user's library".format(collection),
         )
-    return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+    return ErrorResponseModel(
+        "An error occurred.",
+        404,
+        "There was an error while pulling from user's library.",
+    )

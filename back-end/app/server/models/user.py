@@ -12,7 +12,7 @@ class UserSchema(BaseModel):
     listenings: list[str] = []
     playlists: list[str] = []
     queue: list[str] = []
-    library: list[str] = []
+    library: str = ""
     settings: str = Field(...)
 
     @validator("birth_date")
@@ -49,6 +49,19 @@ class UpdateUserModel(BaseModel):
                 "username": "joe18",
                 "birth_date": date(1990, 12, 30),
                 "country": "Canada",
+            }
+        }
+
+
+class UpdateLibraryModel(BaseModel):
+    collection_name: str
+    item_ids: Optional[list[str]]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "collection_name": "songs",
+                "item_ids": [],
             }
         }
 
