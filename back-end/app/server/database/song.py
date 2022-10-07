@@ -9,11 +9,12 @@ def song_helper(song) -> dict:
     return {
         "id": str(song["_id"]),
         "name": song["name"],
-        "genre": song["genre"],
+        "genres": song["genres"],
         "artist": song["artist"],
         "album": song["album"],
         "length": song["length"],
         "release_date": song["release_date"],
+        "listenings": song["listenings"]
     }
 
 
@@ -60,7 +61,10 @@ async def update_song(id: str, data: dict):
 
 # Delete a song from the database
 async def delete_song(id: str):
-    song = await songs_collection.find_one({"_id": ObjectId(id)})
+    try:
+        song = await songs_collection.find_one({"_id": ObjectId(id)})
+    except:
+        return False
     if song:
         await songs_collection.delete_one({"_id": ObjectId(id)})
         return True

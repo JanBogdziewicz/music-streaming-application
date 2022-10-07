@@ -6,11 +6,12 @@ from pydantic import BaseModel, Field, validator
 
 class SongSchema(BaseModel):
     name: str = Field(...)
-    genre: str = Field(...)
+    genres: list[str] = Field(...)
     artist: str = Field(...)
-    album: str = Field(None)
+    album: str = Field(...)
     length: int = Field(..., gt=0)
     release_date: date = Field(...)
+    listenings: int = 0
 
     @validator("release_date")
     def ensure_date(cls, v):
@@ -22,11 +23,12 @@ class SongSchema(BaseModel):
         schema_extra = {
             "example": {
                 "name": "Paint It, Black",
-                "genre": "rock",
+                "genres": ["rock"],
                 "artist": "The Rolling Stones",
                 "album": "Aftermath",
                 "length": 225,
                 "release_date": date(1966, 5, 6),
+                "listenings": 23
             }
         }
 
