@@ -5,6 +5,7 @@ from server.routes.song import SongRouter
 from server.routes.user import UserRouter
 from server.routes.library import LibraryRouter
 from server.routes.search import SearchRouter
+from server.routes.artist import ArtistRouter
 
 from server.database.init import initialize_db_schema
 import logging
@@ -29,6 +30,7 @@ app.include_router(SongRouter, tags=["Song"], prefix="/songs")
 app.include_router(UserRouter, tags=["User"], prefix="/users")
 app.include_router(LibraryRouter, tags=["Library"], prefix="/libraries")
 app.include_router(SearchRouter, tags=["Search"], prefix="/searches")
+app.include_router(ArtistRouter, tags=["Artist"], prefix="/artists")
 
 
 @app.get("/", tags=["Root"])
