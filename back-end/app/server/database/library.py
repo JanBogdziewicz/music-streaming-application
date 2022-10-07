@@ -2,8 +2,9 @@ from bson.objectid import ObjectId
 from server.models.library import LibrarySchema
 from server.config import database
 from fastapi.encoders import jsonable_encoder
+from pymongo.collection import Collection
 
-libraries_collection = database.get_collection("libraries")
+libraries_collection: Collection = database.get_collection("libraries")
 
 # helper
 def library_helper(library) -> dict:

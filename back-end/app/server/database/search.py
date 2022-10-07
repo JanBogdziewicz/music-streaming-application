@@ -1,7 +1,8 @@
 from bson.objectid import ObjectId
 from server.config import database
+from pymongo.collection import Collection
 
-searches_collection = database.get_collection("searches")
+searches_collection: Collection = database.get_collection("searches")
 
 # helper
 def search_helper(search) -> dict:
