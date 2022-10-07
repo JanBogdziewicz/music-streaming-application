@@ -1,4 +1,5 @@
 from bson.objectid import ObjectId
+from pymongo.collection import Collection
 from server.database.library import (
     add_library,
     delete_library,
@@ -7,7 +8,7 @@ from server.database.library import (
 )
 from server.config import database
 
-users_collection = database.get_collection("users")
+users_collection: Collection = database.get_collection("users")
 
 # helper
 def user_helper(user) -> dict:
