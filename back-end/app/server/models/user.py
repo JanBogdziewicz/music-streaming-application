@@ -9,13 +9,9 @@ class UserSchema(BaseModel):
     birth_date: date = Field(...)
     join_date: datetime = datetime.now()
     country: str = Field(...)
-    # TODO can be deleted
-    listenings: list[str] = []
-    # TODO can be deleted
-    playlists: list[str] = []
     queue: list[str] = []
     library: str = ""
-    settings: str = Field(...)
+    settings: str = ""
 
     @validator("birth_date")
     def ensure_birth_date(cls, v):
@@ -64,6 +60,17 @@ class UpdateLibraryModel(BaseModel):
             "example": {
                 "collection_name": "songs",
                 "item_ids": [],
+            }
+        }
+
+
+class UpdateQueueModel(BaseModel):
+    song_ids: Optional[list[str]]
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "song_ids": [],
             }
         }
 
