@@ -108,3 +108,54 @@ async def pull_library(id: str, collection: str, ids: list[str]):
         return False
     else:
         return False
+
+
+# Append song/s to user's queue
+async def append_queue(id: str, ids: list[str]):
+    # Return false if an empty request body is sent.
+    if len(ids) < 1:
+        return False
+    user = await users_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        updated_user = await users_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$push": {"queue": {"$each": ids}}},
+        )
+        if updated_user:
+            return True
+        return False
+    else:
+        return False
+
+
+# Pull song/s from user's queue collection
+async def pull_queue(id: str, ids: list[str]):
+    # Return false if an empty request body is sent.
+    if len(ids) < 1:
+        return False
+    user = await users_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        updated_user = await users_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$pull": {"queue": {"$in": ids}}},
+        )
+        if updated_user:
+            return True
+        return False
+    else:
+        return False
+
+
+# Clear a queue of the user
+async def clear_queue(id: str):
+    user = await users_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        updated_user = await users_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {"queue": []}},
+        )
+        if updated_user:
+            return True
+        return False
+    else:
+        return False

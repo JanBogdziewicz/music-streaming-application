@@ -11,6 +11,9 @@ from server.database.user import (
     update_user,
     append_library,
     pull_library,
+    append_queue,
+    pull_queue,
+    clear_queue,
 )
 
 from server.models.user import (
@@ -80,19 +83,19 @@ async def delete_user_data(id: str):
 
 
 # Append new item/s to user's library
-@UserRouter.post(
-    "/{user_id}/append_library",
+@UserRouter.put(
+    "/{id}/append_library",
     response_description="Item/s appended to the user's library",
 )
-async def append_library_data(user_id: str, req: UpdateLibraryModel = Body(...)):
+async def append_library_data(id: str, req: UpdateLibraryModel = Body(...)):
     req = req.dict()
     collection = req["collection_name"]
     ids = req["item_ids"]
-    updated_user = await append_library(user_id, collection, ids)
+    updated_user = await append_library(id, collection, ids)
     if updated_user:
         return ResponseModel(
             "{0} with IDs: {1} added to library of user with ID: {2}".format(
-                collection, ids, user_id
+                collection, ids, id
             ),
             "{0} added succesfully to user's library".format(collection),
         )
@@ -104,19 +107,19 @@ async def append_library_data(user_id: str, req: UpdateLibraryModel = Body(...))
 
 
 # Pull item/s from user's library
-@UserRouter.post(
-    "/{user_id}/pull_library",
+@UserRouter.put(
+    "/{id}/pull_library",
     response_description="Item/s pulled from user's library",
 )
-async def pull_library_data(user_id: str, req: UpdateLibraryModel = Body(...)):
+async def pull_library_data(id: str, req: UpdateLibraryModel = Body(...)):
     req = req.dict()
     collection = req["collection_name"]
     ids = req["item_ids"]
-    updated_user = await pull_library(user_id, collection, ids)
+    updated_user = await pull_library(id, collection, ids)
     if updated_user:
         return ResponseModel(
             "{0} with IDs: {1} deleted from library of user with ID: {2}".format(
-                collection, ids, user_id
+                collection, ids, id
             ),
             "{0} deleted succesfully from user's library".format(collection),
         )
@@ -125,3 +128,67 @@ async def pull_library_data(user_id: str, req: UpdateLibraryModel = Body(...)):
         404,
         "There was an error while pulling from user's library.",
     )
+
+
+# Append new song/s to user's queue
+@UserRouter.post(
+    "/{id}/append_queue",
+    response_description="Song/s appended to the user's queue",
+)
+async def append_queue_data(id: str, req: list[str] = Body(...)):
+    updated_user = await append_queue(id, req)
+    if updated_user:
+        return ResponseModel(
+            "Song/s with IDs: {0} added to queue of user with ID: {1}".format(req, id),
+            "Song/s added succesfully to user's queue",
+        )
+    return ErrorResponseModel(
+        "An error occurred.",
+        404,
+        "There was an error while appending to user's queue",
+    )
+
+
+# Pull song/s from user's queue
+@UserRouter.post(
+    "/{id}/pull_queue",
+    response_description="Song/s pulled from user's queue",
+)
+async def pull_queue_data(id: str, req: list[str] = Body(...)):
+    updated_user = await pull_queue(id, req)
+    if updated_user:
+        return ResponseModel(
+            "Song/s with IDs: {0} deleted from queue of user with ID: {1}".format(
+                req, id
+            ),
+            "Song/s deleted succesfully from user's queue",
+        )
+    return ErrorResponseModel(
+        "An error occurred.",
+        404,
+        "There was an error while pulling from user's queue.",
+    )
+
+
+# Clear queue of the user
+@UserRouter.delete("/{id}/clear_queue", response_description="User's queue cleared")
+async def clear_queue_data(id: str):
+    updated_user = await clear_queue(id)
+    if updated_user:
+        return ResponseModel(
+            "Queue of the user with ID: {0} cleared".format(id),
+            "Queue cleared successfully",
+        )
+    return ErrorResponseModel(
+        "An error occurred", 404, "User with id {0} doesn't exist".format(id)
+    )
+
+
+# Get a queue of a user
+@UserRouter.get("/{id}/queue", response_description="Queue retrieved")
+async def get_queue_data(id):
+    user = await retrieve_user(id)
+    if user:
+        queue = user["queue"]
+        return ResponseModel(queue, "Queue of the user retrieved successfully")
+    return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")

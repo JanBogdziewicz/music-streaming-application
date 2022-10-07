@@ -64,17 +64,6 @@ class UpdateLibraryModel(BaseModel):
         }
 
 
-class UpdateQueueModel(BaseModel):
-    song_ids: Optional[list[str]]
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "song_ids": [],
-            }
-        }
-
-
 def ResponseModel(data, message):
     return {
         "data": data,
