@@ -9,7 +9,9 @@ class UserSchema(BaseModel):
     birth_date: date = Field(...)
     join_date: datetime = datetime.now()
     country: str = Field(...)
+    # TODO can be deleted
     listenings: list[str] = []
+    # TODO can be deleted
     playlists: list[str] = []
     queue: list[str] = []
     library: str = ""

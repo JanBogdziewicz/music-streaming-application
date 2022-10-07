@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from server.database.song import (
@@ -69,6 +69,4 @@ async def delete_song_data(id: str):
         return ResponseModel(
             "Song with ID: {0} removed".format(id), "Song deleted successfully"
         )
-    return ErrorResponseModel(
-        "An error occurred", 404, "Song with id {0} doesn't exist".format(id)
-    )
+    raise HTTPException(status_code=404, detail="Song not found")
