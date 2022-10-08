@@ -35,23 +35,19 @@ async def add_library() -> dict:
 
 # Retrieve a library with a matching ID
 async def retrieve_library(id: str):
-    if ObjectId.is_valid(id):
-        library = await libraries_collection.find_one({"_id": ObjectId(id)})
-        if library:
-            return library_helper(library)
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
+    if library:
+        return library_helper(library)
     return False
 
 
 # Delete a library from the database
 async def delete_library(id: str):
-    if ObjectId.is_valid(id):
-        library = await libraries_collection.find_one({"_id": ObjectId(id)})
-        if library:
-            deleted_library = await libraries_collection.delete_one(
-                {"_id": ObjectId(id)}
-            )
-            if deleted_library:
-                return True
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
+    if library:
+        deleted_library = await libraries_collection.delete_one({"_id": ObjectId(id)})
+        if deleted_library:
+            return True
     return False
 
 

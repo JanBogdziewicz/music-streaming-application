@@ -18,12 +18,6 @@ class UserSchema(BaseModel):
             raise ValueError("User must be 12 years old or older")
         return v
 
-    @validator("join_date")
-    def ensure_join_date(cls, v):
-        if v > datetime.now():
-            raise ValueError("Must be past or current date")
-        return v
-
     class Config:
         schema_extra = {
             "example": {
