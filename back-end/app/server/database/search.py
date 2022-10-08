@@ -30,18 +30,19 @@ async def add_search(search_data: dict) -> dict:
 
 # Retrieve a search request with a matching ID
 async def retrieve_search(id: str):
-    search = await searches_collection.find_one({"_id": ObjectId(id)})
-    if search:
-        return search_helper(search)
-    else:
-        return False
+    if ObjectId.is_valid(id):
+        search = await searches_collection.find_one({"_id": ObjectId(id)})
+        if search:
+            return search_helper(search)
+    return False
 
 
 # Delete a search request from the database
 async def delete_search(id: str):
-    search = await searches_collection.find_one({"_id": ObjectId(id)})
-    if search:
-        await searches_collection.delete_one({"_id": ObjectId(id)})
-        return True
-    else:
-        return False
+    if ObjectId.is_valid(id):
+        search = await searches_collection.find_one({"_id": ObjectId(id)})
+        if search:
+            deleted_search = await searches_collection.delete_one({"_id": ObjectId(id)})
+            if deleted_search:
+                return True
+    return False
