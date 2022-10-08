@@ -64,6 +64,7 @@ async def delete_album_data(id: str):
         "An error occurred", 404, "album with id {0} doesn't exist".format(id)
     )
 
+# Get all songs of an album
 @AlbumRouter.get("/{id}/songs", response_description="album songs retrieved sucessfully")
 async def get_album_songs(id: str):
     songs = await retreive_album_songs(id)

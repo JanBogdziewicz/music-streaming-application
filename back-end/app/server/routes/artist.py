@@ -63,3 +63,11 @@ async def delete_artist_data(id: str):
     return ErrorResponseModel(
         "An error occurred", 404, "artist with id {0} doesn't exist".format(id)
     )
+
+# Get all albums of an artist
+@ArtistRouter.get("/{id}/albums", response_description="artist albums retreived sucessfully")
+async def get_album_songs(id: str):
+    albums = await retreive_artist_albums(id)
+    if albums:
+        return ResponseModel(albums, "All artist albums retrieved successfully")
+    return ResponseModel(albums, "Empty list returned")
