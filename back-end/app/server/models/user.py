@@ -31,7 +31,6 @@ class UserSchema(BaseModel):
                 "username": "joe17",
                 "birth_date": date(1990, 12, 30),
                 "country": "United States",
-                "settings": "test",
             }
         }
 
@@ -45,7 +44,7 @@ class UpdateUserModel(BaseModel):
         schema_extra = {
             "example": {
                 "username": "joe18",
-                "birth_date": date(1990, 12, 30),
+                "birth_date": date(1980, 12, 30),
                 "country": "Canada",
             }
         }

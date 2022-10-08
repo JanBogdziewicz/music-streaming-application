@@ -55,7 +55,7 @@ async def get_user_data(id):
 # Update a user with a matching ID
 @UserRouter.put("/{id}")
 async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     updated_user = await update_user(id, req)
     if updated_user:
         return ResponseModel(
