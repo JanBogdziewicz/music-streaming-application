@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, validator
 
 class SongSchema(BaseModel):
     name: str = Field(...)
-    genres: list[str] = Field(...)
+    genres: list[str] = []
     artist: str = Field(...)
     album: str = Field(...)
     length: int = Field(..., gt=0)
