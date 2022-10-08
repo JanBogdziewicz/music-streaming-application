@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Body
-from fastapi.encoders import jsonable_encoder
+from fastapi import APIRouter, HTTPException
 
 from server.database.library import (
     retrieve_library,
@@ -28,4 +27,6 @@ async def get_library_data(id):
     library = await retrieve_library(id)
     if library:
         return ResponseModel(library, "Library retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "Library doesn't exist.")
+    raise HTTPException(
+        status_code=404, detail="Library with id {0} doesn't exist".format(id)
+    )

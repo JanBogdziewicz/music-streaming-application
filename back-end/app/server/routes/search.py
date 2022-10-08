@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Body
+from turtle import st
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from server.database.search import (
@@ -39,8 +40,8 @@ async def get_search_data(id):
     search = await retrieve_search(id)
     if search:
         return ResponseModel(search, "Search request retrieved successfully")
-    return ErrorResponseModel(
-        "An error occurred.", 404, "Search request doesn't exist."
+    raise HTTPException(
+        status_code=404, detail="Search request with id {0} doesn't exist".format(id)
     )
 
 
@@ -55,6 +56,6 @@ async def delete_search_data(id: str):
             "Search request with ID: {0} removed".format(id),
             "Search request deleted successfully",
         )
-    return ErrorResponseModel(
-        "An error occurred", 404, "Search request with id {0} doesn't exist".format(id)
+    raise HTTPException(
+        status_code=404, detail="Search request with id {0} doesn't exist".format(id)
     )

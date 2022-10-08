@@ -1,6 +1,4 @@
-from dbm.ndbm import library
-from readline import append_history_file
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from server.database.user import (
@@ -49,7 +47,9 @@ async def get_user_data(id):
     user = await retrieve_user(id)
     if user:
         return ResponseModel(user, "User retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
+    )
 
 
 # Update a user with a matching ID
@@ -62,10 +62,8 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
             "User with ID: {0} update is successful".format(id),
             "User updated successfully",
         )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error while updating the user.",
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -77,8 +75,8 @@ async def delete_user_data(id: str):
         return ResponseModel(
             "User with ID: {0} removed".format(id), "User deleted successfully"
         )
-    return ErrorResponseModel(
-        "An error occurred", 404, "User with id {0} doesn't exist".format(id)
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -99,10 +97,8 @@ async def append_library_data(id: str, req: UpdateLibraryModel = Body(...)):
             ),
             "{0} added succesfully to user's library".format(collection),
         )
-    return ErrorResponseModel(
-        "An error occurred.",
-        404,
-        "There was an error while appending to user's library",
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -123,10 +119,8 @@ async def pull_library_data(id: str, req: UpdateLibraryModel = Body(...)):
             ),
             "{0} deleted succesfully from user's library".format(collection),
         )
-    return ErrorResponseModel(
-        "An error occurred.",
-        404,
-        "There was an error while pulling from user's library.",
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -142,10 +136,8 @@ async def append_queue_data(id: str, req: list[str] = Body(...)):
             "Song/s with IDs: {0} added to queue of user with ID: {1}".format(req, id),
             "Song/s added succesfully to user's queue",
         )
-    return ErrorResponseModel(
-        "An error occurred.",
-        404,
-        "There was an error while appending to user's queue",
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -163,10 +155,8 @@ async def pull_queue_data(id: str, req: list[str] = Body(...)):
             ),
             "Song/s deleted succesfully from user's queue",
         )
-    return ErrorResponseModel(
-        "An error occurred.",
-        404,
-        "There was an error while pulling from user's queue.",
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -179,8 +169,8 @@ async def clear_queue_data(id: str):
             "Queue of the user with ID: {0} cleared".format(id),
             "Queue cleared successfully",
         )
-    return ErrorResponseModel(
-        "An error occurred", 404, "User with id {0} doesn't exist".format(id)
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
     )
 
 
@@ -191,4 +181,6 @@ async def get_queue_data(id):
     if user:
         queue = user["queue"]
         return ResponseModel(queue, "Queue of the user retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
+    )
