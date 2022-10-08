@@ -52,7 +52,6 @@ async def retrieve_user(id: str):
 
 # Update a user with a matching ID
 async def update_user(id: str, data: dict):
-    # Return false if an empty request body is sent.
     if ObjectId.is_valid(id):
         user = await users_collection.find_one({"_id": ObjectId(id)})
         if user:

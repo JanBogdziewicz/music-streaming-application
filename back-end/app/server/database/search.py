@@ -13,7 +13,7 @@ def search_helper(search) -> dict:
     }
 
 
-# Retrieve all searche requests present in the database
+# Retrieve all search requests present in the database
 async def retrieve_searches():
     searches = []
     async for search in searches_collection.find():

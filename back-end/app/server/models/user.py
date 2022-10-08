@@ -1,17 +1,16 @@
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
-from typing import Optional
 from pydantic import BaseModel, Field, validator
 
 
 class UserSchema(BaseModel):
-    username: str = Field(...)
+    username: str = Field(..., min_length=1, max_length=32)
     birth_date: date = Field(...)
-    join_date: datetime = datetime.now()
+    join_date: datetime = Field(datetime.now())
     country: str = Field(...)
-    queue: list[str] = []
-    library: str = ""
-    settings: str = ""
+    queue: list[str] = Field([])
+    library: str = Field("")
+    settings: str = Field("")
 
     @validator("birth_date")
     def ensure_birth_date(cls, v):
@@ -21,7 +20,7 @@ class UserSchema(BaseModel):
 
     @validator("join_date")
     def ensure_join_date(cls, v):
-        if v > date.today():
+        if v > datetime.now():
             raise ValueError("Must be past or current date")
         return v
 
@@ -36,9 +35,15 @@ class UserSchema(BaseModel):
 
 
 class UpdateUserModel(BaseModel):
-    username: Optional[str]
-    birth_date: Optional[date]
-    country: Optional[str]
+    username: str = Field(..., min_length=1, max_length=32)
+    birth_date: date = Field(...)
+    country: str = Field(...)
+
+    @validator("birth_date")
+    def ensure_birth_date(cls, v):
+        if v > date.today() - relativedelta(years=12):
+            raise ValueError("User must be 12 years old or older")
+        return v
 
     class Config:
         schema_extra = {
@@ -51,8 +56,16 @@ class UpdateUserModel(BaseModel):
 
 
 class UpdateLibraryModel(BaseModel):
-    collection_name: str
-    item_ids: Optional[list[str]]
+    collection_name: str = Field(...)
+    item_ids: list[str] = Field(..., unique_items=True)
+
+    @validator("collection_name")
+    def ensure_collection_name(cls, v):
+        if v not in ["playlists", "artists", "albums", "songs"]:
+            raise ValueError(
+                "Field 'collection_name' must be either 'playlists', 'artists', 'albums', 'songs'"
+            )
+        return v
 
     class Config:
         schema_extra = {

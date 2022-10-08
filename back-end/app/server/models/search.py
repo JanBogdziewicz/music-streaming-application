@@ -4,8 +4,8 @@ from pydantic import BaseModel, Field
 
 
 class SearchSchema(BaseModel):
-    content: str = Field(...)
-    time: datetime = datetime.now()
+    content: str = Field(..., min_length=1, max_length=1024)
+    time: datetime = Field(datetime.now())
 
 
 def ResponseModel(data, message):
