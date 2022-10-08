@@ -105,6 +105,19 @@ async def append_queue(id: str, ids: list[str]):
     return False
 
 
+# Prepend song/s to user's queue
+async def prepend_queue(id: str, ids: list[str]):
+    user = await users_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        updated_user = await users_collection.update_one(
+            {"_id": ObjectId(id)},
+            {"$push": {"queue": {"$each": ids, "$position": 0}}},
+        )
+        if updated_user:
+            return True
+    return False
+
+
 # Pull song/s from user's queue collection
 async def pull_queue(id: str, ids: list[str]):
     user = await users_collection.find_one({"_id": ObjectId(id)})

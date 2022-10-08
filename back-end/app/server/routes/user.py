@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
+from server.database.library import retrieve_library
 
 from server.database.user import (
     add_user,
@@ -10,6 +11,7 @@ from server.database.user import (
     append_library,
     pull_library,
     append_queue,
+    prepend_queue,
     pull_queue,
     clear_queue,
 )
@@ -124,7 +126,19 @@ async def pull_library_data(id: str, req: UpdateLibraryModel = Body(...)):
     )
 
 
-# Append new song/s to user's queue
+# Get a library of a user
+@UserRouter.get("/{id}/library", response_description="Library retrieved")
+async def get_library_data(id):
+    user = await retrieve_user(id)
+    if user:
+        library = await retrieve_library(user["library"])
+        return ResponseModel(library, "Library of the user retrieved successfully")
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
+    )
+
+
+# Append song/s to user's queue
 @UserRouter.post(
     "/{id}/append_queue",
     response_description="Song/s appended to the user's queue",
@@ -133,7 +147,28 @@ async def append_queue_data(id: str, req: list[str] = Body(...)):
     updated_user = await append_queue(id, req)
     if updated_user:
         return ResponseModel(
-            "Song/s with IDs: {0} added to queue of user with ID: {1}".format(req, id),
+            "Song/s with IDs: {0} appeneded to queue of user with ID: {1}".format(
+                req, id
+            ),
+            "Song/s added succesfully to user's queue",
+        )
+    raise HTTPException(
+        status_code=404, detail="User with id {0} doesn't exist".format(id)
+    )
+
+
+# Prepend song/s to user's queue
+@UserRouter.post(
+    "/{id}/prepend_queue",
+    response_description="Song/s prepended to the user's queue",
+)
+async def prepend_queue_data(id: str, req: list[str] = Body(...)):
+    updated_user = await prepend_queue(id, req)
+    if updated_user:
+        return ResponseModel(
+            "Song/s with IDs: {0} prepended to queue of user with ID: {1}".format(
+                req, id
+            ),
             "Song/s added succesfully to user's queue",
         )
     raise HTTPException(
