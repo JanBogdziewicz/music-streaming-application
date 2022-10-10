@@ -1,7 +1,6 @@
 from dbm.ndbm import library
-from http.client import HTTPException
 from readline import append_history_file
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from server.database.playlist import *
@@ -70,12 +69,30 @@ async def delete_playlist_data(id: str):
 async def get_playlist_songs(id: str):
     songs = await retreive_playlist_songs(id)
     if songs:
-        return ResponseModel(songs, "All playlist songs retrieved successfully")
+        songs_with_index = []
+        index = 0
+        for song in songs:
+            song = {
+                'index': index,
+                **song
+            }
+            index+=1
+            songs_with_index.append(song)
+        return ResponseModel(songs_with_index, "All playlist songs retrieved successfully")
     return ResponseModel(songs, "Empty list returned")
 
-
+# Add song to playlist
 @PlaylistRouter.post("/{id}", response_description="songs added sucessfully")
 async def add_song_to_playlist(id: str, song: AddSongToPlaylistModel):
     success = await append_song_to_playlist(id, song.song_id)
     if success: return ResponseModel(success, "Song successfully added to the playlist")
     else: raise HTTPException(status_code=500, detail="Failure")
+
+# Remove song from playlist
+@PlaylistRouter.delete("/{id}/{song_index}")
+async def delete_song_from_playlist(id: str, song_index: int):
+    try:
+        await remove_song_from_playlist(id, song_index)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return ResponseModel("success", "Song successfully removed from the playlist")

@@ -14,6 +14,7 @@ def playlist_helper(playlist) -> dict:
         "creation_date": playlist["creation_date"],
         "songs": list(map(lambda x: str(x), playlist["songs"])),
         "length": playlist["length"],
+        "user": playlist["user"]
     }
 
 
@@ -88,3 +89,14 @@ async def append_song_to_playlist(playlist_id: str, song_id: str):
         return False
     return True
 
+# Delete song from playlist
+async def remove_song_from_playlist(playlist_id: str, song_index: int):
+    try:
+        playlist = await playlists_collection.find_one({"_id": ObjectId(playlist_id)})
+        del playlist["songs"][song_index]
+        await playlists_collection.replace_one(
+            {"_id": ObjectId(playlist_id)}, 
+            playlist
+        )
+    except Exception as e:
+        raise e

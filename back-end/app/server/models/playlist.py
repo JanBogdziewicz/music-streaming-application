@@ -9,11 +9,13 @@ class PlaylistSchema(BaseModel):
     creation_date: date = Field(None)
     songs: list[str] = []
     length: int = 0
+    user: str = Field(...)
 
     class Config:
         schema_extra = {
             "example": {
                 "name": "My Own Playlist",
+                "user": "joe17"
             }
         }
 
