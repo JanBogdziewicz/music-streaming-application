@@ -82,7 +82,7 @@ async def get_playlist_songs(id: str):
     return ResponseModel(songs, "Empty list returned")
 
 # Add song to playlist
-@PlaylistRouter.patch("/{playlist_id}/{song_id}", response_description="songs added sucessfully")
+@PlaylistRouter.patch("/{playlist_id}/songs/{song_id}", response_description="songs added sucessfully")
 async def add_song_to_playlist(playlist_id: str, song_id: str):
     try:
         await append_song_to_playlist(playlist_id, song_id)
@@ -91,7 +91,7 @@ async def add_song_to_playlist(playlist_id: str, song_id: str):
     return ResponseModel("success", "Song successfully added to the playlist")
 
 # Remove song from playlist
-@PlaylistRouter.delete("/{id}/{song_index}")
+@PlaylistRouter.delete("/{id}/songs/{song_index}")
 async def delete_song_from_playlist(id: str, song_index: int):
     try:
         await remove_song_from_playlist(id, song_index)
