@@ -7,10 +7,8 @@ from server.database.library import (
     append_items_library,
 )
 from server.config import database
-from server.database.playlist import playlist_helper
 
 users_collection: Collection = database.get_collection("users")
-playlists_collection: Collection = database.get_collection("playlists")
 
 # helper
 def user_helper(user) -> dict:
@@ -144,11 +142,3 @@ async def clear_queue(id: str):
         if updated_user:
             return True
     return False
-
-# Get all user's playlists
-async def retreive_users_playlists(username: str):
-    playlists = []
-    async for playlist in playlists_collection.find({"user": username}):
-        playlists.append(playlist_helper(playlist))
-
-    return playlists

@@ -1,4 +1,4 @@
-from server.database.user import retreive_users_playlists
+from server.database.playlist import retreive_users_playlists
 from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 from server.database.library import retrieve_library
@@ -225,13 +225,5 @@ async def get_queue_data(id):
 @UserRouter.get("/{username}/playlists", response_description="User's playlists retreived")
 async def get_users_playlists(username):
     playlists = await retreive_users_playlists(username)
-    return ResponseModel(playlists, "Playlists retreived successfully")
-
-# Get all user's playlists by id
-@UserRouter.get("/by_id/{id}/playlists", response_description="User's playlists retreived")
-async def get_users_playlists(id):
-    user = await retrieve_user(id)
-    if not user: raise HTTPException(status_code=404, detail="User not found")
-    playlists = await retreive_users_playlists(user["username"])
     return ResponseModel(playlists, "Playlists retreived successfully")
     

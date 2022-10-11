@@ -1,10 +1,9 @@
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from server.config import database
-from server.database.song import song_helper
+from server.database.song import song_helper, songs_collection
 
 playlists_collection: Collection = database.get_collection("playlists")
-songs_collection: Collection = database.get_collection("songs")
 
 # helper
 def playlist_helper(playlist) -> dict:
@@ -99,3 +98,11 @@ async def remove_song_from_playlist(playlist_id: str, song_index: int):
         )
     except Exception as e:
         raise e
+
+# Get all user's playlists
+async def retreive_users_playlists(username: str):
+    playlists = []
+    async for playlist in playlists_collection.find({"user": username}):
+        playlists.append(playlist_helper(playlist))
+
+    return playlists
