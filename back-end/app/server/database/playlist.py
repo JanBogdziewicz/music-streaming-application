@@ -85,9 +85,8 @@ async def append_song_to_playlist(playlist_id: str, song_id: str):
                 "$inc": {"length": song_length}
             }
         )
-    except:
-        return False
-    return True
+    except Exception as e:
+        raise e
 
 # Delete song from playlist
 async def remove_song_from_playlist(playlist_id: str, song_index: int):

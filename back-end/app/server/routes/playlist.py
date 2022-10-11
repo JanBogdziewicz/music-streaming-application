@@ -82,11 +82,13 @@ async def get_playlist_songs(id: str):
     return ResponseModel(songs, "Empty list returned")
 
 # Add song to playlist
-@PlaylistRouter.post("/{id}", response_description="songs added sucessfully")
-async def add_song_to_playlist(id: str, song: AddSongToPlaylistModel):
-    success = await append_song_to_playlist(id, song.song_id)
-    if success: return ResponseModel(success, "Song successfully added to the playlist")
-    else: raise HTTPException(status_code=500, detail="Failure")
+@PlaylistRouter.patch("/{playlist_id}/{song_id}", response_description="songs added sucessfully")
+async def add_song_to_playlist(playlist_id: str, song_id: str):
+    try:
+        await append_song_to_playlist(playlist_id, song_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return ResponseModel("success", "Song successfully added to the playlist")
 
 # Remove song from playlist
 @PlaylistRouter.delete("/{id}/{song_index}")
