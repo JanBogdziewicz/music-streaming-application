@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from server.routes.song import SongRouter
 from server.routes.user import UserRouter
@@ -10,13 +11,18 @@ from server.routes.album import AlbumRouter
 from server.routes.playlist import PlaylistRouter
 
 from server.database.init import initialize_db_schema
+
 import logging
 
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
-
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+@app.exception_handler(Exception)
+async def catch_exceptions_middleware(request, err):
+    return JSONResponse(status_code=500, content={"message": str(err)})
+        
 
 origins = ["*"]
 
