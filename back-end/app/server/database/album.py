@@ -39,10 +39,10 @@ async def add_album(album_data: dict) -> dict:
 # Retrieve a album with a matching ID
 async def retrieve_album(id: str):
     album = await albums_collection.find_one({"_id": ObjectId(id)})
-    if album:
-        return album_helper(album)
-    else:
+    if not album:
         raise HTTPException(status_code=404, detail="album not found")
+    return album_helper(album)
+        
 
 
 # Update a album with a matching ID
