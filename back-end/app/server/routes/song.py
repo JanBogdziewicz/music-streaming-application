@@ -39,9 +39,7 @@ async def get_songs():
 @SongRouter.get("/{id}", response_description="Song retrieved")
 async def get_song_data(id):
     song = await retrieve_song(id)
-    if song:
-        return ResponseModel(song, "Song retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "Song doesn't exist.")
+    return ResponseModel(song, "Song retrieved successfully")
 
 
 # Update a song with a matching ID
@@ -49,24 +47,13 @@ async def get_song_data(id):
 async def update_song_data(id: str, req: UpdateSongModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_song = await update_song(id, req)
-    if updated_song:
-        return ResponseModel(
-            "Song with ID: {0} update is successful".format(id),
-            "Song updated successfully",
-        )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error while updating the song.",
-    )
+    return ResponseModel(updated_song, "Song with ID: {0} update is successful".format(id))
 
 
 # Delete a song with a matching ID
 @SongRouter.delete("/{id}", response_description="Song deleted from the database")
 async def delete_song_data(id: str):
-    deleted_song = await delete_song(id)
-    if deleted_song:
-        return ResponseModel(
-            "Song with ID: {0} removed".format(id), "Song deleted successfully"
-        )
-    raise HTTPException(status_code=404, detail="Song not found")
+    await delete_song(id)
+    return ResponseModel(
+        "Song with ID: {0} removed".format(id), "Song deleted successfully"
+    )
