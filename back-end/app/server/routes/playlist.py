@@ -30,9 +30,7 @@ async def get_playlists():
 @PlaylistRouter.get("/{id}", response_description="playlist retrieved")
 async def get_playlist_data(id):
     playlist = await retrieve_playlist(id)
-    if playlist:
-        return ResponseModel(playlist, "playlist retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "playlist doesn't exist.")
+    return ResponseModel(playlist, "playlist retrieved successfully")
 
 
 # Update a playlist with a matching ID
@@ -40,29 +38,16 @@ async def get_playlist_data(id):
 async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_playlist = await update_playlist(id, req)
-    if updated_playlist:
-        return ResponseModel(
-            "playlist with ID: {0} update is successful".format(id),
-            "playlist updated successfully",
-        )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error while updating the playlist.",
-    )
+    return ResponseModel(updated_playlist, "playlist with ID: {0} update is successful".format(id))
 
 
 # Delete a playlist with a matching ID
 @PlaylistRouter.delete("/{id}", response_description="playlist deleted from the database")
 async def delete_playlist_data(id: str):
-    deleted_playlist = await delete_playlist(id)
-    if deleted_playlist:
-        return ResponseModel(
+    await delete_playlist(id)
+    return ResponseModel(
             "playlist with ID: {0} removed".format(id), "playlist deleted successfully"
         )
-    return ErrorResponseModel(
-        "An error occurred", 404, "playlist with id {0} doesn't exist".format(id)
-    )
 
 # Get all songs of an playlist
 @PlaylistRouter.get("/{id}/songs", response_description="playlist songs retrieved sucessfully")
@@ -84,11 +69,9 @@ async def get_playlist_songs(id: str):
 # Add song to playlist
 @PlaylistRouter.patch("/{playlist_id}/songs/{song_id}", response_description="songs added sucessfully")
 async def add_song_to_playlist(playlist_id: str, song_id: str):
-    try:
-        await append_song_to_playlist(playlist_id, song_id)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return ResponseModel("success", "Song successfully added to the playlist")
+    song = await append_song_to_playlist(playlist_id, song_id)
+    return ResponseModel(song, "Song successfully added to the playlist")
+
 
 # Remove song from playlist
 @PlaylistRouter.delete("/{id}/songs/{song_index}")

@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from server.config import database
@@ -40,32 +41,23 @@ async def retrieve_playlist(id: str):
 
 # Update a playlist with a matching ID
 async def update_playlist(id: str, data: dict):
-    # Return false if an empty request body is sent.
-    if len(data) < 1:
-        return False
-    playlist = await playlists_collection.find_one({"_id": ObjectId(id)})
-    if playlist:
-        updated_playlist = await playlists_collection.update_one(
-            {"_id": ObjectId(id)}, {"$set": data}
-        )
-        return updated_playlist if updated_playlist else False
-    else:
-        return False
+    update_status = await playlists_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    if update_status.matched_count < 1:
+        raise HTTPException(status_code=404, detail="playlist not found")
+    return playlist_helper(await playlists_collection.find_one({"_id": ObjectId(id)}))
 
 
 # Delete a playlist from the database
 async def delete_playlist(id: str):
-    playlist = await playlists_collection.find_one({"_id": ObjectId(id)})
-    if playlist:
-        await playlists_collection.delete_one({"_id": ObjectId(id)})
-        return True
-    else:
-        return False
+    deleted = await playlists_collection.delete_one({"_id": ObjectId(id)})
+    if deleted.deleted_count < 1:
+        raise HTTPException(status_code=404, detail="playlist not found")
+
 
 # Retreive all songs of a playlist
 async def retreive_playlist_songs(id: str):
     playlist = await playlists_collection.find_one({"_id": ObjectId(id)})
-    if not playlist: return False
+    if not playlist: raise HTTPException(status_code=404, detail="playlist not found")
     songs = []
     async for song in songs_collection.find({
         "_id": {"$in": playlist["songs"]}
@@ -73,31 +65,39 @@ async def retreive_playlist_songs(id: str):
         songs.append(song_helper(song))
     return songs
 
+
 # Append song to a playlist
 async def append_song_to_playlist(playlist_id: str, song_id: str):
-    try:
-        song_length = (await songs_collection.find_one({"_id": ObjectId(song_id)}))["length"]
-        await playlists_collection.update_one(
-            {"_id": ObjectId(playlist_id)}, 
-            {
-                "$push": {"songs": ObjectId(song_id)}, 
-                "$inc": {"length": song_length}
-            }
-        )
-    except Exception as e:
-        raise e
+    song = await songs_collection.find_one({"_id": ObjectId(song_id)})
+
+    if not song:
+        raise HTTPException(status_code=404, detail="song not found")
+    
+    update_status = await playlists_collection.update_one(
+        {"_id": ObjectId(playlist_id)}, 
+        {
+            "$push": {"songs": ObjectId(song_id)}, 
+            "$inc": {"length": song["length"]}
+        }
+    )
+
+    if update_status.matched_count < 1:
+        raise HTTPException(status_code=404, detail="playlist not found")
+    
+    return song
 
 # Delete song from playlist
 async def remove_song_from_playlist(playlist_id: str, song_index: int):
-    try:
-        playlist = await playlists_collection.find_one({"_id": ObjectId(playlist_id)})
-        del playlist["songs"][song_index]
-        await playlists_collection.replace_one(
-            {"_id": ObjectId(playlist_id)}, 
-            playlist
-        )
-    except Exception as e:
-        raise e
+    playlist = await playlists_collection.find_one({"_id": ObjectId(playlist_id)})
+
+    del playlist["songs"][song_index]
+    replace_status = await playlists_collection.replace_one(
+        {"_id": ObjectId(playlist_id)}, 
+        playlist
+    )
+
+    if replace_status.matched_count < 1:
+        raise HTTPException(status_code=404, detail="playlist not found")
 
 # Get all user's playlists
 async def retreive_users_playlists(username: str):
