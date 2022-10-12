@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from server.database.listening import (
     retrieve_listening,
@@ -23,13 +23,9 @@ async def get_listenings():
 
 # Get a listening with a matching ID
 @ListeningRouter.get("/{id}", response_description="Listening retrieved")
-async def get_listening_data(id):
+async def get_listening_data(id: str):
     listening = await retrieve_listening(id)
-    if listening:
-        return ResponseModel(listening, "Listening retrieved successfully")
-    raise HTTPException(
-        status_code=404, detail="Listening with id {0} doesn't exist".format(id)
-    )
+    return ResponseModel(listening, "Listening retrieved successfully")
 
 
 # Delete a listening with a matching ID
@@ -37,12 +33,8 @@ async def get_listening_data(id):
     "/{id}", response_description="Listening deleted from the database"
 )
 async def delete_listening_data(id: str):
-    deleted_listening = await delete_listening(id)
-    if deleted_listening:
-        return ResponseModel(
-            "Listening with ID: {0} removed".format(id),
-            "Listening deleted successfully",
-        )
-    raise HTTPException(
-        status_code=404, detail="Listening with id {0} doesn't exist".format(id)
+    await delete_listening(id)
+    return ResponseModel(
+        "Listening with ID: {0} removed".format(id),
+        "Listening deleted successfully",
     )

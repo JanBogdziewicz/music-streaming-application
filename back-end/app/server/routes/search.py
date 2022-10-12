@@ -1,5 +1,4 @@
-from turtle import st
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
 from server.database.search import (
@@ -35,13 +34,9 @@ async def get_searches():
 
 # Get a search request with a matching ID
 @SearchRouter.get("/{id}", response_description="Search request retrieved")
-async def get_search_data(id):
+async def get_search_data(id: str):
     search = await retrieve_search(id)
-    if search:
-        return ResponseModel(search, "Search request retrieved successfully")
-    raise HTTPException(
-        status_code=404, detail="Search request with id {0} doesn't exist".format(id)
-    )
+    return ResponseModel(search, "Search request retrieved successfully")
 
 
 # Delete a search request with a matching ID
@@ -49,12 +44,8 @@ async def get_search_data(id):
     "/{id}", response_description="Search request deleted from the database"
 )
 async def delete_search_data(id: str):
-    deleted_search = await delete_search(id)
-    if deleted_search:
-        return ResponseModel(
-            "Search request with ID: {0} removed".format(id),
-            "Search request deleted successfully",
-        )
-    raise HTTPException(
-        status_code=404, detail="Search request with id {0} doesn't exist".format(id)
+    await delete_search(id)
+    return ResponseModel(
+        "Search request with ID: {0} removed".format(id),
+        "Search request deleted successfully",
     )

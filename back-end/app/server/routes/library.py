@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from server.database.library import (
     retrieve_library,
@@ -22,10 +22,6 @@ async def get_libraries():
 
 # Get a library with a matching ID
 @LibraryRouter.get("/{id}", response_description="Library retrieved")
-async def get_library_data(id):
+async def get_library_data(id: str):
     library = await retrieve_library(id)
-    if library:
-        return ResponseModel(library, "Library retrieved successfully")
-    raise HTTPException(
-        status_code=404, detail="Library with id {0} doesn't exist".format(id)
-    )
+    return ResponseModel(library, "Library retrieved successfully")
