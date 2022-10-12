@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 from server.config import database
 from pymongo.collection import Collection
+from fastapi import HTTPException
 
 searches_collection: Collection = database.get_collection("searches")
 
@@ -10,6 +11,7 @@ def search_helper(search) -> dict:
         "id": str(search["_id"]),
         "content": search["content"],
         "time": search["time"],
+        "user": search["user"],
     }
 
 
@@ -33,14 +35,20 @@ async def retrieve_search(id: str):
     search = await searches_collection.find_one({"_id": ObjectId(id)})
     if search:
         return search_helper(search)
-    return False
+    else:
+        raise HTTPException(status_code=404, detail="Search request not found")
 
 
 # Delete a search request from the database
 async def delete_search(id: str):
-    search = await searches_collection.find_one({"_id": ObjectId(id)})
-    if search:
-        deleted_search = await searches_collection.delete_one({"_id": ObjectId(id)})
-        if deleted_search:
-            return True
-    return False
+    deleted = await searches_collection.delete_one({"_id": ObjectId(id)})
+    if deleted.deleted_count < 1:
+        raise HTTPException(status_code=404, detail="Search request not found")
+
+
+# Retrieve all user's search requests
+async def retrieve_user_searches(username: str):
+    searches = []
+    async for search in searches_collection.find({"user": username}):
+        searches.append(search_helper(search))
+    return searches

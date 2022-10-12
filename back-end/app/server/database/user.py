@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
+from fastapi import HTTPException
 from server.database.library import (
     add_library,
     delete_library,
@@ -7,6 +8,8 @@ from server.database.library import (
     append_items_library,
 )
 from server.config import database
+from server.database.song import song_helper, songs_collection
+
 
 users_collection: Collection = database.get_collection("users")
 
@@ -18,9 +21,8 @@ def user_helper(user) -> dict:
         "birth_date": user["birth_date"],
         "join_date": user["join_date"],
         "country": user["country"],
-        "queue": user["queue"],
-        "library": user["library"],
-        "settings": user["settings"],
+        "queue": list(map(lambda x: str(x), user["queue"])),
+        "library": list(map(lambda x: str(x), user["library"])),
     }
 
 
@@ -35,110 +37,113 @@ async def retrieve_users():
 # Add a new user to the database
 async def add_user(user_data: dict) -> dict:
     library = await add_library()
-    user_data["library"] = library["id"]
+    user_data["library"] = library["_id"]
     user = await users_collection.insert_one(user_data)
     new_user = await users_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
 
 
 # Retrieve a user with a matching ID
-async def retrieve_user(id: str):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
+async def retrieve_user(username: str):
+    user = await users_collection.find_one({"username": username})
     if user:
         return user_helper(user)
-    return False
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Update a user with a matching ID
-async def update_user(id: str, data: dict):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
-    if user:
-        updated_user = await users_collection.update_one(
-            {"_id": ObjectId(id)}, {"$set": data}
-        )
-        if updated_user:
-            return True
-    return False
+async def update_user(username: str, data: dict):
+    updated = await users_collection.update_one({"username": username}, {"$set": data})
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Delete a user from the database
-async def delete_user(id: str):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
+async def delete_user(username: str):
+    user = await users_collection.find_one({"username": username})
     if user:
-        deleted_library = await delete_library(user["library"])
-        deleted_user = await users_collection.delete_one({"_id": ObjectId(id)})
-        if deleted_library and deleted_user:
-            return True
-    return False
+        await delete_library(user["library"])
+        await users_collection.delete_one({"username": username})
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Append item/s to user's library
-async def append_library(id: str, collection: str, ids: list[str]):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
+async def append_library(username: str, collection: str, ids: list[str]):
+    user = await users_collection.find_one({"username": username})
     if user:
-        updated_user = await append_items_library(user["library"], collection, ids)
-        if updated_user:
-            return True
-    return False
+        updated = await append_items_library(user["library"], collection, ids)
+        if updated.matched_count < 1:
+            raise HTTPException(status_code=404, detail="User library not found")
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Pull item/s from user's library collection
-async def pull_library(id: str, collection: str, ids: list[str]):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
+async def pull_library(username: str, collection: str, ids: list[str]):
+    user = await users_collection.find_one({"username": username})
     if user:
-        updated_user = await pull_items_library(user["library"], collection, ids)
-        if updated_user:
-            return True
-    return False
+        updated = await pull_items_library(user["library"], collection, ids)
+        if updated.matched_count < 1:
+            raise HTTPException(status_code=404, detail="User library not found")
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Append song/s to user's queue
-async def append_queue(id: str, ids: list[str]):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
-    if user:
-        updated_user = await users_collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$push": {"queue": {"$each": ids}}},
-        )
-        if updated_user:
-            return True
-    return False
+async def append_queue(username: str, ids: list[str]):
+    updated = await users_collection.update_one(
+        {"username": username},
+        {"$push": {"queue": {"$each": list(map(lambda x: ObjectId(x), ids))}}},
+    )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Prepend song/s to user's queue
-async def prepend_queue(id: str, ids: list[str]):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
-    if user:
-        updated_user = await users_collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$push": {"queue": {"$each": ids, "$position": 0}}},
-        )
-        if updated_user:
-            return True
-    return False
+async def prepend_queue(username: str, ids: list[str]):
+    updated = await users_collection.update_one(
+        {"username": username},
+        {
+            "$push": {
+                "queue": {
+                    "$each": list(map(lambda x: ObjectId(x), ids)),
+                    "$position": 0,
+                }
+            }
+        },
+    )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Pull song/s from user's queue collection
-async def pull_queue(id: str, ids: list[str]):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
-    if user:
-        updated_user = await users_collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$pull": {"queue": {"$in": ids}}},
-        )
-        if updated_user:
-            return True
-    return False
+async def pull_queue(username: str, ids: list[str]):
+    updated = await users_collection.update_one(
+        {"username": username},
+        {"$pull": {"queue": {"$in": list(map(lambda x: ObjectId(x), ids))}}},
+    )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User not found")
 
 
 # Clear a queue of the user
-async def clear_queue(id: str):
-    user = await users_collection.find_one({"_id": ObjectId(id)})
-    if user:
-        updated_user = await users_collection.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": {"queue": []}},
-        )
-        if updated_user:
-            return True
-    return False
+async def clear_queue(username: str):
+    updated = await users_collection.update_one(
+        {"username": username},
+        {"$set": {"queue": []}},
+    )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User not found")
+
+
+# Retrieve all queue songs
+async def retrieve_queue_songs(username: str):
+    user = await users_collection.find_one({"username": username})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    songs = []
+    async for song in songs_collection.find({"_id": {"$in": user["queue"]}}):
+        songs.append(song_helper(song))
+    return songs

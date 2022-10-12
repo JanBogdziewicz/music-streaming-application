@@ -45,185 +45,183 @@ async def get_users():
 
 
 # Get a user with a matching ID
-@UserRouter.get("/{id}", response_description="User retrieved")
-async def get_user_data(id):
-    user = await retrieve_user(id)
+@UserRouter.get("/{username}", response_description="User retrieved")
+async def get_user_data(username: str):
+    user = await retrieve_user(username)
     if user:
         return ResponseModel(user, "User retrieved successfully")
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Update a user with a matching ID
-@UserRouter.put("/{id}")
-async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
+@UserRouter.put("/{username}")
+async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
     req = jsonable_encoder(req)
-    updated_user = await update_user(id, req)
+    updated_user = await update_user(username, req)
     if updated_user:
         return ResponseModel(
-            "User with ID: {0} update is successful".format(id),
+            "User {0} update is successful".format(username),
             "User updated successfully",
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Delete a user with a matching ID
-@UserRouter.delete("/{id}", response_description="User deleted from the database")
-async def delete_user_data(id: str):
+@UserRouter.delete("/{username}", response_description="User deleted from the database")
+async def delete_user_data(username: str):
     deleted_user = await delete_user(id)
     if deleted_user:
         return ResponseModel(
-            "User with ID: {0} removed".format(id), "User deleted successfully"
+            "User {0} removed".format(username), "User deleted successfully"
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Append new item/s to user's library
 @UserRouter.put(
-    "/{id}/append_library",
+    "/{username}/append_library",
     response_description="Item/s appended to the user's library",
 )
-async def append_library_data(id: str, req: UpdateLibraryModel = Body(...)):
+async def append_library_data(username: str, req: UpdateLibraryModel = Body(...)):
     req = req.dict()
     collection = req["collection_name"]
     ids = req["item_ids"]
-    updated_user = await append_library(id, collection, ids)
+    updated_user = await append_library(username, collection, ids)
     if updated_user:
         return ResponseModel(
-            "{0} with IDs: {1} added to library of user with ID: {2}".format(
-                collection, ids, id
+            "{0} with IDs: {1} added to library of user {2}".format(
+                collection, ids, username
             ),
             "{0} added succesfully to user's library".format(collection),
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Pull item/s from user's library
 @UserRouter.put(
-    "/{id}/pull_library",
+    "/{username}/pull_library",
     response_description="Item/s pulled from user's library",
 )
-async def pull_library_data(id: str, req: UpdateLibraryModel = Body(...)):
+async def pull_library_data(username: str, req: UpdateLibraryModel = Body(...)):
     req = req.dict()
     collection = req["collection_name"]
     ids = req["item_ids"]
-    updated_user = await pull_library(id, collection, ids)
+    updated_user = await pull_library(username, collection, ids)
     if updated_user:
         return ResponseModel(
-            "{0} with IDs: {1} deleted from library of user with ID: {2}".format(
-                collection, ids, id
+            "{0} with IDs: {1} deleted from library of user {2}".format(
+                collection, ids, username
             ),
             "{0} deleted succesfully from user's library".format(collection),
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Get a library of a user
-@UserRouter.get("/{id}/library", response_description="Library retrieved")
-async def get_library_data(id):
-    user = await retrieve_user(id)
+@UserRouter.get("/{username}/library", response_description="Library retrieved")
+async def get_library_data(username: str):
+    user = await retrieve_user(username)
     if user:
         library = await retrieve_library(user["library"])
         return ResponseModel(library, "Library of the user retrieved successfully")
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Append song/s to user's queue
 @UserRouter.post(
-    "/{id}/append_queue",
+    "/{username}/append_queue",
     response_description="Song/s appended to the user's queue",
 )
-async def append_queue_data(id: str, req: list[str] = Body(...)):
-    updated_user = await append_queue(id, req)
+async def append_queue_data(username: str, req: list[str] = Body(...)):
+    updated_user = await append_queue(username, req)
     if updated_user:
         return ResponseModel(
-            "Song/s with IDs: {0} appeneded to queue of user with ID: {1}".format(
-                req, id
-            ),
+            "Song/s with IDs: {0} appeneded to queue of user {1}".format(req, username),
             "Song/s added succesfully to user's queue",
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Prepend song/s to user's queue
 @UserRouter.post(
-    "/{id}/prepend_queue",
+    "/{username}/prepend_queue",
     response_description="Song/s prepended to the user's queue",
 )
-async def prepend_queue_data(id: str, req: list[str] = Body(...)):
-    updated_user = await prepend_queue(id, req)
+async def prepend_queue_data(username: str, req: list[str] = Body(...)):
+    updated_user = await prepend_queue(username, req)
     if updated_user:
         return ResponseModel(
-            "Song/s with IDs: {0} prepended to queue of user with ID: {1}".format(
-                req, id
-            ),
+            "Song/s with IDs: {0} prepended to queue of user {1}".format(req, username),
             "Song/s added succesfully to user's queue",
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Pull song/s from user's queue
 @UserRouter.post(
-    "/{id}/pull_queue",
+    "/{username}/pull_queue",
     response_description="Song/s pulled from user's queue",
 )
-async def pull_queue_data(id: str, req: list[str] = Body(...)):
-    updated_user = await pull_queue(id, req)
+async def pull_queue_data(username: str, req: list[str] = Body(...)):
+    updated_user = await pull_queue(username, req)
     if updated_user:
         return ResponseModel(
-            "Song/s with IDs: {0} deleted from queue of user with ID: {1}".format(
-                req, id
-            ),
+            "Song/s with IDs: {0} deleted from queue of user {1}".format(req, username),
             "Song/s deleted succesfully from user's queue",
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Clear queue of the user
-@UserRouter.delete("/{id}/clear_queue", response_description="User's queue cleared")
-async def clear_queue_data(id: str):
-    updated_user = await clear_queue(id)
+@UserRouter.delete(
+    "/{username}/clear_queue", response_description="User's queue cleared"
+)
+async def clear_queue_data(username: str):
+    updated_user = await clear_queue(username)
     if updated_user:
         return ResponseModel(
-            "Queue of the user with ID: {0} cleared".format(id),
+            "Queue of the user {0} cleared".format(username),
             "Queue cleared successfully",
         )
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
 
 # Get a queue of a user
-@UserRouter.get("/{id}/queue", response_description="Queue retrieved")
-async def get_queue_data(id):
-    user = await retrieve_user(id)
+@UserRouter.get("/{username}/queue", response_description="Queue retrieved")
+async def get_queue_data(username: str):
+    user = await retrieve_user(username)
     if user:
         queue = user["queue"]
         return ResponseModel(queue, "Queue of the user retrieved successfully")
     raise HTTPException(
-        status_code=404, detail="User with id {0} doesn't exist".format(id)
+        status_code=404, detail="User {0} doesn't exist".format(username)
     )
 
-# Get all user's playlists by username
-@UserRouter.get("/{username}/playlists", response_description="User's playlists retreived")
+
+# Get all user's playlists
+@UserRouter.get(
+    "/{username}/playlists", response_description="User's playlists retreived"
+)
 async def get_users_playlists(username):
     playlists = await retreive_users_playlists(username)
     return ResponseModel(playlists, "Playlists retreived successfully")
-    
