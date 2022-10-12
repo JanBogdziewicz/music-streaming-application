@@ -30,9 +30,7 @@ async def get_artists():
 @ArtistRouter.get("/{id}", response_description="artist retrieved")
 async def get_artist_data(id):
     artist = await retrieve_artist(id)
-    if artist:
-        return ResponseModel(artist, "artist retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "artist doesn't exist.")
+    return ResponseModel(artist, "artist retrieved successfully")
 
 
 # Update a artist with a matching ID
@@ -40,28 +38,15 @@ async def get_artist_data(id):
 async def update_artist_data(id: str, req: UpdateArtistModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_artist = await update_artist(id, req)
-    if updated_artist:
-        return ResponseModel(
-            "artist with ID: {0} update is successful".format(id),
-            "artist updated successfully",
-        )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error while updating the artist.",
-    )
+    return ResponseModel(updated_artist, "Artist with ID: {0} update is successful".format(id))
 
 
 # Delete a artist with a matching ID
 @ArtistRouter.delete("/{id}", response_description="artist deleted from the database")
 async def delete_artist_data(id: str):
-    deleted_artist = await delete_artist(id)
-    if deleted_artist:
-        return ResponseModel(
-            "artist with ID: {0} removed".format(id), "artist deleted successfully"
-        )
-    return ErrorResponseModel(
-        "An error occurred", 404, "artist with id {0} doesn't exist".format(id)
+    await delete_artist(id)
+    return ResponseModel(
+        "artist with ID: {0} removed".format(id), "artist deleted successfully"
     )
 
 # Get all albums of an artist

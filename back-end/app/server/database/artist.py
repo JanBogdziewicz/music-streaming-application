@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from server.config import database
@@ -35,37 +36,30 @@ async def add_artist(artist_data: dict) -> dict:
 # Retrieve a artist with a matching ID
 async def retrieve_artist(id: str):
     artist = await artists_collection.find_one({"_id": ObjectId(id)})
-    return artist_helper(artist) if artist else False
+    if not artist:
+        raise HTTPException(status_code=404, detail="Artist not found")
+    return artist_helper(artist)
 
 
 # Update a artist with a matching ID
 async def update_artist(id: str, data: dict):
-    # Return false if an empty request body is sent.
-    if len(data) < 1:
-        return False
-    artist = await artists_collection.find_one({"_id": ObjectId(id)})
-    if artist:
-        updated_artist = await artists_collection.update_one(
-            {"_id": ObjectId(id)}, {"$set": data}
-        )
-        return updated_artist if updated_artist else False
-    else:
-        return False
+    update_status = await artists_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    if update_status.matched_count < 1:
+        raise HTTPException(status_code=404, detail="Artist not found")
+    return artist_helper(await artists_collection.find_one({"_id": ObjectId(id)}))
 
 
 # Delete a artist from the database
 async def delete_artist(id: str):
-    artist = await artists_collection.find_one({"_id": ObjectId(id)})
-    if artist:
-        await artists_collection.delete_one({"_id": ObjectId(id)})
-        return True
-    else:
-        return False
+    deleted = await artists_collection.delete_one({"_id": ObjectId(id)})
+    if deleted.deleted_count < 1:
+        raise HTTPException(status_code=404, detail="artist not found")
+
 
 # Retreive all albums of an artist
 async def retreive_artist_albums(id: str):
     artist = await artists_collection.find_one({"_id": ObjectId(id)})
-    if not artist: return False
+    if not artist: raise HTTPException(status_code=404, detail="artist not found")
     albums = []
     async for album in albums_collection.find({"artist": artist["name"]}):
         albums.append(album_helper(album))
