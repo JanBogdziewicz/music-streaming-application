@@ -10,7 +10,6 @@ from server.database.search import (
 )
 
 from server.models.search import (
-    ErrorResponseModel,
     ResponseModel,
     SearchSchema,
 )

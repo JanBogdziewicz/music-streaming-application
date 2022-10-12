@@ -58,18 +58,22 @@ async def delete_library(id: str):
 
 # Pull item/s from library collection
 async def pull_items_library(id: str, collection: str, ids: list[str]):
-    return libraries_collection.update_one(
+    updated = await libraries_collection.update_one(
         {"_id": ObjectId(id)},
         {"$pull": {collection: {"$in": list(map(lambda x: ObjectId(x), ids))}}},
     )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User library not found")
 
 
 # Append item/s to library collection
 async def append_items_library(id: str, collection: str, ids: list[str]):
-    return libraries_collection.update_one(
+    updated = await libraries_collection.update_one(
         {"_id": ObjectId(id)},
         {"$addToSet": {collection: {"$each": list(map(lambda x: ObjectId(x), ids))}}},
     )
+    if updated.matched_count < 1:
+        raise HTTPException(status_code=404, detail="User library not found")
 
 
 # Retrieve all library playlists

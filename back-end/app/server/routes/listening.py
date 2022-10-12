@@ -7,7 +7,6 @@ from server.database.listening import (
 )
 
 from server.models.listening import (
-    ErrorResponseModel,
     ResponseModel,
 )
 

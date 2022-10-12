@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 
 class ListeningSchema(BaseModel):
     song: str = Field(...)
-    time: datetime = Field(datetime.now())
+    time: datetime = Field(default_factory=datetime.now)
     user: str = Field(...)
 
 

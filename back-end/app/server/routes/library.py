@@ -6,7 +6,6 @@ from server.database.library import (
 )
 
 from server.models.library import (
-    ErrorResponseModel,
     ResponseModel,
 )
 

@@ -18,7 +18,6 @@ from server.database.user import (
 )
 
 from server.models.user import (
-    ErrorResponseModel,
     ResponseModel,
     UserSchema,
     UpdateUserModel,
@@ -92,16 +91,12 @@ async def append_library_data(username: str, req: UpdateLibraryModel = Body(...)
     req = req.dict()
     collection = req["collection_name"]
     ids = req["item_ids"]
-    updated_user = await append_library(username, collection, ids)
-    if updated_user:
-        return ResponseModel(
-            "{0} with IDs: {1} added to library of user {2}".format(
-                collection, ids, username
-            ),
-            "{0} added succesfully to user's library".format(collection),
-        )
-    raise HTTPException(
-        status_code=404, detail="User {0} doesn't exist".format(username)
+    await append_library(username, collection, ids)
+    return ResponseModel(
+        "{0} with IDs: {1} added to library of user {2}".format(
+            collection, ids, username
+        ),
+        "{0} added succesfully to user's library".format(collection),
     )
 
 

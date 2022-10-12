@@ -22,7 +22,7 @@ def user_helper(user) -> dict:
         "join_date": user["join_date"],
         "country": user["country"],
         "queue": list(map(lambda x: str(x), user["queue"])),
-        "library": list(map(lambda x: str(x), user["library"])),
+        "library": str(user["library"]),
     }
 
 
@@ -73,9 +73,7 @@ async def delete_user(username: str):
 async def append_library(username: str, collection: str, ids: list[str]):
     user = await users_collection.find_one({"username": username})
     if user:
-        updated = await append_items_library(user["library"], collection, ids)
-        if updated.matched_count < 1:
-            raise HTTPException(status_code=404, detail="User library not found")
+        append_items_library(user["library"], collection, ids)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -84,9 +82,7 @@ async def append_library(username: str, collection: str, ids: list[str]):
 async def pull_library(username: str, collection: str, ids: list[str]):
     user = await users_collection.find_one({"username": username})
     if user:
-        updated = await pull_items_library(user["library"], collection, ids)
-        if updated.matched_count < 1:
-            raise HTTPException(status_code=404, detail="User library not found")
+        pull_items_library(user["library"], collection, ids)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 

@@ -1,17 +1,16 @@
 from datetime import date, datetime
-from server.models.PydanticObjectId import PydanticObjectId
+from server.models.object_id import PyObjectId
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel, Field, validator
-from bson.objectid import ObjectId
 
 
 class UserSchema(BaseModel):
     username: str = Field(..., min_length=1, max_length=32)
     birth_date: date = Field(...)
-    join_date: datetime = Field(datetime.now())
+    join_date: datetime = Field(default_factory=datetime.now)
     country: str = Field(...)
-    queue: list[PydanticObjectId] = Field([])
-    library: PydanticObjectId = Field(ObjectId())
+    queue: list[PyObjectId] = Field([])
+    library: PyObjectId = Field(default_factory=PyObjectId)
 
     @validator("birth_date")
     def ensure_birth_date(cls, v):
@@ -20,6 +19,7 @@ class UserSchema(BaseModel):
         return v
 
     class Config:
+        arbitrary_types_allowed = True
         schema_extra = {
             "example": {
                 "username": "joe17",
@@ -52,7 +52,7 @@ class UpdateUserModel(BaseModel):
 
 class UpdateLibraryModel(BaseModel):
     collection_name: str = Field(...)
-    item_ids: list[PydanticObjectId] = Field(..., unique_items=True)
+    item_ids: list[PyObjectId] = Field(..., unique_items=True)
 
     @validator("collection_name")
     def ensure_collection_name(cls, v):
