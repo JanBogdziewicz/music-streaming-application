@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 class SearchSchema(BaseModel):
     content: str = Field(..., min_length=1, max_length=1024)
     time: datetime = Field(datetime.now())
+    user: str = Field(...)
 
 
 def ResponseModel(data, message):
@@ -14,7 +15,3 @@ def ResponseModel(data, message):
         "code": 200,
         "message": message,
     }
-
-
-def ErrorResponseModel(error, code, message):
-    return {"error": error, "code": code, "message": message}
