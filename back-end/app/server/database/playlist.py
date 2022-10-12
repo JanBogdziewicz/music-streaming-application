@@ -89,15 +89,19 @@ async def append_song_to_playlist(playlist_id: str, song_id: str):
 # Delete song from playlist
 async def remove_song_from_playlist(playlist_id: str, song_index: int):
     playlist = await playlists_collection.find_one({"_id": ObjectId(playlist_id)})
+    if not playlist:
+        raise HTTPException(status_code=404, detail="playlist not found")
+    song = await songs_collection.find_one({"_id": playlist["songs"][song_index]})
 
+    playlist["length"] -= song["length"]
     del playlist["songs"][song_index]
-    replace_status = await playlists_collection.replace_one(
+
+    await playlists_collection.replace_one(
         {"_id": ObjectId(playlist_id)}, 
         playlist
     )
 
-    if replace_status.matched_count < 1:
-        raise HTTPException(status_code=404, detail="playlist not found")
+    return song
 
 # Get all user's playlists
 async def retreive_users_playlists(username: str):

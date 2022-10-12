@@ -76,8 +76,5 @@ async def add_song_to_playlist(playlist_id: str, song_id: str):
 # Remove song from playlist
 @PlaylistRouter.delete("/{id}/songs/{song_index}")
 async def delete_song_from_playlist(id: str, song_index: int):
-    try:
-        await remove_song_from_playlist(id, song_index)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return ResponseModel("success", "Song successfully removed from the playlist")
+    song = await remove_song_from_playlist(id, song_index)
+    return ResponseModel(song, "Song successfully removed from the playlist")
