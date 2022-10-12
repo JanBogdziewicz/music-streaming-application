@@ -14,7 +14,7 @@ AlbumRouter = APIRouter()
 async def add_album_data(album: AlbumSchema = Body(...)):
     album = jsonable_encoder(album)
     new_album = await add_album(album)
-    return ResponseModel(new_album, "album added successfully.")
+    return ResponseModel(new_album, "Album added successfully.")
 
 
 # Get all albums
@@ -30,9 +30,7 @@ async def get_albums():
 @AlbumRouter.get("/{id}", response_description="album retrieved")
 async def get_album_data(id):
     album = await retrieve_album(id)
-    if album:
-        return ResponseModel(album, "album retrieved successfully")
-    return ErrorResponseModel("An error occurred.", 404, "album doesn't exist.")
+    return ResponseModel(album, "Album retrieved successfully")
 
 
 # Update a album with a matching ID
@@ -40,29 +38,17 @@ async def get_album_data(id):
 async def update_album_data(id: str, req: UpdateAlbumModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_album = await update_album(id, req)
-    if updated_album:
-        return ResponseModel(
-            "album with ID: {0} update is successful".format(id),
-            "album updated successfully",
-        )
-    return ErrorResponseModel(
-        "An error occurred",
-        404,
-        "There was an error while updating the album.",
-    )
+    return ResponseModel(updated_album, "Album with ID: {0} update is successful".format(id))
 
 
 # Delete a album with a matching ID
 @AlbumRouter.delete("/{id}", response_description="album deleted from the database")
 async def delete_album_data(id: str):
-    deleted_album = await delete_album(id)
-    if deleted_album:
-        return ResponseModel(
-            "album with ID: {0} removed".format(id), "album deleted successfully"
-        )
-    return ErrorResponseModel(
-        "An error occurred", 404, "album with id {0} doesn't exist".format(id)
+    await delete_album(id)
+    return ResponseModel(
+        "album with ID: {0} removed".format(id), "album deleted successfully"
     )
+
 
 # Get all songs of an album
 @AlbumRouter.get("/{id}/songs", response_description="album songs retrieved sucessfully")

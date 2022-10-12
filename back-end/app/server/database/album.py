@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 from server.config import database
@@ -38,37 +39,31 @@ async def add_album(album_data: dict) -> dict:
 # Retrieve a album with a matching ID
 async def retrieve_album(id: str):
     album = await albums_collection.find_one({"_id": ObjectId(id)})
-    return album_helper(album) if album else False
+    if album:
+        return album_helper(album)
+    else:
+        raise HTTPException(status_code=404, detail="album not found")
 
 
 # Update a album with a matching ID
 async def update_album(id: str, data: dict):
-    # Return false if an empty request body is sent.
-    if len(data) < 1:
-        return False
-    album = await albums_collection.find_one({"_id": ObjectId(id)})
-    if album:
-        updated_album = await albums_collection.update_one(
-            {"_id": ObjectId(id)}, {"$set": data}
-        )
-        return updated_album if updated_album else False
-    else:
-        return False
+    update_status = await albums_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    if update_status.matched_count < 1:
+        raise HTTPException(status_code=404, detail="album not found")
+    return album_helper(await albums_collection.find_one({"_id": ObjectId(id)}))
 
 
 # Delete a album from the database
 async def delete_album(id: str):
-    album = await albums_collection.find_one({"_id": ObjectId(id)})
-    if album:
-        await albums_collection.delete_one({"_id": ObjectId(id)})
-        return True
-    else:
-        return False
+    deleted = await albums_collection.delete_one({"_id": ObjectId(id)})
+    if deleted.deleted_count < 1:
+        raise HTTPException(status_code=404, detail="album not found")
+
 
 # Retreive all songs of an album
 async def retreive_album_songs(id: str):
     album = await albums_collection.find_one({"_id": ObjectId(id)})
-    if not album: return False
+    if not album: raise HTTPException(status_code=404, detail="album not found")
     songs = []
     async for song in songs_collection.find({
         "artist": album["artist"], 
