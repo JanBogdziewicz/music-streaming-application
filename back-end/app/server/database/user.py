@@ -116,12 +116,12 @@ async def prepend_queue(username: str, ids: list[str]):
 
 # Pull song/s from user's queue collection
 async def pull_queue(username: str, ids: list[str]):
-    updated = await users_collection.update_one(
-        {"username": username},
-        {"$pull": {"queue": {"$in": list(map(lambda x: ObjectId(x), ids))}}},
-    )
-    if updated.matched_count < 1:
+    user = await users_collection.find_one({"username": username})
+    if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    for song_id in ids:
+        del user["queue"][song_id]
+    await users_collection.replace_one({"username": username}, user)
 
 
 # Clear a queue of the user
@@ -140,6 +140,8 @@ async def retrieve_queue_songs(username: str):
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     songs = []
-    async for song in songs_collection.find({"_id": {"$in": user["queue"]}}):
-        songs.append(song_helper(song))
+    for id in user["queue"]:
+        song = await songs_collection.find_one({"_id": id})
+        if song:
+            songs.append(song_helper(song))
     return songs

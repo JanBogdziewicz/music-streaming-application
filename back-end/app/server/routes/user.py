@@ -24,6 +24,7 @@ from server.database.user import (
     prepend_queue,
     pull_queue,
     clear_queue,
+    retrieve_queue_songs,
 )
 
 from server.models.user import (
@@ -81,7 +82,7 @@ async def delete_user_data(username: str):
 
 # Append new item/s to user's library
 @UserRouter.put(
-    "/{username}/append_library",
+    "/{username}/library/append",
     response_description="Item/s appended to the user's library",
 )
 async def append_library_data(username: str, req: UpdateLibraryModel = Body(...)):
@@ -99,7 +100,7 @@ async def append_library_data(username: str, req: UpdateLibraryModel = Body(...)
 
 # Pull item/s from user's library
 @UserRouter.put(
-    "/{username}/pull_library",
+    "/{username}/library/pull",
     response_description="Item/s pulled from user's library",
 )
 async def pull_library_data(username: str, req: UpdateLibraryModel = Body(...)):
@@ -125,7 +126,7 @@ async def get_library_data(username: str):
 
 # Append song/s to user's queue
 @UserRouter.post(
-    "/{username}/append_queue",
+    "/{username}/queue/append",
     response_description="Song/s appended to the user's queue",
 )
 async def append_queue_data(username: str, req: list[str] = Body(...)):
@@ -138,7 +139,7 @@ async def append_queue_data(username: str, req: list[str] = Body(...)):
 
 # Prepend song/s to user's queue
 @UserRouter.post(
-    "/{username}/prepend_queue",
+    "/{username}/queue/prepend",
     response_description="Song/s prepended to the user's queue",
 )
 async def prepend_queue_data(username: str, req: list[str] = Body(...)):
@@ -151,20 +152,20 @@ async def prepend_queue_data(username: str, req: list[str] = Body(...)):
 
 # Pull song/s from user's queue
 @UserRouter.post(
-    "/{username}/pull_queue",
+    "/{username}/queue/pull",
     response_description="Song/s pulled from user's queue",
 )
-async def pull_queue_data(username: str, req: list[str] = Body(...)):
+async def pull_queue_data(username: str, req: list[int] = Body(...)):
     await pull_queue(username, req)
     return ResponseModel(
-        "Song/s with IDs: {0} deleted from queue of user {1}".format(req, username),
-        "Song/s deleted succesfully from user's queue",
+        "Song/s with indexes: {0} pulled from queue of user {1}".format(req, username),
+        "Song/s pulled succesfully from user's queue",
     )
 
 
 # Clear queue of the user
 @UserRouter.delete(
-    "/{username}/clear_queue", response_description="User's queue cleared"
+    "/{username}/queue/clear", response_description="User's queue cleared"
 )
 async def clear_queue_data(username: str):
     await clear_queue(username)
@@ -182,13 +183,30 @@ async def get_queue_data(username: str):
     return ResponseModel(queue, "Queue of the user retrieved successfully")
 
 
+# Get all songs from user's queue
+@UserRouter.get("/{username}/queue/songs", response_description="Queue songs retrieved")
+async def get_users_queue_songs(username: str):
+    songs = await retrieve_queue_songs(username)
+    if songs:
+        songs_with_index = []
+        index = 0
+        for song in songs:
+            song = {"index": index, **song}
+            index += 1
+            songs_with_index.append(song)
+        return ResponseModel(songs_with_index, "All queue songs retrieved successfully")
+    return ResponseModel(songs, "Empty list returned")
+
+
 # Get all user's playlists
 @UserRouter.get(
     "/{username}/playlists", response_description="User's playlists retrieved"
 )
 async def get_users_playlists(username: str):
     playlists = await retrieve_users_playlists(username)
-    return ResponseModel(playlists, "Playlists retrieved successfully")
+    if playlists:
+        return ResponseModel(playlists, "Playlists retrieved successfully")
+    return ResponseModel(playlists, "Empty list returned")
 
 
 # Get all user's search requests
@@ -197,7 +215,9 @@ async def get_users_playlists(username: str):
 )
 async def get_users_searches(username: str):
     searches = await retrieve_user_searches(username)
-    return ResponseModel(searches, "Search requests retrieved successfully")
+    if searches:
+        return ResponseModel(searches, "Search requests retrieved successfully")
+    return ResponseModel(searches, "Empty list returned")
 
 
 # Get all user's listenings
@@ -206,7 +226,9 @@ async def get_users_searches(username: str):
 )
 async def get_users_listenings(username: str):
     listenings = await retrieve_user_listenings(username)
-    return ResponseModel(listenings, "Listenings retrieved successfully")
+    if listenings:
+        return ResponseModel(listenings, "Listenings retrieved successfully")
+    return ResponseModel(listenings, "Empty list returned")
 
 
 # Get all user's library playlists
@@ -216,7 +238,9 @@ async def get_users_listenings(username: str):
 )
 async def get_users_library_playlists(username: str):
     playlists = await retrieve_library_playlists(username)
-    return ResponseModel(playlists, "Library playlists retrieved successfully")
+    if playlists:
+        return ResponseModel(playlists, "Library playlists retrieved successfully")
+    return ResponseModel(playlists, "Empty list returned")
 
 
 # Get all user's library albums
@@ -226,7 +250,9 @@ async def get_users_library_playlists(username: str):
 )
 async def get_users_library_albums(username: str):
     albums = await retrieve_library_albums(username)
-    return ResponseModel(albums, "Library albums retrieved successfully")
+    if albums:
+        return ResponseModel(albums, "Library albums retrieved successfully")
+    return ResponseModel(albums, "Empty list returned")
 
 
 # Get all user's library artists
@@ -236,7 +262,9 @@ async def get_users_library_albums(username: str):
 )
 async def get_users_library_artists(username: str):
     artists = await retrieve_library_artists(username)
-    return ResponseModel(artists, "Library artists retrieved successfully")
+    if artists:
+        return ResponseModel(artists, "Library artists retrieved successfully")
+    return ResponseModel(artists, "Empty list returned")
 
 
 # Get all user's library songs
@@ -246,4 +274,6 @@ async def get_users_library_artists(username: str):
 )
 async def get_users_library_songs(username: str):
     songs = await retrieve_library_songs(username)
-    return ResponseModel(songs, "Library playlists retrieved successfully")
+    if songs:
+        return ResponseModel(songs, "Library playlists retrieved successfully")
+    return ResponseModel(songs, "Empty list returned")
