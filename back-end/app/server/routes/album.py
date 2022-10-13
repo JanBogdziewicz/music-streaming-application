@@ -38,7 +38,9 @@ async def get_album_data(id):
 async def update_album_data(id: str, req: UpdateAlbumModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_album = await update_album(id, req)
-    return ResponseModel(updated_album, "Album with ID: {0} update is successful".format(id))
+    return ResponseModel(
+        updated_album, "Album with ID: {0} update is successful".format(id)
+    )
 
 
 # Delete a album with a matching ID
@@ -51,9 +53,11 @@ async def delete_album_data(id: str):
 
 
 # Get all songs of an album
-@AlbumRouter.get("/{id}/songs", response_description="album songs retrieved sucessfully")
+@AlbumRouter.get(
+    "/{id}/songs", response_description="album songs retrieved sucessfully"
+)
 async def get_album_songs(id: str):
-    songs = await retreive_album_songs(id)
+    songs = await retrieve_album_songs(id)
     if songs:
         return ResponseModel(songs, "All album songs retrieved successfully")
     return ResponseModel(songs, "Empty list returned")

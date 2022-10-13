@@ -14,7 +14,7 @@ def artist_helper(artist) -> dict:
         "name": artist["name"],
         "join_date": artist["join_date"],
         "bio": artist["bio"],
-        "logo_path": artist["logo_path"]
+        "logo_path": artist["logo_path"],
     }
 
 
@@ -31,7 +31,7 @@ async def add_artist(artist_data: dict) -> dict:
     artist = await artists_collection.insert_one(artist_data)
     new_artist = await artists_collection.find_one({"_id": artist.inserted_id})
     return artist_helper(new_artist)
-    
+
 
 # Retrieve a artist with a matching ID
 async def retrieve_artist(id: str):
@@ -43,7 +43,9 @@ async def retrieve_artist(id: str):
 
 # Update a artist with a matching ID
 async def update_artist(id: str, data: dict):
-    update_status = await artists_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    update_status = await artists_collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": data}
+    )
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="Artist not found")
     return artist_helper(await artists_collection.find_one({"_id": ObjectId(id)}))
@@ -56,10 +58,11 @@ async def delete_artist(id: str):
         raise HTTPException(status_code=404, detail="artist not found")
 
 
-# Retreive all albums of an artist
-async def retreive_artist_albums(id: str):
+# Retrieve all albums of an artist
+async def retrieve_artist_albums(id: str):
     artist = await artists_collection.find_one({"_id": ObjectId(id)})
-    if not artist: raise HTTPException(status_code=404, detail="artist not found")
+    if not artist:
+        raise HTTPException(status_code=404, detail="artist not found")
     albums = []
     async for album in albums_collection.find({"artist": artist["name"]}):
         albums.append(album_helper(album))

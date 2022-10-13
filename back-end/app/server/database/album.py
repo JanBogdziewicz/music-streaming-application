@@ -17,7 +17,7 @@ def album_helper(album) -> dict:
         "album_type": album["album_type"],
         "genres": album["genres"],
         "artist": album["artist"],
-        "cover_path": album["cover_path"]
+        "cover_path": album["cover_path"],
     }
 
 
@@ -42,12 +42,13 @@ async def retrieve_album(id: str):
     if not album:
         raise HTTPException(status_code=404, detail="album not found")
     return album_helper(album)
-        
 
 
 # Update a album with a matching ID
 async def update_album(id: str, data: dict):
-    update_status = await albums_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    update_status = await albums_collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": data}
+    )
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="album not found")
     return album_helper(await albums_collection.find_one({"_id": ObjectId(id)}))
@@ -60,14 +61,14 @@ async def delete_album(id: str):
         raise HTTPException(status_code=404, detail="album not found")
 
 
-# Retreive all songs of an album
-async def retreive_album_songs(id: str):
+# Retrieve all songs of an album
+async def retrieve_album_songs(id: str):
     album = await albums_collection.find_one({"_id": ObjectId(id)})
-    if not album: raise HTTPException(status_code=404, detail="album not found")
+    if not album:
+        raise HTTPException(status_code=404, detail="album not found")
     songs = []
-    async for song in songs_collection.find({
-        "artist": album["artist"], 
-        "album": album["name"]
-    }):
+    async for song in songs_collection.find(
+        {"artist": album["artist"], "album": album["name"]}
+    ):
         songs.append(song_helper(song))
     return songs

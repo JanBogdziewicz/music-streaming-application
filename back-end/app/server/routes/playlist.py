@@ -38,36 +38,45 @@ async def get_playlist_data(id):
 async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_playlist = await update_playlist(id, req)
-    return ResponseModel(updated_playlist, "playlist with ID: {0} update is successful".format(id))
+    return ResponseModel(
+        updated_playlist, "playlist with ID: {0} update is successful".format(id)
+    )
 
 
 # Delete a playlist with a matching ID
-@PlaylistRouter.delete("/{id}", response_description="playlist deleted from the database")
+@PlaylistRouter.delete(
+    "/{id}", response_description="playlist deleted from the database"
+)
 async def delete_playlist_data(id: str):
     await delete_playlist(id)
     return ResponseModel(
-            "playlist with ID: {0} removed".format(id), "playlist deleted successfully"
-        )
+        "playlist with ID: {0} removed".format(id), "playlist deleted successfully"
+    )
+
 
 # Get all songs of an playlist
-@PlaylistRouter.get("/{id}/songs", response_description="playlist songs retrieved sucessfully")
+@PlaylistRouter.get(
+    "/{id}/songs", response_description="playlist songs retrieved sucessfully"
+)
 async def get_playlist_songs(id: str):
-    songs = await retreive_playlist_songs(id)
+    songs = await retrieve_playlist_songs(id)
     if songs:
         songs_with_index = []
         index = 0
         for song in songs:
-            song = {
-                'index': index,
-                **song
-            }
-            index+=1
+            song = {"index": index, **song}
+            index += 1
             songs_with_index.append(song)
-        return ResponseModel(songs_with_index, "All playlist songs retrieved successfully")
+        return ResponseModel(
+            songs_with_index, "All playlist songs retrieved successfully"
+        )
     return ResponseModel(songs, "Empty list returned")
 
+
 # Add song to playlist
-@PlaylistRouter.patch("/{playlist_id}/songs/{song_id}", response_description="songs added sucessfully")
+@PlaylistRouter.patch(
+    "/{playlist_id}/songs/{song_id}", response_description="songs added sucessfully"
+)
 async def add_song_to_playlist(playlist_id: str, song_id: str):
     song = await append_song_to_playlist(playlist_id, song_id)
     return ResponseModel(song, "Song successfully added to the playlist")

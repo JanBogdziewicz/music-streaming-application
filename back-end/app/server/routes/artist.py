@@ -38,7 +38,9 @@ async def get_artist_data(id):
 async def update_artist_data(id: str, req: UpdateArtistModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_artist = await update_artist(id, req)
-    return ResponseModel(updated_artist, "Artist with ID: {0} update is successful".format(id))
+    return ResponseModel(
+        updated_artist, "Artist with ID: {0} update is successful".format(id)
+    )
 
 
 # Delete a artist with a matching ID
@@ -49,10 +51,13 @@ async def delete_artist_data(id: str):
         "artist with ID: {0} removed".format(id), "artist deleted successfully"
     )
 
+
 # Get all albums of an artist
-@ArtistRouter.get("/{id}/albums", response_description="artist albums retreived sucessfully")
+@ArtistRouter.get(
+    "/{id}/albums", response_description="artist albums retrieved sucessfully"
+)
 async def get_album_songs(id: str):
-    albums = await retreive_artist_albums(id)
+    albums = await retrieve_artist_albums(id)
     if albums:
         return ResponseModel(albums, "All artist albums retrieved successfully")
     return ResponseModel(albums, "Empty list returned")

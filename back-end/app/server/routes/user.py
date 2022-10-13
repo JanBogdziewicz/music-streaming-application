@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from server.database.library import retrieve_library
 
 from server.database.search import retrieve_user_searches
-from server.database.playlist import retreive_users_playlists
+from server.database.playlist import retrieve_users_playlists
 from server.database.listening import retrieve_user_listenings
 from server.database.library import (
     retrieve_library_playlists,
@@ -184,66 +184,66 @@ async def get_queue_data(username: str):
 
 # Get all user's playlists
 @UserRouter.get(
-    "/{username}/playlists", response_description="User's playlists retreived"
+    "/{username}/playlists", response_description="User's playlists retrieved"
 )
 async def get_users_playlists(username: str):
-    playlists = await retreive_users_playlists(username)
-    return ResponseModel(playlists, "Playlists retreived successfully")
+    playlists = await retrieve_users_playlists(username)
+    return ResponseModel(playlists, "Playlists retrieved successfully")
 
 
 # Get all user's search requests
 @UserRouter.get(
-    "/{username}/searches", response_description="User's search requests retreived"
+    "/{username}/searches", response_description="User's search requests retrieved"
 )
 async def get_users_searches(username: str):
     searches = await retrieve_user_searches(username)
-    return ResponseModel(searches, "Search requests retreived successfully")
+    return ResponseModel(searches, "Search requests retrieved successfully")
 
 
 # Get all user's listenings
 @UserRouter.get(
-    "/{username}/listenings", response_description="User's listenings retreived"
+    "/{username}/listenings", response_description="User's listenings retrieved"
 )
 async def get_users_listenings(username: str):
     listenings = await retrieve_user_listenings(username)
-    return ResponseModel(listenings, "Listenings retreived successfully")
+    return ResponseModel(listenings, "Listenings retrieved successfully")
 
 
 # Get all user's library playlists
 @UserRouter.get(
     "/{username}/library/playlists",
-    response_description="User's library playlists retreived",
+    response_description="User's library playlists retrieved",
 )
 async def get_users_library_playlists(username: str):
     playlists = await retrieve_library_playlists(username)
-    return ResponseModel(playlists, "Library playlists retreived successfully")
+    return ResponseModel(playlists, "Library playlists retrieved successfully")
 
 
 # Get all user's library albums
 @UserRouter.get(
     "/{username}/library/albums",
-    response_description="User's library albums retreived",
+    response_description="User's library albums retrieved",
 )
 async def get_users_library_albums(username: str):
     albums = await retrieve_library_albums(username)
-    return ResponseModel(albums, "Library albums retreived successfully")
+    return ResponseModel(albums, "Library albums retrieved successfully")
 
 
 # Get all user's library artists
 @UserRouter.get(
     "/{username}/library/artists",
-    response_description="User's library artists retreived",
+    response_description="User's library artists retrieved",
 )
 async def get_users_library_artists(username: str):
     artists = await retrieve_library_artists(username)
-    return ResponseModel(artists, "Library artists retreived successfully")
+    return ResponseModel(artists, "Library artists retrieved successfully")
 
 
 # Get all user's library songs
 @UserRouter.get(
     "/{username}/library/songs",
-    response_description="User's library songs retreived",
+    response_description="User's library songs retrieved",
 )
 async def get_users_library_songs(username: str):
     songs = await retrieve_library_songs(username)
-    return ResponseModel(songs, "Library playlists retreived successfully")
+    return ResponseModel(songs, "Library playlists retrieved successfully")
