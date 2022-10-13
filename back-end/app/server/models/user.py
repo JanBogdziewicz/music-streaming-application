@@ -1,5 +1,4 @@
 from datetime import date, datetime
-from server.models.object_id import PyObjectId
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel, Field, validator
 
@@ -9,8 +8,8 @@ class UserSchema(BaseModel):
     birth_date: date = Field(...)
     join_date: datetime = Field(default_factory=datetime.now)
     country: str = Field(...)
-    queue: list[PyObjectId] = Field([])
-    library: PyObjectId = Field(default_factory=PyObjectId)
+    queue: list[str] = Field([])
+    library: str = Field("")
 
     @validator("birth_date")
     def ensure_birth_date(cls, v):
@@ -52,7 +51,7 @@ class UpdateUserModel(BaseModel):
 
 class UpdateLibraryModel(BaseModel):
     collection_name: str = Field(...)
-    item_ids: list[PyObjectId] = Field(..., unique_items=True)
+    item_ids: list[str] = Field(..., unique_items=True)
 
     @validator("collection_name")
     def ensure_collection_name(cls, v):

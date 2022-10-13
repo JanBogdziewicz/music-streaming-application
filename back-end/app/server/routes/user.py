@@ -52,14 +52,14 @@ async def get_users():
     return ResponseModel(users, "Empty list returned")
 
 
-# Get a user with a matching ID
+# Get a user with a matching username
 @UserRouter.get("/{username}", response_description="User retrieved")
 async def get_user_data(username: str):
     user = await retrieve_user(username)
     return ResponseModel(user, "User retrieved successfully")
 
 
-# Update a user with a matching ID
+# Update a user with a matching username
 @UserRouter.put("/{username}")
 async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
     req = jsonable_encoder(req)
@@ -70,10 +70,10 @@ async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
     )
 
 
-# Delete a user with a matching ID
+# Delete a user with a matching username
 @UserRouter.delete("/{username}", response_description="User deleted from the database")
 async def delete_user_data(username: str):
-    await delete_user(id)
+    await delete_user(username)
     return ResponseModel(
         "User {0} removed".format(username), "User deleted successfully"
     )

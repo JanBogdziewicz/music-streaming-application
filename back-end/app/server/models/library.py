@@ -1,15 +1,11 @@
-from server.models.object_id import PyObjectId
 from pydantic import BaseModel, Field
 
 
 class LibrarySchema(BaseModel):
-    playlists: list[PyObjectId] = Field([])
-    artists: list[PyObjectId] = Field([])
-    albums: list[PyObjectId] = Field([])
-    songs: list[PyObjectId] = Field([])
-
-    class Config:
-        arbitrary_types_allowed = True
+    playlists: list[str] = Field([])
+    artists: list[str] = Field([])
+    albums: list[str] = Field([])
+    songs: list[str] = Field([])
 
 
 def ResponseModel(data, message):

@@ -73,7 +73,7 @@ async def delete_user(username: str):
 async def append_library(username: str, collection: str, ids: list[str]):
     user = await users_collection.find_one({"username": username})
     if user:
-        append_items_library(user["library"], collection, ids)
+        await append_items_library(user["library"], collection, ids)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -82,7 +82,7 @@ async def append_library(username: str, collection: str, ids: list[str]):
 async def pull_library(username: str, collection: str, ids: list[str]):
     user = await users_collection.find_one({"username": username})
     if user:
-        pull_items_library(user["library"], collection, ids)
+        await pull_items_library(user["library"], collection, ids)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 

@@ -78,7 +78,7 @@ async def append_items_library(id: str, collection: str, ids: list[str]):
 
 # Retrieve all library playlists
 async def retrieve_library_playlists(id: str):
-    library = library_helper(await libraries_collection.find_one({"_id": ObjectId(id)}))
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     playlists = []
@@ -91,7 +91,7 @@ async def retrieve_library_playlists(id: str):
 
 # Retrieve all library artists
 async def retrieve_library_artists(id: str):
-    library = library_helper(await libraries_collection.find_one({"_id": ObjectId(id)}))
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     artists = []
@@ -102,7 +102,7 @@ async def retrieve_library_artists(id: str):
 
 # Retrieve all library albums
 async def retrieve_library_albums(id: str):
-    library = library_helper(await libraries_collection.find_one({"_id": ObjectId(id)}))
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     albums = []
@@ -113,7 +113,7 @@ async def retrieve_library_albums(id: str):
 
 # Retrieve all library songs
 async def retrieve_library_songs(id: str):
-    library = library_helper(await libraries_collection.find_one({"_id": ObjectId(id)}))
+    library = await libraries_collection.find_one({"_id": ObjectId(id)})
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     songs = []

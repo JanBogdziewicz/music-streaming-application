@@ -27,9 +27,8 @@ async def retrieve_listenings():
 
 
 # Add a new listening to the database
-async def add_listening(listening_data: ListeningSchema) -> dict:
-    new_listening = jsonable_encoder(listening_data)
-    listening = await listenings_collection.insert_one(new_listening)
+async def add_listening(listening_data: dict) -> dict:
+    listening = await listenings_collection.insert_one(listening_data)
     new_listening = await listenings_collection.find_one({"_id": listening.inserted_id})
     return listening_helper(new_listening)
 
