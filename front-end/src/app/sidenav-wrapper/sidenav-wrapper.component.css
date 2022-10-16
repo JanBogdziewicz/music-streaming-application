@@ -1,0 +1,38 @@
+mat-sidenav-container {
+  height: 100vh;
+}
+mat-sidenav-container mat-sidenav mat-nav-list .menu-item {
+  margin-left: 8px;
+}
+mat-sidenav-container mat-sidenav mat-nav-list .chevron-button {
+  transition: 300ms ease-in-out;
+  transform: rotate(0deg);
+}
+mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
+  transform: rotate(180deg);
+}
+
+.logo {
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.avatar_div {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2vw;
+}
+
+.avatar {
+  transform: scale(2);
+}

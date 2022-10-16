@@ -1,0 +1,53 @@
+<mat-sidenav-container autosize>
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    opened="isExpanded"
+    (keydown.escape)="isExpanded = false"
+    disableClose
+    role="navigation"
+  >
+    <mat-nav-list>
+      <div class="logo" [routerLink]="'home'">
+        <mat-icon mat-list-icon class="logo"> music_note </mat-icon>
+      </div>
+
+      <mat-list-item (click)="isExpanded = !isExpanded">
+        <mat-icon
+          mat-list-icon
+          class="chevron-button"
+          [ngClass]="{ rotated: isExpanded }"
+        >
+          chevron_right
+        </mat-icon>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'home'">
+        <mat-icon mat-list-icon>home</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Home</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'explore'">
+        <mat-icon mat-list-icon>explore</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">Explore</span>
+      </mat-list-item>
+
+      <mat-list-item [routerLink]="'user'">
+        <mat-icon mat-list-icon>account_circle_icon</mat-icon>
+        <span *ngIf="isExpanded" class="menu-item">User</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content role="main">
+    <mat-toolbar>
+      <span class="example-spacer"></span>
+      <mat-list-item [routerLink]="'user'">
+        <div class="avatar_div">
+          <mat-icon mat-list-icon class="avatar">account_circle_icon</mat-icon>
+        </div>
+      </mat-list-item>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

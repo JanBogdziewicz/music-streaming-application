@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetDemoService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getData() {
-    return this.http.get('https://api.publicapis.org/entries');
+    return this.http.get('http://127.0.0.1:8090/users/');
   }
 }
