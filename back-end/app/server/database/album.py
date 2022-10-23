@@ -12,7 +12,7 @@ def album_helper(album) -> dict:
     return {
         "id": str(album["_id"]),
         "name": album["name"],
-        "relase_date": album["release_date"],
+        "release_date": album["release_date"],
         "label": album["label"],
         "album_type": album["album_type"],
         "genres": album["genres"],
