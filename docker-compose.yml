@@ -17,6 +17,6 @@ services:
       - 27017:27017
     volumes:
       - ./data/mongo:/data/db
-    # environment:
-    #   - MONGO_INITDB_ROOT_USERNAME=music
-    #   - MONGO_INITDB_ROOT_PASSWORD=music
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=music
+      - MONGO_INITDB_ROOT_PASSWORD=music
