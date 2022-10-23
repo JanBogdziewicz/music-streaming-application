@@ -11,7 +11,11 @@ from server.routes.album import AlbumRouter
 from server.routes.playlist import PlaylistRouter
 from server.routes.listening import ListeningRouter
 
-from server.database.init import initialize_db_schema, initialize_db_data
+from server.database.init import (
+    initialize_db_schema,
+    initialize_db_data,
+    clear_database,
+)
 
 import logging
 
@@ -53,5 +57,6 @@ async def read_root():
 
 @app.on_event("startup")
 async def startup():
-    await initialize_db_schema()
+    clear_database()
     await initialize_db_data()
+    await initialize_db_schema()

@@ -1,12 +1,9 @@
 from bson.objectid import ObjectId
 from server.models.listening import ListeningSchema
-from server.config import database
+from server.config import listenings_collection
 from fastapi import HTTPException
-from fastapi.encoders import jsonable_encoder
-from pymongo.collection import Collection
 from server.database.song import song_helper
 
-listenings_collection: Collection = database.get_collection("listenings")
 
 # helper
 def listening_helper(listening) -> dict:

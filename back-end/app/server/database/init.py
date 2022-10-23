@@ -1,7 +1,17 @@
 from datetime import datetime
-from server.config import database
-from server.init_config import *
 from pymongo.collection import Collection
+from server.config import (
+    database,
+    albums_collection,
+    artists_collection,
+    libraries_collection,
+    listenings_collection,
+    playlists_collection,
+    searches_collection,
+    songs_collection,
+    users_collection,
+)
+from server.init_config import *
 import pymongo
 import logging
 from fastapi.encoders import jsonable_encoder
@@ -15,42 +25,39 @@ from server.database.song import song_helper
 from server.database.artist import artist_helper
 from server.models.library import LibrarySchema
 
-artists_collection: Collection = database.get_collection("artists")
-albums_collection: Collection = database.get_collection("albums")
-songs_collection: Collection = database.get_collection("songs")
-users_collection: Collection = database.get_collection("users")
-libraries_collection: Collection = database.get_collection("libraries")
-playlists_collection: Collection = database.get_collection("playlists")
-listenings_collection: Collection = database.get_collection("listenings")
-
 logger = logging.getLogger(__name__)
 
 
-async def create_unique_constraint(collection_name: str, fields: list[str]):
-    if collection_name in await database.list_collection_names():
-        logger.info("collection already exists")
-        return
+def clear_database():
+    database.drop_collection("artists")
+    database.drop_collection("albums")
+    database.drop_collection("libraries")
+    database.drop_collection("listenings")
+    database.drop_collection("playlists")
+    database.drop_collection("searches")
+    database.drop_collection("songs")
+    database.drop_collection("users")
 
+
+async def create_unique_constraint(collection: Collection, fields: list[str]):
     logger.info("creating index")
-    collection: Collection = database.get_collection(collection_name)
     fields_array = list(map(lambda x: (x, pymongo.ASCENDING), fields))
     collection.create_index(fields_array, unique=True)
 
 
 async def initialize_db_schema():
-    await create_unique_constraint("songs", ["name", "artist"])
-    await create_unique_constraint("artists", ["name"])
-    await create_unique_constraint("albums", ["name", "artist"])
-    await create_unique_constraint("playlists", ["name", "user"])
-    await create_unique_constraint("users", ["username"])
-    await create_unique_constraint("search", ["user", "timestamp"])
+    await create_unique_constraint(songs_collection, ["name", "artist"])
+    await create_unique_constraint(artists_collection, ["name"])
+    await create_unique_constraint(albums_collection, ["name", "artist"])
+    await create_unique_constraint(playlists_collection, ["name", "user"])
+    await create_unique_constraint(users_collection, ["username"])
+    await create_unique_constraint(searches_collection, ["user", "timestamp"])
     # still have to figure out time
     # await create_unique_constraint("time", [])
 
 
 async def init_artists(fake: Faker, artist_number: int):
     artist_ids = []
-    database.drop_collection("artists")
     for _ in range(artist_number):
         artist_data = {
             "name": fake.name(),
@@ -79,7 +86,6 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
         "Rock",
     ]
     album_ids = []
-    database.drop_collection("albums")
     for artist_id in artist_ids:
         artist_albums_number = random.randint(
             ARTIST_ALBUMS_NR_MIN, ARTIST_ALBUMS_NR_MAX
@@ -101,7 +107,6 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
 
 async def init_songs(fake: Faker, album_ids: list[str]):
     song_ids = []
-    database.drop_collection("songs")
     for album_id in album_ids:
         album = album_helper(
             await albums_collection.find_one({"_id": ObjectId(album_id)})
@@ -130,8 +135,6 @@ async def init_songs(fake: Faker, album_ids: list[str]):
 
 async def init_users(fake: Faker, user_number: int):
     user_ids = []
-    database.drop_collection("users")
-    database.drop_collection("libraries")
     for _ in range(user_number):
         new_library = jsonable_encoder(LibrarySchema())
         library = await libraries_collection.insert_one(new_library)
@@ -155,7 +158,6 @@ async def init_users(fake: Faker, user_number: int):
 
 async def init_playlists(fake: Faker, user_ids: list[str], song_ids: list[str]):
     playlist_ids = []
-    database.drop_collection("playlists")
     for user_id in user_ids:
         user_playlist_ids = []
         user = user_helper(await users_collection.find_one({"_id": ObjectId(user_id)}))
@@ -282,7 +284,6 @@ async def init_libraries(
 
 
 async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str]):
-    database.drop_collection("listenings")
     for song_id in song_ids:
         song = await songs_collection.find_one({"_id": ObjectId(song_id)})
         artist = artist_helper(

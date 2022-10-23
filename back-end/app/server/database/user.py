@@ -1,5 +1,4 @@
 from bson.objectid import ObjectId
-from pymongo.collection import Collection
 from fastapi import HTTPException
 from server.database.library import (
     add_library,
@@ -7,11 +6,9 @@ from server.database.library import (
     pull_items_library,
     append_items_library,
 )
-from server.config import database
-from server.database.song import song_helper, songs_collection
+from server.config import users_collection, songs_collection
+from server.database.song import song_helper
 
-
-users_collection: Collection = database.get_collection("users")
 
 # helper
 def user_helper(user) -> dict:

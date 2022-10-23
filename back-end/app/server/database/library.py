@@ -1,17 +1,21 @@
 from bson.objectid import ObjectId
 from server.models.library import LibrarySchema
-from server.config import database
+from server.config import (
+    playlists_collection,
+    artists_collection,
+    albums_collection,
+    songs_collection,
+    libraries_collection,
+)
 from fastapi.encoders import jsonable_encoder
 from fastapi import HTTPException
 from pymongo.collection import Collection
 
-from server.database.playlist import playlist_helper, playlists_collection
-from server.database.artist import artist_helper, artists_collection
-from server.database.album import album_helper, albums_collection
-from server.database.song import song_helper, songs_collection
+from server.database.playlist import playlist_helper
+from server.database.artist import artist_helper
+from server.database.album import album_helper
+from server.database.song import song_helper
 
-
-libraries_collection: Collection = database.get_collection("libraries")
 
 # helper
 def library_helper(library) -> dict:

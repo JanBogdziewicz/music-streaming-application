@@ -1,9 +1,7 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
-from server.config import database
-from pymongo.collection import Collection
+from server.config import songs_collection
 
-songs_collection: Collection = database.get_collection("songs")
 
 # helper
 def song_helper(song) -> dict:

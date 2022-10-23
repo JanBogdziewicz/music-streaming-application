@@ -1,9 +1,7 @@
 from bson.objectid import ObjectId
-from server.config import database
-from pymongo.collection import Collection
+from server.config import searches_collection
 from fastapi import HTTPException
 
-searches_collection: Collection = database.get_collection("searches")
 
 # helper
 def search_helper(search) -> dict:
