@@ -15,7 +15,7 @@ def song_helper(song) -> dict:
         "album": song["album"],
         "length": song["length"],
         "release_date": song["release_date"],
-        "listenings": song["listenings"]
+        "listenings": song["listenings"],
     }
 
 
@@ -44,7 +44,9 @@ async def retrieve_song(id: str):
 
 # Update a song with a matching ID
 async def update_song(id: str, data: dict):
-    update_status = await songs_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+    update_status = await songs_collection.update_one(
+        {"_id": ObjectId(id)}, {"$set": data}
+    )
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="Song not found")
     return song_helper(await songs_collection.find_one({"_id": ObjectId(id)}))
