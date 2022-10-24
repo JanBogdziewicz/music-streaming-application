@@ -228,7 +228,6 @@ async def init_libraries(
 async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str]):
     for song_id in song_ids:
         song = await retrieve_song(song_id)
-        artist = await retrieve_artist(song["artist"])
         listening_number = 0
         for user_id in user_ids:
             user = await retrieve_user(user_id)
@@ -242,7 +241,6 @@ async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str])
                         start_date=max(
                             user["join_date"],
                             datetime.strptime(song["release_date"], "%Y-%m-%d"),
-                            artist["join_date"],
                         )
                     ),
                     "user": user_id,
