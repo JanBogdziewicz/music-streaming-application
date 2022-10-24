@@ -10,7 +10,6 @@ from server.database.song import (
 )
 
 from server.models.song import (
-    ErrorResponseModel,
     ResponseModel,
     SongSchema,
     UpdateSongModel,
