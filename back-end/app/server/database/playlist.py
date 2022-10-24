@@ -60,8 +60,10 @@ async def retrieve_playlist_songs(id: str):
     if not playlist:
         raise HTTPException(status_code=404, detail="playlist not found")
     songs = []
-    async for song in songs_collection.find({"_id": {"$in": playlist["songs"]}}):
-        songs.append(song_helper(song))
+    for id in playlist["songs"]:
+        song = await songs_collection.find_one({"_id": id})
+        if song:
+            songs.append(song_helper(song))
     return songs
 
 
