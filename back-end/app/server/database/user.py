@@ -34,7 +34,7 @@ async def retrieve_users():
 # Add a new user to the database
 async def add_user(user_data: dict) -> dict:
     library = await add_library()
-    user_data["library"] = library["_id"]
+    user_data["library"] = library["id"]
     user = await users_collection.insert_one(user_data)
     new_user = await users_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)

@@ -41,7 +41,7 @@ async def add_library() -> dict:
     new_library = jsonable_encoder(LibrarySchema())
     library = await libraries_collection.insert_one(new_library)
     new_library = await libraries_collection.find_one({"_id": library.inserted_id})
-    return new_library
+    return library_helper(new_library)
 
 
 # Retrieve a library with a matching ID
