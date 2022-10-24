@@ -74,6 +74,7 @@ async def init_artists(fake: Faker, artist_number: int):
 async def init_albums(fake: Faker, artist_ids: list[str]):
     album_ids = []
     for artist_id in artist_ids:
+        artist = await retrieve_artist(artist_id)
         artist_albums_number = random.randint(
             ARTIST_ALBUMS_NR_MIN, ARTIST_ALBUMS_NR_MAX
         )
@@ -84,8 +85,8 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
                 "label": fake.word(ext_word_list=ALBUM_LABELS),
                 "album_type": fake.word(ext_word_list=ALBUM_TYPES),
                 "genres": [fake.word(ext_word_list=ALBUM_GENRES)],
-                "artist": artist_id,
-                "cover_path": "temp",
+                "artist": artist["name"],
+                "cover_path": None,
             }
             album = await add_album(album_data)
             album_ids.append(album["id"])
@@ -108,7 +109,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
                 "name": fake.word(),
                 "genres": album["genres"],
                 "artist": album["artist"],
-                "album": album["id"],
+                "album": album["name"],
                 "length": random.randint(SONG_LENGTH_MIN, SONG_LENGTH_MAX),
                 "release_date": album["release_date"],
                 "listenings": 0,
