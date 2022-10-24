@@ -9,7 +9,7 @@ from server.database.song import song_helper
 def listening_helper(listening) -> dict:
     return {
         "id": str(listening["_id"]),
-        "song": song_helper(listening["song"]),
+        "song": listening["song"],
         "time": listening["time"],
         "user": listening["user"],
     }

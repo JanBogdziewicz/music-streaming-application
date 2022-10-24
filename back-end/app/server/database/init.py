@@ -14,16 +14,17 @@ from server.config import (
 from server.init_config import *
 import pymongo
 import logging
-from fastapi.encoders import jsonable_encoder
 from faker import Faker
-from bson.objectid import ObjectId
 import random
 from dateutil.relativedelta import relativedelta
-from server.database.album import album_helper
-from server.database.user import user_helper
-from server.database.song import song_helper
-from server.database.artist import artist_helper
-from server.models.library import LibrarySchema
+
+from server.database.album import add_album, retrieve_album
+from server.database.user import add_user, retrieve_user
+from server.database.song import add_song, retrieve_song, update_song
+from server.database.artist import add_artist, retrieve_artist
+from server.database.library import append_items_library
+from server.database.listening import add_listening
+from server.database.playlist import add_playlist
 
 logger = logging.getLogger(__name__)
 
@@ -65,26 +66,12 @@ async def init_artists(fake: Faker, artist_number: int):
             "bio": fake.sentence(nb_words=5),
             "logo_path": "temp",
         }
-        artist = await artists_collection.insert_one(artist_data)
-        artist_ids.append(str(artist.inserted_id))
+        artist = await add_artist(artist_data)
+        artist_ids.append(artist["id"])
     return artist_ids
 
 
 async def init_albums(fake: Faker, artist_ids: list[str]):
-    labels = ["Universal Music Group", "Sony Music", "Warner Music Group"]
-    album_types = ["SINGLE", "EXTENDED_PLAY", "LONGPLAY"]
-    genres = [
-        "Blues",
-        "Classical",
-        "Country",
-        "Disco",
-        "Hiphop",
-        "Jazz",
-        "Metal",
-        "Pop",
-        "Reggae",
-        "Rock",
-    ]
     album_ids = []
     for artist_id in artist_ids:
         artist_albums_number = random.randint(
@@ -94,23 +81,21 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
             album_data = {
                 "name": fake.word(),
                 "release_date": fake.date(),
-                "label": fake.word(ext_word_list=labels),
-                "album_type": fake.word(ext_word_list=album_types),
-                "genres": [fake.word(ext_word_list=genres)],
+                "label": fake.word(ext_word_list=ALBUM_LABELS),
+                "album_type": fake.word(ext_word_list=ALBUM_TYPES),
+                "genres": [fake.word(ext_word_list=ALBUM_GENRES)],
                 "artist": artist_id,
                 "cover_path": "temp",
             }
-            album = await albums_collection.insert_one(album_data)
-            album_ids.append(str(album.inserted_id))
+            album = await add_album(album_data)
+            album_ids.append(album["id"])
     return album_ids
 
 
 async def init_songs(fake: Faker, album_ids: list[str]):
     song_ids = []
     for album_id in album_ids:
-        album = album_helper(
-            await albums_collection.find_one({"_id": ObjectId(album_id)})
-        )
+        album = await retrieve_album(album_id)
         match album["album_type"]:
             case "SINGLE":
                 album_song_number = SINGLE_SONG_NR
@@ -128,16 +113,14 @@ async def init_songs(fake: Faker, album_ids: list[str]):
                 "release_date": album["release_date"],
                 "listenings": 0,
             }
-            song = await songs_collection.insert_one(song_data)
-            song_ids.append(str(song.inserted_id))
+            song = await add_song(song_data)
+            song_ids.append(song["id"])
     return song_ids
 
 
 async def init_users(fake: Faker, user_number: int):
     user_ids = []
     for _ in range(user_number):
-        new_library = jsonable_encoder(LibrarySchema())
-        library = await libraries_collection.insert_one(new_library)
         birth_date = fake.date_of_birth(
             minimum_age=USER_AGE_MIN, maximum_age=USER_AGE_MAX
         )
@@ -149,10 +132,9 @@ async def init_users(fake: Faker, user_number: int):
             ),
             "country": fake.country(),
             "queue": [],
-            "library": str(library.inserted_id),
         }
-        user = await users_collection.insert_one(user_data)
-        user_ids.append(user.inserted_id)
+        user = await add_user(user_data)
+        user_ids.append(user["username"])
     return user_ids
 
 
@@ -160,7 +142,7 @@ async def init_playlists(fake: Faker, user_ids: list[str], song_ids: list[str]):
     playlist_ids = []
     for user_id in user_ids:
         user_playlist_ids = []
-        user = user_helper(await users_collection.find_one({"_id": ObjectId(user_id)}))
+        user = await retrieve_user(user_id)
         user_playlist_number = random.randint(
             USER_PLAYLIST_NR_MIN, USER_PLAYLIST_NR_MAX
         )
@@ -171,31 +153,35 @@ async def init_playlists(fake: Faker, user_ids: list[str], song_ids: list[str]):
             songs = random.sample(song_ids, playlist_song_number)
             length = 0
             for song_id in songs:
-                song = song_helper(
-                    await songs_collection.find_one({"_id": ObjectId(song_id)})
-                )
+                song = await retrieve_song(song_id)
                 length += song["length"]
             playlist_data = {
                 "name": fake.word(),
                 "creation_date": str(fake.date_between(start_date=user["join_date"])),
                 "songs": songs,
                 "length": length,
-                "user": user["username"],
+                "user": user_id,
             }
-            playlist = await playlists_collection.insert_one(playlist_data)
-            playlist_ids.append(str(playlist.inserted_id))
-            user_playlist_ids.append(playlist.inserted_id)
-        await libraries_collection.update_one(
-            {"_id": ObjectId(user["library"])},
-            {
-                "$addToSet": {
-                    "playlists": {
-                        "$each": list(map(lambda x: ObjectId(x), user_playlist_ids))
-                    }
-                }
-            },
-        )
+            playlist = await add_playlist(playlist_data)
+            playlist_ids.append(playlist["id"])
+            user_playlist_ids.append(playlist["id"])
+        await append_items_library(user["library"], "playlists", user_playlist_ids)
     return playlist_ids
+
+
+async def append_sample_items_library(
+    sample_min: int,
+    sample_max: int,
+    library_id: str,
+    collection_name: str,
+    item_ids: list[str],
+):
+    items_library_number = random.randint(sample_min, sample_max)
+    await append_items_library(
+        library_id,
+        collection_name,
+        random.sample(item_ids, items_library_number),
+    )
 
 
 async def init_libraries(
@@ -206,94 +192,45 @@ async def init_libraries(
     song_ids: list[str],
 ):
     for user_id in user_ids:
-        user = user_helper(await users_collection.find_one({"_id": ObjectId(user_id)}))
-        user_playlists_library_number = random.randint(
-            USER_PLAYLIST_LIBRARY_NR_MIN, USER_PLAYLIST_LIBRARY_NR_MAX
+        user = await retrieve_user(user_id)
+        library_id = user["library"]
+        await append_sample_items_library(
+            USER_PLAYLIST_LIBRARY_NR_MIN,
+            USER_PLAYLIST_LIBRARY_NR_MAX,
+            library_id,
+            "playlists",
+            playlist_ids,
         )
-        await libraries_collection.update_one(
-            {"_id": ObjectId(user["library"])},
-            {
-                "$addToSet": {
-                    "playlists": {
-                        "$each": list(
-                            map(
-                                lambda x: ObjectId(x),
-                                random.sample(
-                                    playlist_ids, user_playlists_library_number
-                                ),
-                            )
-                        )
-                    }
-                }
-            },
+        await append_sample_items_library(
+            USER_ARTIST_LIBRARY_NR_MIN,
+            USER_ARTIST_LIBRARY_NR_MAX,
+            library_id,
+            "artists",
+            artist_ids,
         )
-        user_artists_library_number = random.randint(
-            USER_ARTIST_LIBRARY_NR_MIN, USER_ARTIST_LIBRARY_NR_MAX
+        await append_sample_items_library(
+            USER_ALBUM_LIBRARY_NR_MIN,
+            USER_ALBUM_LIBRARY_NR_MAX,
+            library_id,
+            "albums",
+            album_ids,
         )
-        await libraries_collection.update_one(
-            {"_id": ObjectId(user["library"])},
-            {
-                "$addToSet": {
-                    "artists": {
-                        "$each": list(
-                            map(
-                                lambda x: ObjectId(x),
-                                random.sample(artist_ids, user_artists_library_number),
-                            )
-                        )
-                    }
-                }
-            },
-        )
-        user_albums_library_number = random.randint(
-            USER_ALBUM_LIBRARY_NR_MIN, USER_ALBUM_LIBRARY_NR_MAX
-        )
-        await libraries_collection.update_one(
-            {"_id": ObjectId(user["library"])},
-            {
-                "$addToSet": {
-                    "albums": {
-                        "$each": list(
-                            map(
-                                lambda x: ObjectId(x),
-                                random.sample(album_ids, user_albums_library_number),
-                            )
-                        )
-                    }
-                }
-            },
-        )
-        user_songs_library_number = random.randint(
-            USER_SONG_LIBRARY_NR_MIN, USER_SONG_LIBRARY_NR_MAX
-        )
-        await libraries_collection.update_one(
-            {"_id": ObjectId(user["library"])},
-            {
-                "$addToSet": {
-                    "songs": {
-                        "$each": list(
-                            map(
-                                lambda x: ObjectId(x),
-                                random.sample(song_ids, user_songs_library_number),
-                            )
-                        )
-                    }
-                }
-            },
+        await append_sample_items_library(
+            USER_SONG_LIBRARY_NR_MIN,
+            USER_SONG_LIBRARY_NR_MAX,
+            library_id,
+            "songs",
+            song_ids,
         )
 
 
 async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str]):
     for song_id in song_ids:
-        song = await songs_collection.find_one({"_id": ObjectId(song_id)})
-        artist = artist_helper(
-            await artists_collection.find_one({"_id": ObjectId(song["artist"])})
-        )
+        song = await retrieve_song(song_id)
+        artist = await retrieve_artist(song["artist"])
         listening_number = 0
         for user_id in user_ids:
-            user = user_helper(
-                await users_collection.find_one({"_id": ObjectId(user_id)})
-            )
+            user = await retrieve_user(user_id)
             user_song_listening_number = random.randint(
                 USER_SONG_LISTENING_NR_MIN, USER_SONG_LISTENING_NR_MAX
             )
@@ -307,13 +244,11 @@ async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str])
                             artist["join_date"],
                         )
                     ),
-                    "user": user["username"],
+                    "user": user_id,
                 }
-                await listenings_collection.insert_one(listening_data)
+                await add_listening(listening_data)
             listening_number += user_song_listening_number
-        await songs_collection.update_one(
-            {"_id": ObjectId(song_id)}, {"$set": {"listenings": listening_number}}
-        )
+        await update_song(song_id, {"listenings": listening_number})
 
 
 async def initialize_db_data():

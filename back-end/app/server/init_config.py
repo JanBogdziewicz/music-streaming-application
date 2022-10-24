@@ -18,6 +18,20 @@ ARTIST_NR = 5
 ARTIST_ALBUMS_NR_MIN = 1
 ARTIST_ALBUMS_NR_MAX = 3
 
+ALBUM_LABELS = ["Universal Music Group", "Sony Music", "Warner Music Group"]
+ALBUM_TYPES = ["SINGLE", "EXTENDED_PLAY", "LONGPLAY"]
+ALBUM_GENRES = [
+    "Blues",
+    "Classical",
+    "Country",
+    "Disco",
+    "Hiphop",
+    "Jazz",
+    "Metal",
+    "Pop",
+    "Reggae",
+    "Rock",
+]
 SINGLE_SONG_NR = 1
 EP_SONG_NR_MIN = 2
 EP_SONG_NR_MAX = 5
