@@ -2,10 +2,10 @@ from pydantic import BaseModel, Field
 
 
 class LibrarySchema(BaseModel):
-    playlists: list[str] = Field([])
-    artists: list[str] = Field([])
-    albums: list[str] = Field([])
-    songs: list[str] = Field([])
+    playlists: list[str] = Field([], unique_items=True)
+    artists: list[str] = Field([], unique_items=True)
+    albums: list[str] = Field([], unique_items=True)
+    songs: list[str] = Field([], unique_items=True)
 
 
 def ResponseModel(data, message):

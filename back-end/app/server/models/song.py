@@ -6,12 +6,12 @@ from pydantic import BaseModel, Field, validator
 
 class SongSchema(BaseModel):
     name: str = Field(...)
-    genres: list[str] = []
+    genres: list[str] = Field([])
     artist: str = Field(...)
     album: str = Field(...)
     length: int = Field(..., gt=0)
     release_date: date = Field(...)
-    listenings: int = 0
+    listenings: int = Field(0)
 
     @validator("release_date")
     def ensure_date(cls, v):
@@ -28,24 +28,29 @@ class SongSchema(BaseModel):
                 "album": "Aftermath",
                 "length": 225,
                 "release_date": date(1966, 5, 6),
-                "listenings": 23
             }
         }
 
 
 class UpdateSongModel(BaseModel):
-    name: Optional[str]
-    genre: Optional[str]
-    artist: Optional[str]
-    album: Optional[str]
-    length: Optional[int]
-    release_date: Optional[date]
+    name: str = Field(...)
+    genres: list[str] = Field(...)
+    artist: str = Field(...)
+    album: str = Field(...)
+    length: int = Field(..., gt=0)
+    release_date: date = Field(...)
+
+    @validator("release_date")
+    def ensure_date(cls, v):
+        if v > date.today():
+            raise ValueError("Must be past or current date")
+        return v
 
     class Config:
         schema_extra = {
             "example": {
                 "name": "Paint It, Pink",
-                "genre": "disco",
+                "genre": ["disco"],
                 "artist": "The Rolling Stones",
                 "album": "Aftermath",
                 "length": 225,
@@ -63,8 +68,4 @@ def ResponseModel(data, message):
 
 
 def ErrorResponseModel(error, code, message):
-    return {
-        "error": error, 
-        "code": code, 
-        "message": message
-    }
+    return {"error": error, "code": code, "message": message}

@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field, validator
 
 class ArtistSchema(BaseModel):
     name: str = Field(...)
-    join_date: datetime = datetime.now()
+    join_date: datetime = Field(default_factory=datetime.now)
     bio: str = Field(...)
     logo_path: str = Field(None)
 
@@ -24,8 +24,17 @@ class ArtistSchema(BaseModel):
             }
         }
 
+
 class UpdateArtistModel(BaseModel):
-    bio: Optional[str]
+    bio: str = Field(...)
+    logo_path: str = Field(None)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "bio": "Cool band. Really really cool.",
+            }
+        }
 
 
 def ResponseModel(data, message):

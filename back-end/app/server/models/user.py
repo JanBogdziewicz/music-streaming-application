@@ -29,7 +29,6 @@ class UserSchema(BaseModel):
 
 
 class UpdateUserModel(BaseModel):
-    username: str = Field(..., min_length=1, max_length=32)
     birth_date: date = Field(...)
     country: str = Field(...)
 
@@ -42,7 +41,6 @@ class UpdateUserModel(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "username": "joe18",
                 "birth_date": date(1980, 12, 30),
                 "country": "Canada",
             }

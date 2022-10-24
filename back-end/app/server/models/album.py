@@ -1,15 +1,14 @@
-from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
-from typing import Optional
+from datetime import date
+from typing import Literal
 from pydantic import BaseModel, Field, validator
 
 
 class AlbumSchema(BaseModel):
     name: str = Field(...)
-    release_date: date = datetime.now()
+    release_date: date = Field(...)
     label: str = Field(...)
-    album_type: str = Field(...)
-    genres: list[str] = []
+    album_type: Literal["SINGLE", "EXTENDED_PLAY", "LONGPLAY"] = Field(...)
+    genres: list[str] = Field([], unique_items=True)
     artist: str = Field(...)
     cover_path: str = Field(None)
 
@@ -19,18 +18,11 @@ class AlbumSchema(BaseModel):
             raise ValueError("Must be past or current date")
         return v
 
-    @validator("album_type")
-    def ensure_album_type(cls, v):
-        if v not in ["SINGLE", "EXTENDED_PLAY", "LONGPLAY"]:
-            raise ValueError(
-                "Field 'album_type' must be either 'SINGLE', 'EXTENDED_PLAY', or 'LONGPLAY'"
-            )
-        return v
-
     class Config:
         schema_extra = {
             "example": {
                 "name": "Aftermath",
+                "release_date": date(1966, 5, 6),
                 "label": "Universal Music",
                 "album_type": "LONGPLAY",
                 "genres": ["rock"],
@@ -40,8 +32,27 @@ class AlbumSchema(BaseModel):
 
 
 class UpdateAlbumModel(BaseModel):
-    name: Optional[str]
-    genres: Optional[list[str]]
+    release_date: date = Field(...)
+    label: str = Field(...)
+    album_type: Literal["SINGLE", "EXTENDED_PLAY", "LONGPLAY"] = Field(...)
+    genres: list[str] = Field([], unique_items=True)
+    cover_path: str = Field(None)
+
+    @validator("release_date")
+    def ensure_date(cls, v):
+        if v > date.today():
+            raise ValueError("Must be past or current date")
+        return v
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "release_date": date(1966, 5, 6),
+                "label": "Not Universal Music",
+                "album_type": "LONGPLAY",
+                "genres": ["disco"],
+            }
+        }
 
 
 def ResponseModel(data, message):
