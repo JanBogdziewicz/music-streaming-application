@@ -36,7 +36,7 @@ async def get_playlist_data(id):
 # Update a playlist with a matching ID
 @PlaylistRouter.put("/{id}")
 async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     updated_playlist = await update_playlist(id, req)
     return ResponseModel(
         updated_playlist, "playlist with ID: {0} update is successful".format(id)

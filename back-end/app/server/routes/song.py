@@ -45,9 +45,11 @@ async def get_song_data(id):
 # Update a song with a matching ID
 @SongRouter.put("/{id}")
 async def update_song_data(id: str, req: UpdateSongModel = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     updated_song = await update_song(id, req)
-    return ResponseModel(updated_song, "Song with ID: {0} update is successful".format(id))
+    return ResponseModel(
+        updated_song, "Song with ID: {0} update is successful".format(id)
+    )
 
 
 # Delete a song with a matching ID

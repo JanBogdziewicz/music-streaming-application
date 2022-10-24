@@ -36,7 +36,7 @@ async def get_album_data(id):
 # Update a album with a matching ID
 @AlbumRouter.put("/{id}")
 async def update_album_data(id: str, req: UpdateAlbumModel = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     updated_album = await update_album(id, req)
     return ResponseModel(
         updated_album, "Album with ID: {0} update is successful".format(id)

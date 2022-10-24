@@ -36,7 +36,7 @@ async def get_artist_data(id):
 # Update a artist with a matching ID
 @ArtistRouter.put("/{id}")
 async def update_artist_data(id: str, req: UpdateArtistModel = Body(...)):
-    req = {k: v for k, v in req.dict().items() if v is not None}
+    req = jsonable_encoder(req)
     updated_artist = await update_artist(id, req)
     return ResponseModel(
         updated_artist, "Artist with ID: {0} update is successful".format(id)
