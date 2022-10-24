@@ -1,9 +1,6 @@
 from bson.objectid import ObjectId
-from server.models.listening import ListeningSchema
 from server.config import listenings_collection
 from fastapi import HTTPException
-from server.database.song import song_helper
-
 
 # helper
 def listening_helper(listening) -> dict:

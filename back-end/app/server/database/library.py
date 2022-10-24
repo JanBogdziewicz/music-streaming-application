@@ -9,7 +9,6 @@ from server.config import (
 )
 from fastapi.encoders import jsonable_encoder
 from fastapi import HTTPException
-from pymongo.collection import Collection
 
 from server.database.playlist import playlist_helper
 from server.database.artist import artist_helper

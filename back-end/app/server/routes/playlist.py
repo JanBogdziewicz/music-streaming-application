@@ -1,6 +1,4 @@
-from dbm.ndbm import library
-from readline import append_history_file
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
 from server.database.playlist import *
