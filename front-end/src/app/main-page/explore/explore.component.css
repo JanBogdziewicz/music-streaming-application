@@ -1,0 +1,22 @@
+mat-nav-list.list-horizontal {
+  display: flex;
+  overflow: auto;
+}
+
+mat-nav-list.list-horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+mat-nav-list.list-horizontal .mat-list-item {
+  flex: 0 0 16.66%;
+}
+
+.scroll {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+h1 {
+  margin: 20px;
+}

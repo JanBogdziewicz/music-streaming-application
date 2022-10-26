@@ -1,1 +1,46 @@
-<p>explore works!</p>
+<mat-list>
+  <h1>Songs</h1>
+  <mat-nav-list class="list-horizontal">
+    <a mat-list-item href="..." *ngFor="let song of songs$ | async">
+      {{ song.name }}
+    </a>
+  </mat-nav-list>
+  <div class="scroll">
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <h1>Albums</h1>
+  <mat-nav-list class="list-horizontal">
+    <a mat-list-item href="..." *ngFor="let album of albums$ | async">
+      {{ album.name }}
+    </a>
+  </mat-nav-list>
+  <div class="scroll">
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <h1>Artists</h1>
+  <mat-nav-list class="list-horizontal">
+    <a mat-list-item href="..." *ngFor="let artist of artists$ | async">
+      {{ artist.name }}
+    </a>
+  </mat-nav-list>
+  <div class="scroll">
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-mini-fab color="basic">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</mat-list>
