@@ -67,14 +67,14 @@ async def init_artists(fake: Faker, artist_number: int):
             "logo_path": "temp",
         }
         artist = await add_artist(artist_data)
-        artist_ids.append(artist["id"])
+        artist_ids.append(artist["name"])
     return artist_ids
 
 
 async def init_albums(fake: Faker, artist_ids: list[str]):
     album_ids = []
-    for artist_id in artist_ids:
-        artist = await retrieve_artist(artist_id)
+    for artist_name in artist_ids:
+        artist = await retrieve_artist(artist_name)
         artist_albums_number = random.randint(
             ARTIST_ALBUMS_NR_MIN, ARTIST_ALBUMS_NR_MAX
         )

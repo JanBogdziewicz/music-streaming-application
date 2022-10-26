@@ -1,5 +1,4 @@
 from fastapi import HTTPException
-from bson.objectid import ObjectId
 from server.config import artists_collection, albums_collection
 from server.database.album import album_helper
 
@@ -30,37 +29,35 @@ async def add_artist(artist_data: dict) -> dict:
     return artist_helper(new_artist)
 
 
-# Retrieve a artist with a matching ID
-async def retrieve_artist(id: str):
-    artist = await artists_collection.find_one({"_id": ObjectId(id)})
+# Retrieve a artist with a matching name
+async def retrieve_artist(name: str):
+    artist = await artists_collection.find_one({"name": name})
     if not artist:
         raise HTTPException(status_code=404, detail="Artist not found")
     return artist_helper(artist)
 
 
-# Update a artist with a matching ID
-async def update_artist(id: str, data: dict):
-    update_status = await artists_collection.update_one(
-        {"_id": ObjectId(id)}, {"$set": data}
-    )
+# Update a artist with a matching name
+async def update_artist(name: str, data: dict):
+    update_status = await artists_collection.update_one({"name": name}, {"$set": data})
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="Artist not found")
-    return artist_helper(await artists_collection.find_one({"_id": ObjectId(id)}))
+    return artist_helper(await artists_collection.find_one({"name": name}))
 
 
 # Delete a artist from the database
-async def delete_artist(id: str):
-    deleted = await artists_collection.delete_one({"_id": ObjectId(id)})
+async def delete_artist(name: str):
+    deleted = await artists_collection.delete_one({"name": name})
     if deleted.deleted_count < 1:
         raise HTTPException(status_code=404, detail="artist not found")
 
 
 # Retrieve all albums of an artist
-async def retrieve_artist_albums(id: str):
-    artist = await artists_collection.find_one({"_id": ObjectId(id)})
+async def retrieve_artist_albums(name: str):
+    artist = await artists_collection.find_one({"name": name})
     if not artist:
         raise HTTPException(status_code=404, detail="artist not found")
     albums = []
-    async for album in albums_collection.find({"artist": artist["name"]}):
+    async for album in albums_collection.find({"artist": name}):
         albums.append(album_helper(album))
     return albums
