@@ -7,7 +7,7 @@
     disableClose
     role="navigation"
   >
-    <mat-nav-list>
+    <mat-nav-list class="inline-list">
       <div class="logo" [routerLink]="'home'">
         <mat-icon mat-list-icon class="logo"> music_note </mat-icon>
       </div>
@@ -37,6 +37,17 @@
         <span *ngIf="isExpanded" class="menu-item">User</span>
       </mat-list-item>
     </mat-nav-list>
+
+    <mat-nav-list *ngIf="isExpanded">
+      <mat-list-item 
+        *ngFor="let playlist of playlists$ | async"
+        class="example-item"
+        (click)="goToPlaylist(playlist)"
+      >
+        {{playlist.name}}
+      </mat-list-item>
+    </mat-nav-list>
+    
   </mat-sidenav>
 
   <mat-sidenav-content role="main">
@@ -50,4 +61,5 @@
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
+
 </mat-sidenav-container>
