@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 from pymongo.collection import Collection
 from server.config import (
     database,
@@ -59,12 +60,13 @@ async def initialize_db_schema():
 
 async def init_artists(fake: Faker, artist_number: int):
     artist_ids = []
+    album_dir = "./assets/artist_images"
     for _ in range(artist_number):
         artist_data = {
             "name": fake.name(),
             "join_date": fake.date_time(),
             "bio": fake.sentence(nb_words=5),
-            "logo_path": "temp",
+            "logo_path": os.path.join(album_dir, "artist.jpg"),
         }
         artist = await add_artist(artist_data)
         artist_ids.append(artist["name"])
@@ -73,6 +75,7 @@ async def init_artists(fake: Faker, artist_number: int):
 
 async def init_albums(fake: Faker, artist_ids: list[str]):
     album_ids = []
+    album_dir = "./assets/album_images"
     for artist_name in artist_ids:
         artist = await retrieve_artist(artist_name)
         artist_albums_number = random.randint(
@@ -86,7 +89,7 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
                 "album_type": fake.word(ext_word_list=ALBUM_TYPES),
                 "genres": [fake.word(ext_word_list=ALBUM_GENRES)],
                 "artist": artist["name"],
-                "cover_path": None,
+                "cover_path": os.path.join(album_dir, "album.jpg"),
             }
             album = await add_album(album_data)
             album_ids.append(album["id"])

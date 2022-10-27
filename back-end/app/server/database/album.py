@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
 from server.config import albums_collection, songs_collection
-from server.database.song import song_helper
+from server.database.song import song_helper, retrieve_song
 
 
 # helper
@@ -69,3 +69,12 @@ async def retrieve_album_songs(id: str):
     ):
         songs.append(song_helper(song))
     return songs
+
+
+# Retrieve album of the song
+async def retrieve_song_album(song_id: str):
+    song = await retrieve_song(song_id)
+    album = albums_collection.find_one(
+        {"artist": song["artist"], "name": song["album"]}
+    )
+    return album

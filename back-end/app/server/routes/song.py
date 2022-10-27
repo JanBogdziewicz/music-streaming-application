@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 
+from server.database.album import retrieve_song_album
+
 from server.database.song import (
     add_song,
     delete_song,
@@ -58,3 +60,10 @@ async def delete_song_data(id: str):
     return ResponseModel(
         "Song with ID: {0} removed".format(id), "Song deleted successfully"
     )
+
+
+# Retrieve album of the song
+@SongRouter.get("/{id}/album", response_description="Album of the song retrieved")
+async def get_song_album_data(id):
+    song = await retrieve_song_album(id)
+    return ResponseModel(song, "Album of the song retrieved successfully")
