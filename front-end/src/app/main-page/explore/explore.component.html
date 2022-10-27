@@ -1,45 +1,54 @@
 <mat-list>
   <h1>Songs</h1>
-  <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let song of songs$ | async">
-      {{ song.name }}
+  <mat-nav-list class="list-horizontal" id="songs-list">
+    <a mat-list-item href="..." *ngFor="let song of songs; let i = index">
+      <figure>
+        <img src="{{ song_albums[i].cover_path }}" alt="Album Cover" />
+        <figcaption class="link">{{ song.name }}</figcaption>
+      </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(songs_list)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollRight(songs_list)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
   <mat-divider></mat-divider>
   <h1>Albums</h1>
-  <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let album of albums$ | async">
-      {{ album.name }}
+  <mat-nav-list class="list-horizontal" id="albums-list">
+    <a mat-list-item href="..." *ngFor="let album of albums">
+      <figure>
+        <img src="{{ album.cover_path }}" alt="Album Cover" />
+        <figcaption class="link">{{ album.name }}</figcaption>
+      </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(albums_list)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollRight(albums_list)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
   <mat-divider></mat-divider>
   <h1>Artists</h1>
-  <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let artist of artists$ | async">
-      {{ artist.name }}
+  <mat-nav-list class="list-horizontal" id="artists-list">
+    <a mat-list-item href="..." *ngFor="let artist of artists">
+      <figure>
+        <img src="{{ artist.logo_path }}" alt="Artist Logo" />
+        <figcaption class="link">{{ artist.name }}</figcaption>
+      </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(artists_list)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic">
+    <button mat-mini-fab color="basic" (click)="scrollRight(artists_list)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>

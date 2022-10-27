@@ -1,9 +1,13 @@
 # front-end
 front-end/node_modules
 front-end/.angular
+front-end/dist
 
 # back-end
 **/__pycache__/
 
 # data
 data/mongo
+
+#vs code
+.vscode/
