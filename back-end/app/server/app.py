@@ -57,6 +57,6 @@ async def read_root():
 
 @app.on_event("startup")
 async def startup():
-    clear_database()
+    await clear_database()
     await initialize_db_data()
     await initialize_db_schema()

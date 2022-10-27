@@ -29,15 +29,15 @@ from server.database.playlist import add_playlist
 logger = logging.getLogger(__name__)
 
 
-def clear_database():
-    database.drop_collection("artists")
-    database.drop_collection("albums")
-    database.drop_collection("libraries")
-    database.drop_collection("listenings")
-    database.drop_collection("playlists")
-    database.drop_collection("searches")
-    database.drop_collection("songs")
-    database.drop_collection("users")
+async def clear_database():
+    await database.drop_collection("artists")
+    await database.drop_collection("albums")
+    await database.drop_collection("libraries")
+    await database.drop_collection("listenings")
+    await database.drop_collection("playlists")
+    await database.drop_collection("searches")
+    await database.drop_collection("songs")
+    await database.drop_collection("users")
 
 
 async def create_unique_constraint(collection: Collection, fields: list[str]):
