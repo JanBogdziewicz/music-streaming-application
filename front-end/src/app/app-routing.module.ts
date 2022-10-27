@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'explore', component: ExploreComponent },
       { path: 'user', component: UserComponent },
-      { path: 'playlist/*', component: PlaylistComponent }
+      { path: 'playlist/:id', component: PlaylistComponent }
     ],
   },
   {

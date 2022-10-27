@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PlaylistService } from '../playlist.service';
-import { Playlist } from '../database-entities/playlists';
+import { PlaylistService } from '../services/playlist.service';
+import { Playlist } from '../database-entities/playlist';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,8 +23,8 @@ export class SidenavWrapperComponent implements OnInit {
   }
 
   goToPlaylist(playlist: Playlist) {
-    console.log("NO CO JEST");
-    //this.router.navigate([`/explore`]);
-    this.router.navigate([`/playlist/${playlist.id}`]);
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+        this.router.navigate([`/playlist/${playlist.id}`])
+    );
   }
 }

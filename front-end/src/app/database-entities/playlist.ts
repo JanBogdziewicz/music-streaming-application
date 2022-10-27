@@ -1,8 +1,8 @@
 export interface Playlist {
-  id: String;
-  name: String;
+  id: string;
+  name: string;
   creation_date: Date;
-  songs: String[];
+  songs: string[];
   length: Number;
-  user: String;
+  user: string;
 }
