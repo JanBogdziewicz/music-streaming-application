@@ -65,5 +65,5 @@ async def delete_song_data(id: str):
 # Retrieve album of the song
 @SongRouter.get("/{id}/album", response_description="Album of the song retrieved")
 async def get_song_album_data(id):
-    song = await retrieve_song_album(id)
-    return ResponseModel(song, "Album of the song retrieved successfully")
+    album = await retrieve_song_album(id)
+    return ResponseModel(album, "Album of the song retrieved successfully")

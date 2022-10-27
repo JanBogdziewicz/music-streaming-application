@@ -74,7 +74,7 @@ async def retrieve_album_songs(id: str):
 # Retrieve album of the song
 async def retrieve_song_album(song_id: str):
     song = await retrieve_song(song_id)
-    album = albums_collection.find_one(
-        {"artist": song["artist"], "name": song["album"]}
+    album = await albums_collection.find_one(
+        {"name": song["album"], "artist": song["artist"]}
     )
-    return album
+    return album_helper(album)
