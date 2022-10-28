@@ -19,7 +19,7 @@
   <mat-divider></mat-divider>
   <h1>Albums</h1>
   <mat-nav-list class="list-horizontal" id="albums-list">
-    <a mat-list-item href="..." *ngFor="let album of albums">
+    <a mat-list-item *ngFor="let album of albums" (click)="goToAlbum(album)">
       <figure>
         <img src="{{ album.cover_path }}" alt="Album Cover" />
         <figcaption class="link">{{ album.name }}</figcaption>

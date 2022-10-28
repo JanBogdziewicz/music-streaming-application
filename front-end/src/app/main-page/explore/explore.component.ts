@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Album } from 'src/app/database-entities/album';
 import { Artist } from 'src/app/database-entities/artist';
@@ -24,7 +24,7 @@ export class ExploreComponent implements OnInit {
   public albums_list: HTMLElement | null;
   public artists_list: HTMLElement | null;
 
-  constructor(private service: ExploreService) {}
+  constructor(private service: ExploreService, private router: Router) {}
 
   ngOnInit(): void {
     this.songs$ = this.service.getSongs();
@@ -66,5 +66,11 @@ export class ExploreComponent implements OnInit {
         element.scrollLeft = scroll;
       }
     }
+  }
+
+  goToAlbum(album: Album) {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+        this.router.navigate([`/album/${album.id}`])
+    );
   }
 }

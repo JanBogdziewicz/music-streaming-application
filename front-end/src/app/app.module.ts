@@ -15,9 +15,10 @@ import { HomeComponent } from './main-page/home/home.component';
 import { ExploreComponent } from './main-page/explore/explore.component';
 import { UserComponent } from './main-page/user/user.component';
 import { PlaylistComponent } from './main-page/playlist/playlist.component';
+import { AlbumComponent } from './main-page/album/album.component';
 
 @NgModule({
-  declarations: [AppComponent, DemoComponent, SidenavWrapperComponent, HomeComponent, ExploreComponent, UserComponent, PlaylistComponent],
+  declarations: [AppComponent, DemoComponent, SidenavWrapperComponent, HomeComponent, ExploreComponent, UserComponent, PlaylistComponent, AlbumComponent],
   imports: [
     CommonModule,
     MaterialModule,

@@ -5,6 +5,7 @@ import { HomeComponent } from './main-page/home/home.component';
 import { UserComponent } from './main-page/user/user.component';
 import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { SidenavWrapperComponent } from './sidenav-wrapper/sidenav-wrapper.component';
+import { AlbumComponent } from './main-page/album/album.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'explore', component: ExploreComponent },
       { path: 'user', component: UserComponent },
-      { path: 'playlist/:id', component: PlaylistComponent }
+      { path: 'playlist/:id', component: PlaylistComponent },
+      { path: 'album/:id', component: AlbumComponent }
     ],
   },
   {
