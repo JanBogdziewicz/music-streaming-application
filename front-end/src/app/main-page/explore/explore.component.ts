@@ -1,10 +1,38 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Component,
+  Directive,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Album } from 'src/app/database-entities/album';
 import { Artist } from 'src/app/database-entities/artist';
 import { Song } from 'src/app/database-entities/song';
 import { ExploreService } from '../../services/explore.service';
+
+export interface Scroll {
+  item_list: ScrollableDirective[];
+  index: number;
+}
+
+@Directive({ selector: '[scrollable]' })
+export class ScrollableDirective {
+  constructor(private _el: ElementRef) {}
+  get element() {
+    return this._el.nativeElement;
+  }
+  scrollIntoView() {
+    this._el.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'start',
+    });
+  }
+}
 
 @Component({
   selector: 'app-explore',
@@ -12,16 +40,19 @@ import { ExploreService } from '../../services/explore.service';
   styleUrls: ['./explore.component.css'],
 })
 export class ExploreComponent implements OnInit {
-  public songs$!: Observable<Song[]>;
+  @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
+
+  private songs$!: Observable<Song[]>;
+  private albums$!: Observable<Album[]>;
+  private artists$!: Observable<Artist[]>;
+
   public songs: Song[];
-  public albums$!: Observable<Album[]>;
   public albums: Album[];
-  public artists$!: Observable<Artist[]>;
   public artists: Artist[];
 
-  public songs_list: HTMLElement | null;
-  public albums_list: HTMLElement | null;
-  public artists_list: HTMLElement | null;
+  public song_scroll: Scroll = { item_list: [], index: 0 };
+  public album_scroll: Scroll = { item_list: [], index: 0 };
+  public artist_scroll: Scroll = { item_list: [], index: 0 };
 
   constructor(private service: ExploreService, private router: Router) {}
 
@@ -34,29 +65,38 @@ export class ExploreComponent implements OnInit {
 
     this.artists$ = this.service.getArtists();
     this.artists$.subscribe((res) => (this.artists = res));
-
-    this.songs_list = document.getElementById('songs-list');
-    this.albums_list = document.getElementById('albums-list');
-    this.artists_list = document.getElementById('artists-list');
   }
 
-  public scrollLeft(element: HTMLElement | null) {
-    if (element) {
-      let scroll =
-        element.scrollLeft - Math.floor((1 / 6) * element.clientWidth);
-      if (scroll >= 0) {
-        element.scrollLeft = scroll;
-      }
-    }
+  ngAfterViewInit(): void {
+    this.listItems.changes.subscribe(() => {
+      this.song_scroll.item_list = this.listItems.filter(
+        (item) => item.element.id === 'song'
+      );
+      this.album_scroll.item_list = this.listItems.filter(
+        (item) => item.element.id === 'album'
+      );
+      this.artist_scroll.item_list = this.listItems.filter(
+        (item) => item.element.id === 'artist'
+      );
+    });
   }
 
-  public scrollRight(element: HTMLElement | null) {
-    if (element) {
-      let scroll = element.scrollLeft + (1 / 6) * element.clientWidth;
-      if (scroll <= element.scrollWidth - element.clientWidth) {
-        element.scrollLeft = scroll;
-      }
+  public scrollMove(element: ScrollableDirective) {
+    element.scrollIntoView();
+  }
+
+  public scrollLeft(s: Scroll) {
+    if (s.index == 0) {
+      s.index += s.item_list.length - 6;
+    } else {
+      s.index--;
     }
+    this.scrollMove(s.item_list[s.index]);
+  }
+
+  public scrollRight(s: Scroll) {
+    s.index = (s.index + 1) % (s.item_list.length - 5);
+    this.scrollMove(s.item_list[s.index]);
   }
 
   goToAlbum(album: Album) {

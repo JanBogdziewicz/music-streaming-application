@@ -1,54 +1,60 @@
 <mat-list>
   <h1>Songs</h1>
-  <mat-nav-list class="list-horizontal" id="songs-list">
-    <a mat-list-item href="..." *ngFor="let song of songs">
+  <mat-nav-list class="list-horizontal">
+    <a mat-list-item scrollable id="song" *ngFor="let song of songs">
       <figure>
         <img src="{{ song.cover_path }}" alt="Album Cover of the Song" />
-        <figcaption class="link">{{ song.name }}</figcaption>
+        <figcaption>{{ song.name }}</figcaption>
       </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(songs_list)">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(song_scroll)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(songs_list)">
+    <button mat-mini-fab color="basic" (click)="scrollRight(song_scroll)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
   <mat-divider></mat-divider>
   <h1>Albums</h1>
-  <mat-nav-list class="list-horizontal" id="albums-list">
-    <a mat-list-item *ngFor="let album of albums" (click)="goToAlbum(album)">
-      <figure>
+  <mat-nav-list class="list-horizontal">
+    <a
+      mat-list-item
+      scrollable
+      id="album"
+      *ngFor="let album of albums"
+      (click)="goToAlbum(album)"
+    >
+      <figure class="link">
         <img src="{{ album.cover_path }}" alt="Album Cover" />
-        <figcaption class="link">{{ album.name }}</figcaption>
+        <figcaption>{{ album.name }}</figcaption>
       </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(albums_list)">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(album_scroll)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(albums_list)">
+    <button mat-mini-fab color="basic" (click)="scrollRight(album_scroll)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
   <mat-divider></mat-divider>
   <h1>Artists</h1>
-  <mat-nav-list class="list-horizontal" id="artists-list">
-    <a mat-list-item href="..." *ngFor="let artist of artists">
-      <figure>
+  <mat-nav-list class="list-horizontal">
+    <a mat-list-item scrollable id="artist" *ngFor="let artist of artists">
+      <figure class="link">
         <img src="{{ artist.logo_path }}" alt="Artist Logo" />
-        <figcaption class="link">{{ artist.name }}</figcaption>
+        <figcaption>{{ artist.name }}</figcaption>
       </figure>
     </a>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(artists_list)">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(artist_scroll)">
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(artists_list)">
+    <button mat-mini-fab color="basic" (click)="scrollRight(artist_scroll)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
