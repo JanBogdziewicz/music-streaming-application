@@ -19,9 +19,9 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'explore', component: ExploreComponent },
-      { path: 'user', component: UserComponent },
+      { path: 'user/:id', component: UserComponent },
       { path: 'playlist/:id', component: PlaylistComponent },
-      { path: 'album/:id', component: AlbumComponent }
+      { path: 'album/:id', component: AlbumComponent },
     ],
   },
   {

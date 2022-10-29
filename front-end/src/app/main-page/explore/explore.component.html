@@ -1,9 +1,9 @@
 <mat-list>
   <h1>Songs</h1>
   <mat-nav-list class="list-horizontal" id="songs-list">
-    <a mat-list-item href="..." *ngFor="let song of songs; let i = index">
+    <a mat-list-item href="..." *ngFor="let song of songs">
       <figure>
-        <img src="{{ song_albums[i].cover_path }}" alt="Album Cover" />
+        <img src="{{ song.cover_path }}" alt="Album Cover of the Song" />
         <figcaption class="link">{{ song.name }}</figcaption>
       </figure>
     </a>

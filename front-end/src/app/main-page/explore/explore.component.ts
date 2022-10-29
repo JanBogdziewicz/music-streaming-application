@@ -14,7 +14,6 @@ import { ExploreService } from '../../services/explore.service';
 export class ExploreComponent implements OnInit {
   public songs$!: Observable<Song[]>;
   public songs: Song[];
-  public song_albums: Album[] = [];
   public albums$!: Observable<Album[]>;
   public albums: Album[];
   public artists$!: Observable<Artist[]>;
@@ -29,7 +28,6 @@ export class ExploreComponent implements OnInit {
   ngOnInit(): void {
     this.songs$ = this.service.getSongs();
     this.songs$.subscribe((res) => (this.songs = res));
-    this.songs$.subscribe((res) => this.getSongAlbums(res));
 
     this.albums$ = this.service.getAlbums();
     this.albums$.subscribe((res) => (this.albums = res));
@@ -40,13 +38,6 @@ export class ExploreComponent implements OnInit {
     this.songs_list = document.getElementById('songs-list');
     this.albums_list = document.getElementById('albums-list');
     this.artists_list = document.getElementById('artists-list');
-  }
-
-  getSongAlbums(songs: Song[]) {
-    songs.forEach((song) => {
-      let album$ = this.service.getSongAlbum(song.id);
-      album$.subscribe((res) => this.song_albums.push(res));
-    });
   }
 
   public scrollLeft(element: HTMLElement | null) {
@@ -69,8 +60,8 @@ export class ExploreComponent implements OnInit {
   }
 
   goToAlbum(album: Album) {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-        this.router.navigate([`/album/${album.id}`])
-    );
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([`/album/${album.id}`]));
   }
 }

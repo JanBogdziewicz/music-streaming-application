@@ -6,5 +6,6 @@ export interface Song {
   album: string;
   length: number;
   release_date: string;
+  cover_path: string;
   listenings: number;
 }

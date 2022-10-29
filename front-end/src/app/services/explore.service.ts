@@ -61,20 +61,4 @@ export class ExploreService {
         map((response) => response.data as Artist[])
       );
   }
-
-  getSongAlbum(id: string): Observable<Album> {
-    return this.http
-      .get<MongoResponse>(`${environment.backend_address}/songs/${id}/album/`)
-      .pipe(
-        tap((response) =>
-          console.log(
-            'HTTP status code:',
-            response.code,
-            'message:',
-            response.message
-          )
-        ),
-        map((response) => response.data as Album)
-      );
-  }
 }
