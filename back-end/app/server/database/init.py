@@ -1,8 +1,11 @@
 from datetime import datetime
-import os
+from os import listdir
+from os.path import exists, join
 from pymongo.collection import Collection
 from server.config import (
     database,
+    album_covers_fs,
+    artist_logos_fs,
     albums_collection,
     artists_collection,
     libraries_collection,
@@ -58,24 +61,36 @@ async def initialize_db_schema():
     # await create_unique_constraint("time", [])
 
 
-async def init_artists(fake: Faker, artist_number: int):
+async def init_images():
+    album_cover_ids = []
+    artist_logo_ids = []
+    album_covers = [join(ALBUM_COVERS_PATH, f) for f in listdir(ALBUM_COVERS_PATH)]
+    artist_logos = [join(ARTIST_LOGOS_PATH, f) for f in listdir(ARTIST_LOGOS_PATH)]
+    for cover in album_covers:
+        id = await album_covers_fs.upload_from_stream(cover, open(cover, "rb"))
+        album_cover_ids.append(str(id))
+    for logo in artist_logos:
+        id = await artist_logos_fs.upload_from_stream(logo, open(logo, "rb"))
+        artist_logo_ids.append(str(id))
+    return album_cover_ids, artist_logo_ids
+
+
+async def init_artists(fake: Faker, logo_ids: list):
     artist_ids = []
-    album_dir = "./assets/artist_images"
-    for _ in range(artist_number):
+    for _ in range(ARTIST_NR):
         artist_data = {
             "name": fake.name(),
             "join_date": fake.date_time(),
             "bio": fake.sentence(nb_words=5),
-            "logo_path": os.path.join(album_dir, "artist.jpg"),
+            "logo_path": random.choice(logo_ids),
         }
         artist = await add_artist(artist_data)
         artist_ids.append(artist["name"])
     return artist_ids
 
 
-async def init_albums(fake: Faker, artist_ids: list[str]):
+async def init_albums(fake: Faker, artist_ids: list[str], cover_ids):
     album_ids = []
-    album_dir = "./assets/album_images"
     for artist_name in artist_ids:
         artist = await retrieve_artist(artist_name)
         artist_albums_number = random.randint(
@@ -89,7 +104,7 @@ async def init_albums(fake: Faker, artist_ids: list[str]):
                 "album_type": fake.word(ext_word_list=ALBUM_TYPES),
                 "genres": [fake.word(ext_word_list=ALBUM_GENRES)],
                 "artist": artist["name"],
-                "cover_path": os.path.join(album_dir, "album.jpg"),
+                "cover_path": random.choice(cover_ids),
             }
             album = await add_album(album_data)
             album_ids.append(album["id"])
@@ -123,9 +138,9 @@ async def init_songs(fake: Faker, album_ids: list[str]):
     return song_ids
 
 
-async def init_users(fake: Faker, user_number: int):
+async def init_users(fake: Faker):
     user_ids = []
-    for _ in range(user_number):
+    for _ in range(USER_NR):
         birth_date = fake.date_of_birth(
             minimum_age=USER_AGE_MIN, maximum_age=USER_AGE_MAX
         )
@@ -260,10 +275,11 @@ async def initialize_db_data():
     fake = Faker()
     Faker.seed(0)
     random.seed(0)
-    artist_ids = await init_artists(fake, ARTIST_NR)
-    album_ids = await init_albums(fake, artist_ids)
+    album_cover_ids, artist_logo_ids = await init_images()
+    artist_ids = await init_artists(fake, artist_logo_ids)
+    album_ids = await init_albums(fake, artist_ids, album_cover_ids)
     song_ids = await init_songs(fake, album_ids)
-    user_ids = await init_users(fake, USER_NR)
+    user_ids = await init_users(fake)
     playlist_ids = await init_playlists(fake, user_ids, song_ids)
     await init_libraries(user_ids, playlist_ids, artist_ids, album_ids, song_ids)
     await init_listenings(fake, user_ids, song_ids)
