@@ -25,5 +25,11 @@ h1 {
 
 img {
   width: 70%;
+  height: 60%;
   object-fit: cover;
+}
+
+.link {
+  width: 200px;
+  height: 200px;
 }

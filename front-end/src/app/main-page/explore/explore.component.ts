@@ -75,7 +75,7 @@ export class ExploreComponent implements OnInit {
   ngOnInit(): void {
     this.songs$ = this.service.getSongs();
     this.songs$.subscribe((res) => {
-      this.songs = res;
+      this.songs = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.songs.forEach((song) => {
         this.getSongCover(song.id, song.cover);
       });
@@ -83,7 +83,7 @@ export class ExploreComponent implements OnInit {
 
     this.albums$ = this.service.getAlbums();
     this.albums$.subscribe((res) => {
-      this.albums = res;
+      this.albums = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.albums.forEach((album) => {
         this.getAlbumCover(album.id, album.cover);
       });
@@ -91,7 +91,7 @@ export class ExploreComponent implements OnInit {
 
     this.artists$ = this.service.getArtists();
     this.artists$.subscribe((res) => {
-      this.artists = res;
+      this.artists = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.artists.forEach((artist) => {
         this.getArtistLogo(artist.name, artist.logo);
       });
@@ -147,7 +147,6 @@ export class ExploreComponent implements OnInit {
       if (!this.images.has(image_id)) {
         let url = URL.createObjectURL(data);
         this.images.set(image_id, url);
-        console.log(this.images);
       }
     });
   }
