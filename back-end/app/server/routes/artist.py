@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import Response
+
+from server.database.images import download_artist_logo
 
 from server.database.artist import *
 
@@ -62,3 +65,13 @@ async def get_album_songs(artist_name: str):
     if albums:
         return ResponseModel(albums, "All artist albums retrieved successfully")
     return ResponseModel(albums, "Empty list returned")
+
+
+# Get logo of an artist
+@ArtistRouter.get(
+    "/{artist_name}/logo", response_description="artist logo retrieved sucessfully"
+)
+async def get_artist_logo(artist_name: str):
+    artist = await retrieve_artist(artist_name)
+    logo = await download_artist_logo(artist["logo"])
+    return Response(logo)

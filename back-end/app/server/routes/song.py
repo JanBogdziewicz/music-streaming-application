@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import Response
+
+from server.database.images import download_album_cover
 
 from server.database.album import retrieve_song_album
 
@@ -67,3 +70,11 @@ async def delete_song_data(id: str):
 async def get_song_album_data(id):
     album = await retrieve_song_album(id)
     return ResponseModel(album, "Album of the song retrieved successfully")
+
+
+# Get cover of a song
+@SongRouter.get("/{id}/cover", response_description="song cover retrieved sucessfully")
+async def get_song_cover(id: str):
+    song = await retrieve_song(id)
+    cover = await download_album_cover(song["cover"])
+    return Response(cover)

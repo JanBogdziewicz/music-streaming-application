@@ -65,9 +65,9 @@ async def get_album_songs(id: str):
 
 # Get cover of an album
 @AlbumRouter.get(
-    "/{id}/album_cover", response_description="album cover retrieved sucessfully"
+    "/{id}/cover", response_description="album cover retrieved sucessfully"
 )
-async def get_album_songs(id: str):
+async def get_album_cover(id: str):
     album = await retrieve_album(id)
     cover = await download_album_cover(album["cover"])
     return Response(cover)

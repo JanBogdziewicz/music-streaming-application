@@ -6,3 +6,9 @@ async def download_album_cover(file_id: str):
     data = await album_covers_fs.open_download_stream(ObjectId(file_id))
     bytes = await data.read()
     return bytes
+
+
+async def download_artist_logo(file_id: str):
+    data = await artist_logos_fs.open_download_stream(ObjectId(file_id))
+    bytes = await data.read()
+    return bytes
