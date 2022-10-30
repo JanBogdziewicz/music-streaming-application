@@ -1,1 +1,16 @@
-<p>home works!</p>
+<mat-tab-group mat-stretch-tabs [@.disabled]="true">
+  <mat-tab label="Playlists">
+    <mat-grid-list cols="4" rowHeight="3:2">
+      <mat-grid-tile mat-list-item *ngFor="let playlist of playlists">
+        <a>
+          <figure class="link">
+            <figcaption>{{ playlist.name }}</figcaption>
+          </figure>
+        </a>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-tab>
+  <mat-tab label="Albums"> Content 2 </mat-tab>
+  <mat-tab label="Artists">Content 3</mat-tab>
+  <mat-tab label="Songs">Content 3</mat-tab>
+</mat-tab-group>
