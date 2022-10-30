@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MongoResponse } from '../database-entities/mongo_response';
-import { Song } from '../database-entities/song';
+import { Artist } from '../database-entities/artist';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SongService {
-  song_address: string = `${environment.backend_address}/songs`;
+export class ArtistService {
+  artist_address = `${environment.backend_address}/artists`;
 
   constructor(private http: HttpClient) {}
 
-  getSongs(): Observable<Song[]> {
-    return this.http.get<MongoResponse>(`${this.song_address}`).pipe(
+  getArtists(): Observable<Artist[]> {
+    return this.http.get<MongoResponse>(`${this.artist_address}`).pipe(
       tap((response) =>
         console.log(
           'HTTP status code:',
@@ -23,12 +23,12 @@ export class SongService {
           response.message
         )
       ),
-      map((response) => response.data as Song[])
+      map((response) => response.data as Artist[])
     );
   }
 
-  getSongCover(id: string): Observable<Blob> {
-    return this.http.get(`${this.song_address}/${id}/cover`, {
+  getArtistLogo(name: string): Observable<Blob> {
+    return this.http.get(`${this.artist_address}/${name}/logo`, {
       responseType: 'blob',
     });
   }

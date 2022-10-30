@@ -8,30 +8,38 @@ import { environment } from 'src/environments/environment';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlbumService {
-  album_address: string = `${environment.backend_address}/albums`
+  album_address: string = `${environment.backend_address}/albums`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAlbums(): Observable<Album[]> {
-    return this.http.get<MongoResponse>(this.album_address).pipe(
-      map(response => response.data as Album[])
-    )
+    return this.http
+      .get<MongoResponse>(this.album_address)
+      .pipe(map((response) => response.data as Album[]));
   }
 
   getAlbumById(id: string): Observable<Album> {
     return this.http.get<MongoResponse>(`${this.album_address}/${id}`).pipe(
-      tap(response => console.log(response)),
-      map(response => response.data as Album)
-    )
+      tap((response) => console.log(response)),
+      map((response) => response.data as Album)
+    );
   }
 
   getAllAlbumSongs(id: string): Observable<Song[]> {
-    return this.http.get<MongoResponse>(`${this.album_address}/${id}/songs`).pipe(
-      tap(response => console.log(response)),
-      map(response => response.data as Song[])
-    )
+    return this.http
+      .get<MongoResponse>(`${this.album_address}/${id}/songs`)
+      .pipe(
+        tap((response) => console.log(response)),
+        map((response) => response.data as Song[])
+      );
+  }
+
+  getAlbumCover(id: string): Observable<Blob> {
+    return this.http.get(`${this.album_address}/${id}/cover`, {
+      responseType: 'blob',
+    });
   }
 }
