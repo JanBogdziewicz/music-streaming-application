@@ -10,7 +10,7 @@ class AlbumSchema(BaseModel):
     album_type: Literal["SINGLE", "EXTENDED_PLAY", "LONGPLAY"] = Field(...)
     genres: list[str] = Field([], unique_items=True)
     artist: str = Field(...)
-    cover_path: str = Field(None)
+    cover: str = Field(None)
 
     @validator("release_date")
     def ensure_date(cls, v):
@@ -36,7 +36,7 @@ class UpdateAlbumModel(BaseModel):
     label: str = Field(...)
     album_type: Literal["SINGLE", "EXTENDED_PLAY", "LONGPLAY"] = Field(...)
     genres: list[str] = Field([], unique_items=True)
-    cover_path: str = Field(None)
+    cover: str = Field(None)
 
     @validator("release_date")
     def ensure_date(cls, v):

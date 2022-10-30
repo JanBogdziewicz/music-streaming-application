@@ -6,7 +6,7 @@ class ArtistSchema(BaseModel):
     name: str = Field(...)
     join_date: datetime = Field(default_factory=datetime.now)
     bio: str = Field(...)
-    logo_path: str = Field(None)
+    logo: str = Field(None)
 
     @validator("join_date")
     def ensure_join_date(cls, v):
@@ -25,7 +25,7 @@ class ArtistSchema(BaseModel):
 
 class UpdateArtistModel(BaseModel):
     bio: str = Field(...)
-    logo_path: str = Field(None)
+    logo: str = Field(None)
 
     class Config:
         schema_extra = {

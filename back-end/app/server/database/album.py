@@ -14,7 +14,7 @@ def album_helper(album) -> dict:
         "album_type": album["album_type"],
         "genres": album["genres"],
         "artist": album["artist"],
-        "cover_path": album["cover_path"],
+        "cover": album["cover"],
     }
 
 

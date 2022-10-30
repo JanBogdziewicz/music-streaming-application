@@ -10,7 +10,7 @@ def artist_helper(artist) -> dict:
         "name": artist["name"],
         "join_date": artist["join_date"],
         "bio": artist["bio"],
-        "logo_path": artist["logo_path"],
+        "logo": artist["logo"],
     }
 
 

@@ -67,10 +67,10 @@ async def init_images():
     album_covers = [join(ALBUM_COVERS_PATH, f) for f in listdir(ALBUM_COVERS_PATH)]
     artist_logos = [join(ARTIST_LOGOS_PATH, f) for f in listdir(ARTIST_LOGOS_PATH)]
     for cover in album_covers:
-        id = await album_covers_fs.upload_from_stream(cover, open(cover, "rb"))
+        id = await album_covers_fs.upload_from_stream("album.jpg", open(cover, "rb"))
         album_cover_ids.append(str(id))
     for logo in artist_logos:
-        id = await artist_logos_fs.upload_from_stream(logo, open(logo, "rb"))
+        id = await artist_logos_fs.upload_from_stream("logo.jpg", open(logo, "rb"))
         artist_logo_ids.append(str(id))
     return album_cover_ids, artist_logo_ids
 
@@ -82,7 +82,7 @@ async def init_artists(fake: Faker, logo_ids: list):
             "name": fake.name(),
             "join_date": fake.date_time(),
             "bio": fake.sentence(nb_words=5),
-            "logo_path": random.choice(logo_ids),
+            "logo": random.choice(logo_ids),
         }
         artist = await add_artist(artist_data)
         artist_ids.append(artist["name"])
@@ -104,7 +104,7 @@ async def init_albums(fake: Faker, artist_ids: list[str], cover_ids):
                 "album_type": fake.word(ext_word_list=ALBUM_TYPES),
                 "genres": [fake.word(ext_word_list=ALBUM_GENRES)],
                 "artist": artist["name"],
-                "cover_path": random.choice(cover_ids),
+                "cover": random.choice(cover_ids),
             }
             album = await add_album(album_data)
             album_ids.append(album["id"])
@@ -130,7 +130,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
                 "album": album["name"],
                 "length": random.randint(SONG_LENGTH_MIN, SONG_LENGTH_MAX),
                 "release_date": album["release_date"],
-                "cover_path": album["cover_path"],
+                "cover": album["cover"],
                 "listenings": 0,
             }
             song = await add_song(song_data)

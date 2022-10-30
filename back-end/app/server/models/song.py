@@ -10,7 +10,7 @@ class SongSchema(BaseModel):
     album: str = Field(...)
     length: int = Field(..., gt=0)
     release_date: date = Field(...)
-    cover_path: str = Field(None)
+    cover: str = Field(None)
     listenings: int = Field(0)
 
     @validator("release_date")
@@ -39,7 +39,7 @@ class UpdateSongModel(BaseModel):
     album: str = Field(...)
     length: int = Field(..., gt=0)
     release_date: date = Field(...)
-    cover_path: str = Field(None)
+    cover: str = Field(None)
 
     @validator("release_date")
     def ensure_date(cls, v):

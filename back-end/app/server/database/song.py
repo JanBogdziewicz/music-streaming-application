@@ -13,7 +13,7 @@ def song_helper(song) -> dict:
         "album": song["album"],
         "length": song["length"],
         "release_date": song["release_date"],
-        "cover_path": song["cover_path"],
+        "cover": song["cover"],
         "listenings": song["listenings"],
     }
 
