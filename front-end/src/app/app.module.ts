@@ -14,6 +14,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { HomeComponent } from './main-page/home/home.component';
 import {
   ExploreComponent,
+  SafeUrlPipe,
   ScrollableDirective,
 } from './main-page/explore/explore.component';
 import { UserComponent } from './main-page/user/user.component';
@@ -31,6 +32,7 @@ import { AlbumComponent } from './main-page/album/album.component';
     PlaylistComponent,
     AlbumComponent,
     ScrollableDirective,
+    SafeUrlPipe,
   ],
   imports: [
     CommonModule,

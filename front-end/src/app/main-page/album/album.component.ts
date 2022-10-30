@@ -8,22 +8,25 @@ import { AlbumService } from 'src/app/services/album.service';
 @Component({
   selector: 'app-album',
   templateUrl: './album.component.html',
-  styleUrls: ['./album.component.css']
+  styleUrls: ['./album.component.css'],
 })
 export class AlbumComponent implements OnInit {
-  album$!: Observable<Album>
-  album: Album
-  album_songs$!: Observable<Song[]>
-  album_songs: Song[]
+  album$!: Observable<Album>;
+  album: Album;
+  album_songs$!: Observable<Song[]>;
+  album_songs: Song[];
 
-  constructor(private route: ActivatedRoute, private albumService: AlbumService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private albumService: AlbumService
+  ) {}
 
   ngOnInit(): void {
     this.album$ = this.getAlbum();
-    this.album$.subscribe(res => this.album = res);
+    this.album$.subscribe((res) => (this.album = res));
 
     this.album_songs$ = this.getAlbumSongs();
-    this.album_songs$.subscribe(res => this.album_songs = res);
+    this.album_songs$.subscribe((res) => (this.album_songs = res));
   }
 
   getAlbum() {

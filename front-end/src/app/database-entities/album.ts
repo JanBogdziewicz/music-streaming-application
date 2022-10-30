@@ -6,5 +6,5 @@ export interface Album {
   album_type: string;
   genres: string[];
   artist: string;
-  cover_path: string;
+  cover: string;
 }

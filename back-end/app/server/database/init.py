@@ -1,6 +1,6 @@
 from datetime import datetime
-from os import listdir
-from os.path import exists, join
+from os import listdir, path
+from os.path import join
 from pymongo.collection import Collection
 from server.config import (
     database,
@@ -67,10 +67,14 @@ async def init_images():
     album_covers = [join(ALBUM_COVERS_PATH, f) for f in listdir(ALBUM_COVERS_PATH)]
     artist_logos = [join(ARTIST_LOGOS_PATH, f) for f in listdir(ARTIST_LOGOS_PATH)]
     for cover in album_covers:
-        id = await album_covers_fs.upload_from_stream("album.jpg", open(cover, "rb"))
+        id = await album_covers_fs.upload_from_stream(
+            path.basename(cover), open(cover, "rb")
+        )
         album_cover_ids.append(str(id))
     for logo in artist_logos:
-        id = await artist_logos_fs.upload_from_stream("logo.jpg", open(logo, "rb"))
+        id = await artist_logos_fs.upload_from_stream(
+            path.basename(logo), open(logo, "rb")
+        )
         artist_logo_ids.append(str(id))
     return album_cover_ids, artist_logo_ids
 

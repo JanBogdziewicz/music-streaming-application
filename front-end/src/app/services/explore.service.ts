@@ -61,4 +61,25 @@ export class ExploreService {
         map((response) => response.data as Artist[])
       );
   }
+
+  getAlbumCover(id: string): Observable<Blob> {
+    return this.http.get(`${environment.backend_address}/albums/${id}/cover`, {
+      responseType: 'blob',
+    });
+  }
+
+  getSongCover(id: string): Observable<Blob> {
+    return this.http.get(`${environment.backend_address}/songs/${id}/cover`, {
+      responseType: 'blob',
+    });
+  }
+
+  getArtistLogo(name: string): Observable<Blob> {
+    return this.http.get(
+      `${environment.backend_address}/artists/${name}/logo`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
 }

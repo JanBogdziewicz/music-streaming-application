@@ -3,7 +3,10 @@
   <mat-nav-list class="list-horizontal">
     <a mat-list-item scrollable id="song" *ngFor="let song of songs">
       <figure>
-        <img src="{{ song.cover_path }}" alt="Album Cover of the Song" />
+        <img
+          [src]="images.get(song.cover) | safeResourceUrl"
+          alt="Song Cover"
+        />
         <figcaption>{{ song.name }}</figcaption>
       </figure>
     </a>
@@ -27,7 +30,10 @@
       (click)="goToAlbum(album)"
     >
       <figure class="link">
-        <img src="{{ album.cover_path }}" alt="Album Cover" />
+        <img
+          [src]="images.get(album.cover) | safeResourceUrl"
+          alt="Album Cover"
+        />
         <figcaption>{{ album.name }}</figcaption>
       </figure>
     </a>
@@ -45,7 +51,10 @@
   <mat-nav-list class="list-horizontal">
     <a mat-list-item scrollable id="artist" *ngFor="let artist of artists">
       <figure class="link">
-        <img src="{{ artist.logo_path }}" alt="Artist Logo" />
+        <img
+          [src]="images.get(artist.logo) | safeResourceUrl"
+          alt="Artist Logo"
+        />
         <figcaption>{{ artist.name }}</figcaption>
       </figure>
     </a>

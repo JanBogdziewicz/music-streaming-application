@@ -3,5 +3,5 @@ export interface Artist {
   name: string;
   join_date: string;
   bio: string;
-  logo_path: string;
+  logo: string;
 }

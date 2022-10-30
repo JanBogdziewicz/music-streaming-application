@@ -3,10 +3,12 @@ import {
   Directive,
   ElementRef,
   OnInit,
+  Pipe,
+  PipeTransform,
   QueryList,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Album } from 'src/app/database-entities/album';
@@ -34,6 +36,18 @@ export class ScrollableDirective {
   }
 }
 
+@Pipe({ name: 'safeResourceUrl' })
+export class SafeUrlPipe implements PipeTransform {
+  constructor(private readonly sanitizer: DomSanitizer) {}
+
+  public transform(url: string | undefined): SafeResourceUrl {
+    if (url) {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+    return '';
+  }
+}
+
 @Component({
   selector: 'app-explore',
   templateUrl: './explore.component.html',
@@ -49,6 +63,8 @@ export class ExploreComponent implements OnInit {
   public songs: Song[];
   public albums: Album[];
   public artists: Artist[];
+  public images: Map<string, string> = new Map<string, string>();
+  public test: string;
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
   public album_scroll: Scroll = { item_list: [], index: 0 };
@@ -58,13 +74,28 @@ export class ExploreComponent implements OnInit {
 
   ngOnInit(): void {
     this.songs$ = this.service.getSongs();
-    this.songs$.subscribe((res) => (this.songs = res));
+    this.songs$.subscribe((res) => {
+      this.songs = res;
+      this.songs.forEach((song) => {
+        this.getSongCover(song.id, song.cover);
+      });
+    });
 
     this.albums$ = this.service.getAlbums();
-    this.albums$.subscribe((res) => (this.albums = res));
+    this.albums$.subscribe((res) => {
+      this.albums = res;
+      this.albums.forEach((album) => {
+        this.getAlbumCover(album.id, album.cover);
+      });
+    });
 
     this.artists$ = this.service.getArtists();
-    this.artists$.subscribe((res) => (this.artists = res));
+    this.artists$.subscribe((res) => {
+      this.artists = res;
+      this.artists.forEach((artist) => {
+        this.getArtistLogo(artist.name, artist.logo);
+      });
+    });
   }
 
   ngAfterViewInit(): void {
@@ -78,6 +109,12 @@ export class ExploreComponent implements OnInit {
       this.artist_scroll.item_list = this.listItems.filter(
         (item) => item.element.id === 'artist'
       );
+    });
+  }
+
+  ngOnDestroy() {
+    this.images.forEach((image) => {
+      URL.revokeObjectURL(image);
     });
   }
 
@@ -103,5 +140,30 @@ export class ExploreComponent implements OnInit {
     this.router
       .navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate([`/album/${album.id}`]));
+  }
+
+  createUrl(image: Observable<Blob>, image_id: string) {
+    image.subscribe((data) => {
+      if (!this.images.has(image_id)) {
+        let url = URL.createObjectURL(data);
+        this.images.set(image_id, url);
+        console.log(this.images);
+      }
+    });
+  }
+
+  getAlbumCover(album_id: string, image_id: string) {
+    let image = this.service.getAlbumCover(album_id);
+    this.createUrl(image, image_id);
+  }
+
+  getSongCover(song_id: string, image_id: string) {
+    let image = this.service.getSongCover(song_id);
+    this.createUrl(image, image_id);
+  }
+
+  getArtistLogo(artist_name: string, image_id: string) {
+    let image = this.service.getArtistLogo(artist_name);
+    this.createUrl(image, image_id);
   }
 }
