@@ -8,6 +8,7 @@ class PlaylistSchema(BaseModel):
     songs: list[str] = Field([])
     length: int = Field(0)
     user: str = Field(...)
+    cover: str = Field(None)
 
     @validator("creation_date")
     def ensure_date(cls, v):
@@ -26,6 +27,7 @@ class PlaylistSchema(BaseModel):
 
 class UpdatePlaylistModel(BaseModel):
     name: str = Field(...)
+    cover: str = Field(None)
 
     class Config:
         schema_extra = {

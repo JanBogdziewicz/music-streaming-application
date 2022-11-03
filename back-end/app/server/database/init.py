@@ -6,6 +6,7 @@ from server.config import (
     database,
     album_covers_fs,
     artist_logos_fs,
+    playlist_images_fs,
     albums_collection,
     artists_collection,
     libraries_collection,
@@ -64,8 +65,12 @@ async def initialize_db_schema():
 async def init_images():
     album_cover_ids = []
     artist_logo_ids = []
+    playlist_cover_ids = []
     album_covers = [join(ALBUM_COVERS_PATH, f) for f in listdir(ALBUM_COVERS_PATH)]
     artist_logos = [join(ARTIST_LOGOS_PATH, f) for f in listdir(ARTIST_LOGOS_PATH)]
+    playlist_covers = [
+        join(PLAYLIST_IMAGES_PATH, f) for f in listdir(PLAYLIST_IMAGES_PATH)
+    ]
     for cover in album_covers:
         id = await album_covers_fs.upload_from_stream(
             path.basename(cover), open(cover, "rb")
@@ -76,7 +81,12 @@ async def init_images():
             path.basename(logo), open(logo, "rb")
         )
         artist_logo_ids.append(str(id))
-    return album_cover_ids, artist_logo_ids
+    for cover in playlist_covers:
+        id = await playlist_images_fs.upload_from_stream(
+            path.basename(cover), open(cover, "rb")
+        )
+        playlist_cover_ids.append(str(id))
+    return album_cover_ids, artist_logo_ids, playlist_cover_ids
 
 
 async def init_artists(fake: Faker, logo_ids: list):
@@ -162,7 +172,9 @@ async def init_users(fake: Faker):
     return user_ids
 
 
-async def init_playlists(fake: Faker, user_ids: list[str], song_ids: list[str]):
+async def init_playlists(
+    fake: Faker, user_ids: list[str], song_ids: list[str], cover_ids
+):
     playlist_ids = []
     for user_id in user_ids:
         user_playlist_ids = []
@@ -185,6 +197,7 @@ async def init_playlists(fake: Faker, user_ids: list[str], song_ids: list[str]):
                 "songs": songs,
                 "length": length,
                 "user": user_id,
+                "cover": random.choice(cover_ids),
             }
             playlist = await add_playlist(playlist_data)
             playlist_ids.append(playlist["id"])
@@ -279,11 +292,11 @@ async def initialize_db_data():
     fake = Faker()
     Faker.seed(0)
     random.seed(0)
-    album_cover_ids, artist_logo_ids = await init_images()
+    album_cover_ids, artist_logo_ids, playlist_cover_ids = await init_images()
     artist_ids = await init_artists(fake, artist_logo_ids)
     album_ids = await init_albums(fake, artist_ids, album_cover_ids)
     song_ids = await init_songs(fake, album_ids)
     user_ids = await init_users(fake)
-    playlist_ids = await init_playlists(fake, user_ids, song_ids)
+    playlist_ids = await init_playlists(fake, user_ids, song_ids, playlist_cover_ids)
     await init_libraries(user_ids, playlist_ids, artist_ids, album_ids, song_ids)
     await init_listenings(fake, user_ids, song_ids)

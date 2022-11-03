@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import Response
+
+from server.database.images import download_playlist_cover
 
 from server.database.playlist import *
 
@@ -85,3 +88,13 @@ async def add_song_to_playlist(playlist_id: str, song_id: str):
 async def delete_song_from_playlist(id: str, song_index: int):
     song = await remove_song_from_playlist(id, song_index)
     return ResponseModel(song, "Song successfully removed from the playlist")
+
+
+# Get cover of a playlist
+@PlaylistRouter.get(
+    "/{id}/cover", response_description="playlist cover retrieved sucessfully"
+)
+async def get_playlist_cover(id: str):
+    playlist = await retrieve_playlist(id)
+    cover = await download_playlist_cover(playlist["cover"])
+    return Response(cover)

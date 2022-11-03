@@ -13,6 +13,7 @@ def playlist_helper(playlist) -> dict:
         "songs": list(map(lambda x: str(x), playlist["songs"])),
         "length": playlist["length"],
         "user": playlist["user"],
+        "cover": playlist["cover"],
     }
 
 
