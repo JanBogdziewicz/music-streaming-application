@@ -1,15 +1,15 @@
 <mat-list>
   <h1>Songs</h1>
   <mat-nav-list class="list-horizontal">
-    <a mat-list-item scrollable id="song" *ngFor="let song of songs">
-      <figure class="link">
+    <div scrollable id="song" *ngFor="let song of songs">
+      <mat-card>
         <img
           [src]="images.get(song.cover) | safeResourceUrl"
           alt="Song Cover"
         />
-        <figcaption>{{ song.name }}</figcaption>
-      </figure>
-    </a>
+        <div class="title">{{ song.name }}</div>
+      </mat-card>
+    </div>
   </mat-nav-list>
   <div class="scroll">
     <button mat-mini-fab color="basic" (click)="scrollLeft(song_scroll)">
@@ -22,21 +22,20 @@
   <mat-divider></mat-divider>
   <h1>Albums</h1>
   <mat-nav-list class="list-horizontal">
-    <a
-      mat-list-item
+    <div
       scrollable
       id="album"
       *ngFor="let album of albums"
       (click)="goToAlbum(album)"
     >
-      <figure class="link">
+      <mat-card>
         <img
           [src]="images.get(album.cover) | safeResourceUrl"
           alt="Album Cover"
         />
-        <figcaption>{{ album.name }}</figcaption>
-      </figure>
-    </a>
+        <div class="title">{{ album.name }}</div>
+      </mat-card>
+    </div>
   </mat-nav-list>
   <div class="scroll">
     <button mat-mini-fab color="basic" (click)="scrollLeft(album_scroll)">
@@ -49,15 +48,15 @@
   <mat-divider></mat-divider>
   <h1>Artists</h1>
   <mat-nav-list class="list-horizontal">
-    <a mat-list-item scrollable id="artist" *ngFor="let artist of artists">
-      <figure class="link">
+    <div scrollable id="artist" *ngFor="let artist of artists">
+      <mat-card>
         <img
           [src]="images.get(artist.logo) | safeResourceUrl"
           alt="Artist Logo"
         />
-        <figcaption>{{ artist.name }}</figcaption>
-      </figure>
-    </a>
+        <div class="title">{{ artist.name }}</div>
+      </mat-card>
+    </div>
   </mat-nav-list>
   <div class="scroll">
     <button mat-mini-fab color="basic" (click)="scrollLeft(artist_scroll)">
