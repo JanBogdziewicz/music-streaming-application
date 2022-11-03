@@ -1,16 +1,54 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
-    <mat-grid-list cols="4" rowHeight="3:2">
-      <mat-grid-tile mat-list-item *ngFor="let playlist of playlists">
-        <a>
-          <figure class="link">
-            <figcaption>{{ playlist.name }}</figcaption>
-          </figure>
-        </a>
+    <mat-grid-list cols="4" rowHeight="5:4">
+      <mat-grid-tile *ngFor="let playlist of playlists">
+        <mat-card>
+          <img
+            [src]="images.get(playlist.cover) | safeResourceUrl"
+            alt="Playlist Cover"
+          />
+          <div class="title">{{ playlist.name }}</div>
+        </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
   </mat-tab>
-  <mat-tab label="Albums"> Content 2 </mat-tab>
-  <mat-tab label="Artists">Content 3</mat-tab>
-  <mat-tab label="Songs">Content 3</mat-tab>
+  <mat-tab label="Albums">
+    <mat-grid-list cols="4" rowHeight="5:4">
+      <mat-grid-tile *ngFor="let album of albums">
+        <mat-card (click)="goToAlbum(album)">
+          <img
+            [src]="images.get(album.cover) | safeResourceUrl"
+            alt="Album Cover"
+          />
+          <div class="title">{{ album.name }}</div>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-tab>
+  <mat-tab label="Artists">
+    <mat-grid-list cols="4" rowHeight="5:4">
+      <mat-grid-tile *ngFor="let artist of artists">
+        <mat-card>
+          <img
+            [src]="images.get(artist.logo) | safeResourceUrl"
+            alt="Artist Logo"
+          />
+          <div class="title">{{ artist.name }}</div>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-tab>
+  <mat-tab label="Songs">
+    <mat-grid-list cols="4" rowHeight="5:4">
+      <mat-grid-tile *ngFor="let song of songs">
+        <mat-card>
+          <img
+            [src]="images.get(song.cover) | safeResourceUrl"
+            alt="Song Cover"
+          />
+          <div class="title">{{ song.name }}</div>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-tab>
 </mat-tab-group>

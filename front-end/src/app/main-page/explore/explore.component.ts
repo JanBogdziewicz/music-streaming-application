@@ -30,7 +30,6 @@ export class ExploreComponent implements OnInit {
   public albums: Album[];
   public artists: Artist[];
   public images: Map<string, string> = new Map<string, string>();
-  public test: string;
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
   public album_scroll: Scroll = { item_list: [], index: 0 };

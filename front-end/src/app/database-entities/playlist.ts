@@ -5,4 +5,5 @@ export interface Playlist {
   songs: string[];
   length: Number;
   user: string;
+  cover: string;
 }
