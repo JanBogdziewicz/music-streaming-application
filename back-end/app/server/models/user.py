@@ -8,6 +8,7 @@ class UserSchema(BaseModel):
     birth_date: date = Field(...)
     join_date: datetime = Field(default_factory=datetime.now)
     country: str = Field(...)
+    avatar: str = Field(None)
     queue: list[str] = Field([])
     library: str = Field("")
 
@@ -31,6 +32,7 @@ class UserSchema(BaseModel):
 class UpdateUserModel(BaseModel):
     birth_date: date = Field(...)
     country: str = Field(...)
+    avatar: str = Field(None)
 
     @validator("birth_date")
     def ensure_birth_date(cls, v):

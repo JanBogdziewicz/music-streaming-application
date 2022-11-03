@@ -18,6 +18,7 @@ def user_helper(user) -> dict:
         "birth_date": user["birth_date"],
         "join_date": user["join_date"],
         "country": user["country"],
+        "avatar": user["avatar"],
         "queue": list(map(lambda x: str(x), user["queue"])),
         "library": str(user["library"]),
     }

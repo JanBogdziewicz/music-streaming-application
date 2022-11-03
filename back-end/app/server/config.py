@@ -7,7 +7,8 @@ client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.music
 album_covers_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "album")
 artist_logos_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "artist")
-playlist_images_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "playlist")
+playlist_covers_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "playlist")
+user_avatars_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "user")
 
 artists_collection: Collection = database.get_collection("artists")
 albums_collection: Collection = database.get_collection("albums")

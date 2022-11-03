@@ -1,5 +1,9 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import Response
+
+from server.database.images import download_user_avatar
+
 from server.database.library import retrieve_library
 
 from server.database.search import retrieve_user_searches
@@ -281,3 +285,13 @@ async def get_users_library_songs(username: str):
     if songs:
         return ResponseModel(songs, "Library playlists retrieved successfully")
     return ResponseModel(songs, "Empty list returned")
+
+
+# Get avatar of a user
+@UserRouter.get(
+    "/{username}/avatar", response_description="user avatar retrieved sucessfully"
+)
+async def get_user_avatar(username: str):
+    user = await retrieve_user(username)
+    avatar = await download_user_avatar(user["avatar"])
+    return Response(avatar)

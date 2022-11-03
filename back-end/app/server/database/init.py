@@ -6,7 +6,8 @@ from server.config import (
     database,
     album_covers_fs,
     artist_logos_fs,
-    playlist_images_fs,
+    playlist_covers_fs,
+    user_avatars_fs,
     albums_collection,
     artists_collection,
     libraries_collection,
@@ -62,31 +63,21 @@ async def initialize_db_schema():
     # await create_unique_constraint("time", [])
 
 
+async def upload_images(images_path: str, fs):
+    ids = []
+    images = [join(images_path, f) for f in listdir(images_path)]
+    for image in images:
+        id = await fs.upload_from_stream(path.basename(image), open(image, "rb"))
+        ids.append(str(id))
+    return ids
+
+
 async def init_images():
-    album_cover_ids = []
-    artist_logo_ids = []
-    playlist_cover_ids = []
-    album_covers = [join(ALBUM_COVERS_PATH, f) for f in listdir(ALBUM_COVERS_PATH)]
-    artist_logos = [join(ARTIST_LOGOS_PATH, f) for f in listdir(ARTIST_LOGOS_PATH)]
-    playlist_covers = [
-        join(PLAYLIST_IMAGES_PATH, f) for f in listdir(PLAYLIST_IMAGES_PATH)
-    ]
-    for cover in album_covers:
-        id = await album_covers_fs.upload_from_stream(
-            path.basename(cover), open(cover, "rb")
-        )
-        album_cover_ids.append(str(id))
-    for logo in artist_logos:
-        id = await artist_logos_fs.upload_from_stream(
-            path.basename(logo), open(logo, "rb")
-        )
-        artist_logo_ids.append(str(id))
-    for cover in playlist_covers:
-        id = await playlist_images_fs.upload_from_stream(
-            path.basename(cover), open(cover, "rb")
-        )
-        playlist_cover_ids.append(str(id))
-    return album_cover_ids, artist_logo_ids, playlist_cover_ids
+    album_cover_ids = await upload_images(ALBUM_COVERS_PATH, album_covers_fs)
+    artist_logo_ids = await upload_images(ARTIST_LOGOS_PATH, artist_logos_fs)
+    playlist_cover_ids = await upload_images(PLAYLIST_COVERS_PATH, playlist_covers_fs)
+    user_avatar_ids = await upload_images(USER_AVATARS_PATH, user_avatars_fs)
+    return album_cover_ids, artist_logo_ids, playlist_cover_ids, user_avatar_ids
 
 
 async def init_artists(fake: Faker, logo_ids: list):
@@ -152,7 +143,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
     return song_ids
 
 
-async def init_users(fake: Faker):
+async def init_users(fake: Faker, avatar_ids):
     user_ids = []
     for _ in range(USER_NR):
         birth_date = fake.date_of_birth(
@@ -165,6 +156,7 @@ async def init_users(fake: Faker):
                 start_date=(birth_date + relativedelta(years=USER_AGE_MIN))
             ),
             "country": fake.country(),
+            "avatar": random.choice(avatar_ids),
             "queue": [],
         }
         user = await add_user(user_data)
@@ -292,11 +284,16 @@ async def initialize_db_data():
     fake = Faker()
     Faker.seed(0)
     random.seed(0)
-    album_cover_ids, artist_logo_ids, playlist_cover_ids = await init_images()
+    (
+        album_cover_ids,
+        artist_logo_ids,
+        playlist_cover_ids,
+        user_avatar_ids,
+    ) = await init_images()
     artist_ids = await init_artists(fake, artist_logo_ids)
     album_ids = await init_albums(fake, artist_ids, album_cover_ids)
     song_ids = await init_songs(fake, album_ids)
-    user_ids = await init_users(fake)
+    user_ids = await init_users(fake, user_avatar_ids)
     playlist_ids = await init_playlists(fake, user_ids, song_ids, playlist_cover_ids)
     await init_libraries(user_ids, playlist_ids, artist_ids, album_ids, song_ids)
     await init_listenings(fake, user_ids, song_ids)
