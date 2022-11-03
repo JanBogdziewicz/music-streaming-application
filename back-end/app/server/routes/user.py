@@ -237,7 +237,8 @@ async def get_users_listenings(username: str):
     response_description="User's library playlists retrieved",
 )
 async def get_users_library_playlists(username: str):
-    playlists = await retrieve_library_playlists(username)
+    user = await retrieve_user(username)
+    playlists = await retrieve_library_playlists(user["library"])
     if playlists:
         return ResponseModel(playlists, "Library playlists retrieved successfully")
     return ResponseModel(playlists, "Empty list returned")
@@ -249,7 +250,8 @@ async def get_users_library_playlists(username: str):
     response_description="User's library albums retrieved",
 )
 async def get_users_library_albums(username: str):
-    albums = await retrieve_library_albums(username)
+    user = await retrieve_user(username)
+    albums = await retrieve_library_albums(user["library"])
     if albums:
         return ResponseModel(albums, "Library albums retrieved successfully")
     return ResponseModel(albums, "Empty list returned")
@@ -261,7 +263,8 @@ async def get_users_library_albums(username: str):
     response_description="User's library artists retrieved",
 )
 async def get_users_library_artists(username: str):
-    artists = await retrieve_library_artists(username)
+    user = await retrieve_user(username)
+    artists = await retrieve_library_artists(user["library"])
     if artists:
         return ResponseModel(artists, "Library artists retrieved successfully")
     return ResponseModel(artists, "Empty list returned")
@@ -273,7 +276,8 @@ async def get_users_library_artists(username: str):
     response_description="User's library songs retrieved",
 )
 async def get_users_library_songs(username: str):
-    songs = await retrieve_library_songs(username)
+    user = await retrieve_user(username)
+    songs = await retrieve_library_songs(user["library"])
     if songs:
         return ResponseModel(songs, "Library playlists retrieved successfully")
     return ResponseModel(songs, "Empty list returned")
