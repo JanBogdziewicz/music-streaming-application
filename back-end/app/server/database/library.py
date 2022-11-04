@@ -100,7 +100,7 @@ async def retrieve_library_artists(id: str):
     if not library:
         raise HTTPException(status_code=404, detail="Library not found")
     artists = []
-    async for artist in artists_collection.find({"_id": {"$in": library["artists"]}}):
+    async for artist in artists_collection.find({"name": {"$in": library["artists"]}}):
         artists.append(artist_helper(artist))
     return artists
 

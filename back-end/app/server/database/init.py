@@ -94,7 +94,7 @@ async def init_artists(fake: Faker, logo_ids: list):
     return artist_ids
 
 
-async def init_albums(fake: Faker, artist_ids: list[str], cover_ids):
+async def init_albums(fake: Faker, artist_ids: list[str], cover_ids: list):
     album_ids = []
     for artist_name in artist_ids:
         artist = await retrieve_artist(artist_name)
@@ -143,7 +143,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
     return song_ids
 
 
-async def init_users(fake: Faker, avatar_ids):
+async def init_users(fake: Faker, avatar_ids: list):
     user_ids = []
     for _ in range(USER_NR):
         birth_date = fake.date_of_birth(
@@ -165,7 +165,7 @@ async def init_users(fake: Faker, avatar_ids):
 
 
 async def init_playlists(
-    fake: Faker, user_ids: list[str], song_ids: list[str], cover_ids
+    fake: Faker, user_ids: list[str], song_ids: list[str], cover_ids: list
 ):
     playlist_ids = []
     for user_id in user_ids:
