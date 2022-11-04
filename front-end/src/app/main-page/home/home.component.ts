@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit {
     this.artists$.subscribe((res) => {
       this.artists = res;
       this.artists.forEach((artist) => {
-        this.getArtistLogo(artist.id, artist.logo);
+        this.getArtistLogo(artist.name, artist.logo);
       });
     });
 

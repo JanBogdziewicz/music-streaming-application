@@ -47,6 +47,12 @@ export class UserService {
       .pipe(map((response) => response.data as Song[]));
   }
 
+  getUserPlaylists(username: string): Observable<Playlist[]> {
+    return this.http
+      .get<MongoResponse>(`${this.user_address}/${username}/playlists`)
+      .pipe(map((response) => response.data as Playlist[]));
+  }
+
   getUserAvatar(username: string): Observable<Blob> {
     return this.http.get(`${this.user_address}/${username}/avatar`, {
       responseType: 'blob',

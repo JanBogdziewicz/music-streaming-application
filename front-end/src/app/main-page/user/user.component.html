@@ -1,1 +1,23 @@
-<p>user works!</p>
+<mat-list>
+  <h1>User Playlists</h1>
+  <mat-nav-list class="list-horizontal">
+    <div scrollable id="playlist" *ngFor="let playlist of playlists">
+      <mat-card (click)="goToPlaylist(playlist)">
+        <img
+          [src]="images.get(playlist.cover) | safeResourceUrl"
+          alt="Playlist Cover"
+        />
+        <div class="title">{{ playlist.name }}</div>
+      </mat-card>
+    </div>
+  </mat-nav-list>
+  <div class="scroll">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(playlist_scroll)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-mini-fab color="basic" (click)="scrollRight(playlist_scroll)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+</mat-list>
