@@ -19,7 +19,7 @@ const routes: Routes = [
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'explore', component: ExploreComponent },
-      { path: 'user/:id', component: UserComponent },
+      { path: 'user/:username', component: UserComponent },
       { path: 'playlist/:id', component: PlaylistComponent },
       { path: 'album/:id', component: AlbumComponent },
     ],

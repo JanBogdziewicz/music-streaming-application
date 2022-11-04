@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { PlaylistService } from '../services/playlist.service';
 import { Playlist } from '../database-entities/playlist';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -10,21 +11,47 @@ import { Router } from '@angular/router';
   styleUrls: ['./sidenav-wrapper.component.css'],
 })
 export class SidenavWrapperComponent implements OnInit {
-  isExpanded: boolean = false;
-  playlists$!: Observable<Playlist[]>
+  public username: string = 'gmccullough'; // constant for now
+  public avatar: string;
+
+  public isExpanded: boolean = false;
+
+  private playlists$!: Observable<Playlist[]>;
+
+  public playlists: Playlist[];
 
   constructor(
-    private playlistService: PlaylistService, 
+    private playlistService: PlaylistService,
+    private userService: UserService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.playlists$ = this.playlistService.getPlaylists()
+    this.playlists$ = this.playlistService.getPlaylists();
+    this.playlists$.subscribe((res) => (this.playlists = res));
+
+    this.getUserAvatar(this.username);
+  }
+
+  ngOnDestroy() {
+    URL.revokeObjectURL(this.avatar);
   }
 
   goToPlaylist(playlist: Playlist) {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-        this.router.navigate([`/playlist/${playlist.id}`])
-    );
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([`/playlist/${playlist.id}`]));
+  }
+
+  createUrl(image: Observable<Blob>) {
+    image.subscribe((data) => {
+      let url = URL.createObjectURL(data);
+      this.avatar = url;
+    });
+  }
+
+  getUserAvatar(username: string) {
+    let image = this.userService.getUserAvatar(username);
+    this.createUrl(image);
   }
 }

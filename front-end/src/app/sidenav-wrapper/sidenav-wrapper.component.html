@@ -32,34 +32,46 @@
         <span *ngIf="isExpanded" class="menu-item">Explore</span>
       </mat-list-item>
 
-      <mat-list-item [routerLink]="'user'">
+      <mat-list-item [routerLink]="['user', username]">
         <mat-icon mat-list-icon>account_circle_icon</mat-icon>
         <span *ngIf="isExpanded" class="menu-item">User</span>
       </mat-list-item>
     </mat-nav-list>
 
     <mat-nav-list *ngIf="isExpanded">
-      <mat-list-item 
-        *ngFor="let playlist of playlists$ | async"
+      <mat-list-item
+        *ngFor="let playlist of playlists"
         class="example-item"
         (click)="goToPlaylist(playlist)"
       >
-        {{playlist.name}}
+        {{ playlist.name }}
       </mat-list-item>
     </mat-nav-list>
-    
   </mat-sidenav>
 
   <mat-sidenav-content role="main">
     <mat-toolbar>
       <span class="example-spacer"></span>
-      <mat-list-item [routerLink]="'user'">
+      <mat-list-item>
         <div class="avatar_div">
-          <mat-icon mat-list-icon class="avatar">account_circle_icon</mat-icon>
+          <img
+            [src]="avatar | safeResourceUrl"
+            alt="User Avatar"
+            [matMenuTriggerFor]="menu"
+          />
         </div>
       </mat-list-item>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
-
 </mat-sidenav-container>
+
+<mat-menu #menu="matMenu">
+  <div class="menu_avatar">
+    <img [src]="avatar | safeResourceUrl" alt="User Avatar" />
+    <div>{{ username }}</div>
+  </div>
+  <mat-divider></mat-divider>
+  <button mat-menu-item [routerLink]="['user', username]">Profile</button>
+  <button mat-menu-item>Log out</button>
+</mat-menu>
