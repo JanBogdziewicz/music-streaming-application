@@ -6,6 +6,7 @@ import { UserComponent } from './main-page/user/user.component';
 import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { SidenavWrapperComponent } from './sidenav-wrapper/sidenav-wrapper.component';
 import { AlbumComponent } from './main-page/album/album.component';
+import { ArtistComponent } from './artist/artist.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'user/:username', component: UserComponent },
       { path: 'playlist/:id', component: PlaylistComponent },
       { path: 'album/:id', component: AlbumComponent },
+      { path: 'artist/:name', component: ArtistComponent },
     ],
   },
   {

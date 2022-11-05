@@ -1,13 +1,13 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Album } from '../database-entities/album';
 import { Observable } from 'rxjs';
+import { Song } from '../database-entities/song';
+import { ArtistService } from '../services/artist.service';
+import { Artist } from '../database-entities/artist';
 import { ScrollableDirective } from 'src/app/common/scrollable-directive';
-import { Album } from 'src/app/database-entities/album';
-import { Artist } from 'src/app/database-entities/artist';
-import { Song } from 'src/app/database-entities/song';
-import { AlbumService } from 'src/app/services/album.service';
-import { ArtistService } from 'src/app/services/artist.service';
-import { SongService } from 'src/app/services/song.service';
+import { AlbumService } from '../services/album.service';
+import { SongService } from '../services/song.service';
 
 export interface Scroll {
   item_list: ScrollableDirective[];
@@ -15,55 +15,53 @@ export interface Scroll {
 }
 
 @Component({
-  selector: 'app-explore',
-  templateUrl: './explore.component.html',
-  styleUrls: ['./explore.component.css'],
+  selector: 'app-artist',
+  templateUrl: './artist.component.html',
+  styleUrls: ['./artist.component.css']
 })
-export class ExploreComponent implements OnInit {
+export class ArtistComponent implements OnInit {
   @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
 
-  private songs$!: Observable<Song[]>;
-  private albums$!: Observable<Album[]>;
-  private artists$!: Observable<Artist[]>;
+  artist$!: Observable<Artist>;
+  songs$!: Observable<Song[]>;
+  albums$!: Observable<Album[]>;
 
+  public artist: Artist;
   public songs: Song[];
   public albums: Album[];
-  public artists: Artist[];
+
   public images: Map<string, string> = new Map<string, string>();
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
   public album_scroll: Scroll = { item_list: [], index: 0 };
-  public artist_scroll: Scroll = { item_list: [], index: 0 };
 
   constructor(
-    private songService: SongService,
-    private artistService: ArtistService,
+    private router: Router, 
+    private artistService: ArtistService, 
+    private route: ActivatedRoute, 
     private albumService: AlbumService,
-    private router: Router
-  ) {}
+    private songService: SongService
+  ) { }
 
   ngOnInit(): void {
-    this.songs$ = this.songService.getSongs();
+    this.artist$ = this.getArtist();
+    this.songs$ = this.getArtistSongs();
+    this.albums$ = this.getArtistAlbums();
+
+    this.artist$.subscribe(res => {
+      this.artist = res;
+      this.getArtistLogo(this.artist.name, this.artist.logo);
+    });
     this.songs$.subscribe((res) => {
       this.songs = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.songs.forEach((song) => {
         this.getSongCover(song.id, song.cover);
       });
     });
-
-    this.albums$ = this.albumService.getAlbums();
     this.albums$.subscribe((res) => {
       this.albums = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.albums.forEach((album) => {
         this.getAlbumCover(album.id, album.cover);
-      });
-    });
-
-    this.artists$ = this.artistService.getArtists();
-    this.artists$.subscribe((res) => {
-      this.artists = res.sort(() => 0.5 - Math.random()).slice(0, 12);
-      this.artists.forEach((artist) => {
-        this.getArtistLogo(artist.name, artist.logo);
       });
     });
   }
@@ -76,9 +74,6 @@ export class ExploreComponent implements OnInit {
       this.album_scroll.item_list = this.listItems.filter(
         (item) => item.element.id === 'album'
       );
-      this.artist_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'artist'
-      );
     });
   }
 
@@ -86,6 +81,27 @@ export class ExploreComponent implements OnInit {
     this.images.forEach((image) => {
       URL.revokeObjectURL(image);
     });
+  }
+
+  goToAlbum(album: Album) {
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([`/album/${album.id}`]));
+  }
+
+  getArtist() {
+    const name = String(this.route.snapshot.paramMap.get('name'));
+    return this.artistService.getArtistByName(name);
+  }
+
+  getArtistSongs() {
+    const name = String(this.route.snapshot.paramMap.get('name'));
+    return this.artistService.getArtistSongs(name);
+  }
+
+  getArtistAlbums() {
+    const name = String(this.route.snapshot.paramMap.get('name'));
+    return this.artistService.getArtistAlbums(name);
   }
 
   public scrollMove(element: ScrollableDirective) {
@@ -106,27 +122,6 @@ export class ExploreComponent implements OnInit {
     this.scrollMove(s.item_list[s.index]);
   }
 
-  goToAlbum(album: Album) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/album/${album.id}`]));
-  }
-
-  goToArtist(artist: Artist) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/artist/${artist.name}`]));
-  }
-
-  createUrl(image: Observable<Blob>, image_id: string) {
-    image.subscribe((data) => {
-      if (!this.images.has(image_id)) {
-        let url = URL.createObjectURL(data);
-        this.images.set(image_id, url);
-      }
-    });
-  }
-
   getAlbumCover(album_id: string, image_id: string) {
     let image = this.albumService.getAlbumCover(album_id);
     this.createUrl(image, image_id);
@@ -140,5 +135,14 @@ export class ExploreComponent implements OnInit {
   getArtistLogo(artist_name: string, image_id: string) {
     let image = this.artistService.getArtistLogo(artist_name);
     this.createUrl(image, image_id);
+  }
+
+  createUrl(image: Observable<Blob>, image_id: string) {
+    image.subscribe((data) => {
+      if (!this.images.has(image_id)) {
+        let url = URL.createObjectURL(data);
+        this.images.set(image_id, url);
+      }
+    });
   }
 }

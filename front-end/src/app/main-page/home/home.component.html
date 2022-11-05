@@ -27,7 +27,7 @@
   </mat-tab>
   <mat-tab label="Artists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let artist of artists">
+      <mat-grid-tile *ngFor="let artist of artists" (click)="goToArtist(artist)">
         <mat-card>
           <img
             [src]="images.get(artist.logo) | safeResourceUrl"

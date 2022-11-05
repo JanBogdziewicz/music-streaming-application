@@ -16,6 +16,7 @@ import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { AlbumComponent } from './main-page/album/album.component';
 import { SafeUrlPipe } from './common/safe-resource-url';
 import { ScrollableDirective } from './common/scrollable-directive';
+import { ArtistComponent } from './artist/artist.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ScrollableDirective } from './common/scrollable-directive';
     AlbumComponent,
     ScrollableDirective,
     SafeUrlPipe,
+    ArtistComponent,
   ],
   imports: [
     CommonModule,

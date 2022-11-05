@@ -45,25 +45,5 @@
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
-  <mat-divider></mat-divider>
-  <h1>Artists</h1>
-  <mat-nav-list class="list-horizontal">
-    <div scrollable id="artist" *ngFor="let artist of artists" (click)="goToArtist(artist)">
-      <mat-card>
-        <img
-          [src]="images.get(artist.logo) | safeResourceUrl"
-          alt="Artist Logo"
-        />
-        <div class="title">{{ artist.name }}</div>
-      </mat-card>
-    </div>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(artist_scroll)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(artist_scroll)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
 </mat-list>
+  
