@@ -27,7 +27,7 @@ export class SidenavWrapperComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.playlists$ = this.playlistService.getPlaylists();
+    this.playlists$ = this.userService.getUserPlaylists(this.username);
     this.playlists$.subscribe((res) => (this.playlists = res));
 
     this.getUserAvatar(this.username);
