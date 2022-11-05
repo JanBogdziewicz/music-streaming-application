@@ -60,12 +60,22 @@ async def delete_artist_data(artist_name: str):
 @ArtistRouter.get(
     "/{artist_name}/albums", response_description="artist albums retrieved sucessfully"
 )
-async def get_album_songs(artist_name: str):
+async def get_artist_albums(artist_name: str):
     albums = await retrieve_artist_albums(artist_name)
     if albums:
         return ResponseModel(albums, "All artist albums retrieved successfully")
     return ResponseModel(albums, "Empty list returned")
 
+
+# Get all songs of an artist
+@ArtistRouter.get(
+    "/{artist_name}/songs", response_description="artist songs retrieved sucessfully"
+)
+async def get_artist_songs(artist_name: str):
+    songs = await retrieve_artist_songs(artist_name)
+    if songs:
+        return ResponseModel(songs, "All artist songs retrieved successfully")
+    return ResponseModel(songs, "Empty list returned")
 
 # Get logo of an artist
 @ArtistRouter.get(

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
-from server.config import artists_collection, albums_collection
+from server.config import artists_collection, albums_collection, songs_collection
 from server.database.album import album_helper
-
+from server.database.song import song_helper
 
 # helper
 def artist_helper(artist) -> dict:
@@ -61,3 +61,12 @@ async def retrieve_artist_albums(name: str):
     async for album in albums_collection.find({"artist": name}):
         albums.append(album_helper(album))
     return albums
+
+async def retrieve_artist_songs(name: str):
+    artist = await artists_collection.find_one({"name": name})
+    if not artist:
+        raise HTTPException(status_code=404, detail="artist not found")
+    songs = []
+    async for song in songs_collection.find({"artist": name}):
+        songs.append(song_helper(song))
+    return songs
