@@ -9,16 +9,19 @@ from .utils import (
 
 from jose import jwt
 from pydantic import ValidationError
-from server.models.user import TokenPayload, SystemUser
+from server.models.user import TokenPayload, SystemUser, UserSchemaNoPass
 from server.database.user import *
+import logging
+
 
 reuseable_oauth = OAuth2PasswordBearer(
     tokenUrl="/users/login",
     scheme_name="JWT"
 )
 
+logger = logging.getLogger(__name__)
 
-async def get_current_user(token: str = Depends(reuseable_oauth)) -> SystemUser:
+async def get_current_user(token: str = Depends(reuseable_oauth)) -> UserSchemaNoPass:
     try:
         payload = jwt.decode(
             token, JWT_SECRET_KEY, algorithms=[ALGORITHM]
@@ -38,7 +41,7 @@ async def get_current_user(token: str = Depends(reuseable_oauth)) -> SystemUser:
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = retrieve_user(token_data.sub)
+    user = await retrieve_user_no_pass(token_data.sub)
 
     if user is None:
         raise HTTPException(
@@ -46,4 +49,4 @@ async def get_current_user(token: str = Depends(reuseable_oauth)) -> SystemUser:
             detail="Could not find user",
         )
 
-    return SystemUser(**user)
+    return UserSchemaNoPass(**user)

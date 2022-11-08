@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body, FastAPI, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
 from fastapi.responses import RedirectResponse
-from server.models.user import UserOut, UserAuth
+from server.models.user import UserOut, UserAuth, UserSchemaNoPass
 from server.utils import *
 from uuid import uuid4
 from fastapi.security import OAuth2PasswordRequestForm
@@ -28,6 +28,7 @@ from server.database.user import (
     add_user,
     delete_user,
     retrieve_user,
+    retrieve_user_no_pass,
     retrieve_users,
     update_user,
     append_library,
@@ -49,19 +50,16 @@ from server.models.user import (
 
 UserRouter = APIRouter()
 
+
 # Add a new user
-
-
 @UserRouter.post("/", response_description="User added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
-    user['password'] = get_hashed_password(user['password'])
     new_user = await add_user(user)
     return ResponseModel(new_user, "User added successfully.")
 
+
 # Login user
-
-
 @UserRouter.post("/login", summary="Create access and refresh tokens for user", response_model=TokenSchema)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await retrieve_user(form_data.username)
@@ -83,9 +81,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         "refresh_token": create_refresh_token(user['username']),
     }
 
+
 # Get all users
-
-
 @UserRouter.get("/", response_description="All users retrieved")
 async def get_users():
     users = await retrieve_users()
@@ -97,7 +94,7 @@ async def get_users():
 # Get a user with a matching username
 @UserRouter.get("/{username}", response_description="User retrieved")
 async def get_user_data(username: str):
-    user = await retrieve_user(username)
+    user = await retrieve_user_no_pass(username)
     return ResponseModel(user, "User retrieved successfully")
 
 
@@ -336,9 +333,8 @@ async def get_user_avatar(username: str):
     avatar = await download_user_avatar(user["avatar"])
     return Response(avatar)
 
+
 # Get current user
-
-
-@UserRouter.get('/me', summary='Get details of currently logged in user', response_model=UserOut)
-async def get_me(user: SystemUser = Depends(get_current_user)):
+@UserRouter.get('/auth/me', summary='Get details of currently logged in user', response_model=UserSchemaNoPass)
+async def get_me(user: UserSchemaNoPass = Depends(get_current_user)):
     return user

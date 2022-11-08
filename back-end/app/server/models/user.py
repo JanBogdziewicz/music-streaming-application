@@ -4,9 +4,8 @@ from pydantic import BaseModel, Field, validator
 from uuid import UUID
 
 
-class UserSchema(BaseModel):
+class UserSchemaNoPass(BaseModel):
     username: str = Field(..., min_length=1, max_length=32)
-    password: str = Field(..., min_length=6, max_length=32)
     birth_date: date = Field(...)
     join_date: datetime = Field(default_factory=datetime.now)
     country: str = Field(...)
@@ -19,6 +18,10 @@ class UserSchema(BaseModel):
         if v > date.today() - relativedelta(years=12):
             raise ValueError("User must be 12 years old or older")
         return v
+
+
+class UserSchema(UserSchemaNoPass):
+    password: str = Field(..., min_length=6, max_length=32)
 
     class Config:
         arbitrary_types_allowed = True
@@ -90,11 +93,11 @@ class UserAuth(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: UUID
-    email: str
+    auth_id: UUID
+    username: str
 
 
-class SystemUser(UserOut):
+class SystemUser(UserSchema):
     password: str
 
 
