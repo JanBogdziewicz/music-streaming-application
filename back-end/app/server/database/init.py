@@ -151,6 +151,7 @@ async def init_users(fake: Faker, avatar_ids: list):
         )
         user_data = {
             "username": fake.user_name(),
+            "password": fake.password(),
             "birth_date": str(birth_date),
             "join_date": fake.date_time_between(
                 start_date=(birth_date + relativedelta(years=USER_AGE_MIN))

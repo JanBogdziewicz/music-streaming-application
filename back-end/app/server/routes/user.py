@@ -1,6 +1,14 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, FastAPI, status, HTTPException, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
+from fastapi.responses import RedirectResponse
+from server.models.user import UserOut, UserAuth
+from server.utils import *
+from uuid import uuid4
+from fastapi.security import OAuth2PasswordRequestForm
+from server.models.user import TokenSchema, SystemUser
+from server.deps import get_current_user
+
 
 from server.database.images import download_user_avatar
 
@@ -38,17 +46,46 @@ from server.models.user import (
     UpdateLibraryModel,
 )
 
+
 UserRouter = APIRouter()
 
 # Add a new user
+
+
 @UserRouter.post("/", response_description="User added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
+    user['password'] = get_hashed_password(user['password'])
     new_user = await add_user(user)
     return ResponseModel(new_user, "User added successfully.")
 
+# Login user
+
+
+@UserRouter.post("/login", summary="Create access and refresh tokens for user", response_model=TokenSchema)
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await retrieve_user(form_data.username)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect email or password"
+        )
+
+    hashed_pass = user['password']
+    if not verify_password(form_data.password, hashed_pass):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect email or password"
+        )
+
+    return {
+        "access_token": create_access_token(user['username']),
+        "refresh_token": create_refresh_token(user['username']),
+    }
 
 # Get all users
+
+
 @UserRouter.get("/", response_description="All users retrieved")
 async def get_users():
     users = await retrieve_users()
@@ -136,7 +173,8 @@ async def get_library_data(username: str):
 async def append_queue_data(username: str, req: list[str] = Body(...)):
     await append_queue(username, req)
     return ResponseModel(
-        "Song/s with IDs: {0} appeneded to queue of user {1}".format(req, username),
+        "Song/s with IDs: {0} appeneded to queue of user {1}".format(
+            req, username),
         "Song/s added succesfully to user's queue",
     )
 
@@ -149,7 +187,8 @@ async def append_queue_data(username: str, req: list[str] = Body(...)):
 async def prepend_queue_data(username: str, req: list[str] = Body(...)):
     await prepend_queue(username, req)
     return ResponseModel(
-        "Song/s with IDs: {0} prepended to queue of user {1}".format(req, username),
+        "Song/s with IDs: {0} prepended to queue of user {1}".format(
+            req, username),
         "Song/s added succesfully to user's queue",
     )
 
@@ -162,7 +201,8 @@ async def prepend_queue_data(username: str, req: list[str] = Body(...)):
 async def pull_queue_data(username: str, req: list[int] = Body(...)):
     await pull_queue(username, req)
     return ResponseModel(
-        "Song/s with indexes: {0} pulled from queue of user {1}".format(req, username),
+        "Song/s with indexes: {0} pulled from queue of user {1}".format(
+            req, username),
         "Song/s pulled succesfully from user's queue",
     )
 
@@ -295,3 +335,10 @@ async def get_user_avatar(username: str):
     user = await retrieve_user(username)
     avatar = await download_user_avatar(user["avatar"])
     return Response(avatar)
+
+# Get current user
+
+
+@UserRouter.get('/me', summary='Get details of currently logged in user', response_model=UserOut)
+async def get_me(user: SystemUser = Depends(get_current_user)):
+    return user

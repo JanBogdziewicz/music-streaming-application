@@ -11,6 +11,10 @@ services:
     ports:
       - "8090:8090"
     restart: on-failure
+    environment:
+      - JWT_SECRET_KEY=music
+      - JWT_REFRESH_SECRET_KEY=music
+      
   mongodb:
     image: mongo:5.0
     ports:
