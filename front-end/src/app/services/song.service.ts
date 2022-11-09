@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Album } from '../database-entities/album';
 import { MongoResponse } from '../database-entities/mongo_response';
 import { Song } from '../database-entities/song';
 
@@ -27,9 +28,22 @@ export class SongService {
     );
   }
 
+  getSong(id: string): Observable<Song> {
+    return this.http.get<MongoResponse>(`${this.song_address}/${id}`).pipe(
+      tap((response) => console.log(response)),
+      map((response) => response.data as Song)
+    );
+  }
+
   getSongCover(id: string): Observable<Blob> {
     return this.http.get(`${this.song_address}/${id}/cover`, {
       responseType: 'blob',
     });
+  }
+
+  getSongAlbum(id: string): Observable<Album> {
+    return this.http
+      .get<MongoResponse>(`${this.song_address}/${id}/album`)
+      .pipe(map((response) => response.data as Album));
   }
 }

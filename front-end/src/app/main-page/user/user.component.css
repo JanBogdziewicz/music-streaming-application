@@ -19,7 +19,7 @@ mat-card {
   height: 75%;
 }
 
-mat-card:hover {
+.playlists mat-card:hover {
   box-shadow: 1px 5px 10px grey;
   cursor: pointer;
 }
@@ -30,7 +30,13 @@ mat-card:hover {
   justify-content: space-between;
 }
 
-img {
+.scroll mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playlists img {
   width: 100%;
   height: 90%;
   border-radius: 2%;
@@ -41,6 +47,148 @@ img {
   text-align: center;
 }
 
-h1 {
+.playlists h1 {
   margin: 1% 0 1% 2%;
+}
+
+.user_data {
+  display: flex;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.text {
+  box-sizing: border-box;
+  width: 25%;
+  height: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 5%;
+}
+
+.text .text_element {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9vw;
+}
+
+.text h1 {
+  font-size: 3vw;
+  font-weight: 750;
+  padding-bottom: 5%;
+}
+
+.avatar {
+  box-sizing: border-box;
+  padding: 2%;
+  display: flex;
+  align-items: center;
+}
+
+.avatar mat-card {
+  width: 13vw;
+  height: 100%;
+}
+
+.profilepic_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.profilepic:hover .profilepic_content {
+  opacity: 1;
+}
+
+.profilepic:hover .profilepic_image {
+  opacity: 0.5;
+}
+
+.profilepic {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #111;
+}
+
+.profilepic_content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.profilepic_text {
+  text-transform: uppercase;
+  font-size: 0.8vw;
+  width: 50%;
+  text-align: center;
+}
+
+.user_data mat-icon {
+  font-size: 1vw;
+  margin: 0.5vw;
+  transform: scale(1.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top_list {
+  display: flex;
+  padding: 2%;
+}
+
+.top_list h1 {
+  margin: 2% 0 2% 0;
+}
+
+.top_list div {
+  flex: 0 0 calc(100% / 2);
+  text-align: center;
+}
+
+.top_image {
+  width: 50%;
+}
+
+.top_image img {
+  width: 50%;
+  height: 80%;
+  border-radius: 2%;
+  object-fit: cover;
+}
+
+.top_list mat-card:hover {
+  box-shadow: 1px 5px 10px grey;
+  cursor: pointer;
+}
+
+.top_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1%;
+}
+
+.top_content mat-card {
+  width: 60%;
+  height: 20%;
+  display: flex;
+  align-items: center;
 }

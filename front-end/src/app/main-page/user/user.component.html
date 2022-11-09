@@ -1,23 +1,91 @@
 <mat-list>
-  <h1>User Playlists</h1>
-  <mat-nav-list class="list-horizontal">
-    <div scrollable id="playlist" *ngFor="let playlist of playlists">
-      <mat-card (click)="goToPlaylist(playlist)">
-        <img
-          [src]="images.get(playlist.cover) | safeResourceUrl"
-          alt="Playlist Cover"
-        />
-        <div class="title">{{ playlist.name }}</div>
+  <div class="user_data">
+    <div class="avatar">
+      <mat-card>
+        <div class="profilepic">
+          <img
+            class="profilepic_image"
+            [src]="images.get(user.avatar) | safeResourceUrl"
+            alt="User Avatar"
+          />
+          <div class="profilepic_content">
+            <mat-icon mat-list-icon>photo_camera</mat-icon>
+            <span class="profilepic_text">Change Avatar</span>
+          </div>
+        </div>
       </mat-card>
     </div>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(playlist_scroll)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(playlist_scroll)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+    <div class="text">
+      <h1>{{ username }}</h1>
+      <div class="text_element">
+        <mat-icon>flag</mat-icon>
+        <div>{{ user.country }}</div>
+      </div>
+      <div class="text_element">
+        <mat-icon>today</mat-icon>
+        <div>Joined {{ user_join_time }} ago</div>
+      </div>
+      <div class="text_element">
+        <mat-icon>cake</mat-icon>
+        <div *ngIf="user_birthday_days">
+          Birthday in {{ user_birthday_days }} days
+        </div>
+        <div *ngIf="!user_birthday_days">Happy Birthday!</div>
+      </div>
+    </div>
   </div>
   <mat-divider></mat-divider>
+  <div class="playlists">
+    <h1>User Playlists</h1>
+    <mat-nav-list class="list-horizontal">
+      <div scrollable id="playlist" *ngFor="let playlist of playlists">
+        <mat-card (click)="goToPlaylist(playlist)">
+          <img
+            [src]="images.get(playlist.cover) | safeResourceUrl"
+            alt="Playlist Cover"
+          />
+          <div class="title">{{ playlist.name }}</div>
+        </mat-card>
+      </div>
+    </mat-nav-list>
+    <div class="scroll">
+      <button mat-mini-fab color="basic" (click)="scrollLeft(playlist_scroll)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button mat-mini-fab color="basic" (click)="scrollRight(playlist_scroll)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="top_list">
+    <div>
+      <h1>Top Songs</h1>
+      <div class="top_content" *ngFor="let topSong of topSongs">
+        <mat-card>
+          <div class="top_image">
+            <img
+              [src]="images.get(topSong.cover) | safeResourceUrl"
+              alt="Song Cover"
+            />
+          </div>
+          <div class="title">{{ topSong.name }}</div>
+        </mat-card>
+      </div>
+    </div>
+    <div>
+      <h1>Top Artists</h1>
+      <div class="top_content" *ngFor="let topArtist of topArtists">
+        <mat-card>
+          <div class="top_image">
+            <img
+              [src]="images.get(topArtist.logo) | safeResourceUrl"
+              alt="Artist Logo"
+            />
+          </div>
+          <div class="title">{{ topArtist.name }}</div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </mat-list>

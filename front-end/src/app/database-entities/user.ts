@@ -4,6 +4,7 @@ export interface User {
   birth_date: string;
   join_date: string;
   country: string;
+  avatar: string;
   queue: string[];
   library: string;
 }
