@@ -17,6 +17,9 @@ import { AlbumComponent } from './main-page/album/album.component';
 import { SafeUrlPipe } from './common/safe-resource-url';
 import { ScrollableDirective } from './common/scrollable-directive';
 import { ArtistComponent } from './artist/artist.component';
+import { RegisterComponent } from './register/register.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { ArtistComponent } from './artist/artist.component';
     ScrollableDirective,
     SafeUrlPipe,
     ArtistComponent,
+    RegisterComponent,
+    LoginComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +44,7 @@ import { ArtistComponent } from './artist/artist.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     ScrollingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

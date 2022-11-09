@@ -7,8 +7,12 @@ import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { SidenavWrapperComponent } from './sidenav-wrapper/sidenav-wrapper.component';
 import { AlbumComponent } from './main-page/album/album.component';
 import { ArtistComponent } from './artist/artist.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  {path: 'register', component: RegisterComponent},
+  {path: 'login', component: LoginComponent},
   {
     path: '',
     redirectTo: 'home',

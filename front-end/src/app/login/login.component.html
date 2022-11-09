@@ -1,0 +1,42 @@
+<!-- <form class="form-signin" [formGroup]='registerForm' (submit)="register()">
+  <h1 class="h3 mb-3 fw-normal">Register</h1>
+  <div class="form-floating">
+    <input class="form-control" id="floatingInput" formControlName="username">
+    <label for="floatingInput">Username</label>
+  </div>
+  <div class="form-floating">
+    <input type="password" class="form-control" id="floatingPassword" formControlName="password">
+    <label for="floatingPassword">Password</label>
+  </div>
+  <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+  <br>
+  <br>
+  <div *ngIf="success" style="color: green;">Registration Successful!! Please <a routerLink="/login" [attr.disabled]="!registerForm.valid">Login</a></div>
+  <p *ngIf="errMessage" class="alert alert-danger alert-dismissible fade show">{{errMessage}}</p>
+</form> -->
+
+<form [formGroup]='loginForm' (submit)="login()">
+  <div class="login">
+    <div class="logbox">
+      <p>Login</p>
+      <mat-form-field appearance="fill">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <section>
+        <div class="example-button-row">
+          <button mat-raised-button type="submit">Login</button>
+        </div>
+      </section>
+      <p *ngIf="message" class="alert alert-danger alert-dismissible fade show">{{message}}</p>
+    </div>
+  </div>
+  </form>
+  
