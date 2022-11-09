@@ -6,7 +6,7 @@ import { UserComponent } from './main-page/user/user.component';
 import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { SidenavWrapperComponent } from './sidenav-wrapper/sidenav-wrapper.component';
 import { AlbumComponent } from './main-page/album/album.component';
-import { ArtistComponent } from './artist/artist.component';
+import { ArtistComponent } from './main-page/artist/artist.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/authGuard';
@@ -25,12 +25,12 @@ const routes: Routes = [
     component: SidenavWrapperComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'home', component: HomeComponent },
-      { path: 'explore', component: ExploreComponent },
-      { path: 'user/:username', component: UserComponent },
-      { path: 'playlist/:id', component: PlaylistComponent },
-      { path: 'album/:id', component: AlbumComponent },
-      { path: 'artist/:name', component: ArtistComponent },
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'explore', component: ExploreComponent, canActivate: [AuthGuard] },
+      { path: 'user/:username', component: UserComponent, canActivate: [AuthGuard] },
+      { path: 'playlist/:id', component: PlaylistComponent, canActivate: [AuthGuard] },
+      { path: 'album/:id', component: AlbumComponent, canActivate: [AuthGuard] },
+      { path: 'artist/:name', component: ArtistComponent, canActivate: [AuthGuard] },
     ],
   },
   {
