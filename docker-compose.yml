@@ -24,3 +24,12 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=music
       - MONGO_INITDB_ROOT_PASSWORD=music
+  
+  front-end:
+    build: ./front-end
+    volumes:
+      - './front-end:/usr/src/app' 
+    ports: 
+      - '4200:4200'
+    command: > 
+      bash -c "npm install && ng serve --host 0.0.0.0 --port 4200 --poll 2000"
