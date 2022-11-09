@@ -5,6 +5,7 @@ import { Playlist } from '../database-entities/playlist';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { Emitter } from '../authEmitter';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -24,7 +25,8 @@ export class SidenavWrapperComponent implements OnInit {
   constructor(
     private playlistService: PlaylistService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -57,10 +59,6 @@ export class SidenavWrapperComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('username');
-    Emitter.authEmitter.emit(false);
-    this.router.navigate(['/login']);
+    this.authenticationService.logout();
   }
 }
