@@ -49,6 +49,7 @@ section {
   width: 120px;
 }
 
-button {
+.submit {
   width: 100%;
+  background-color: cornflowerblue;
 }

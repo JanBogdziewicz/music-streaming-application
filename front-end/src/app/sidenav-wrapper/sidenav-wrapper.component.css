@@ -12,6 +12,14 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   transform: rotate(180deg);
 }
 
+mat-sidenav {
+    background-color: rgb(120, 158, 230);
+}
+
+mat-toolbar {
+    background-color: rgb(182, 204, 245);
+}
+
 .logo {
   cursor: pointer;
   margin-top: 8px;
