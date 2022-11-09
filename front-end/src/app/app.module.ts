@@ -16,7 +16,7 @@ import { PlaylistComponent } from './main-page/playlist/playlist.component';
 import { AlbumComponent } from './main-page/album/album.component';
 import { SafeUrlPipe } from './common/safe-resource-url';
 import { ScrollableDirective } from './common/scrollable-directive';
-import { ArtistComponent } from './artist/artist.component';
+import { ArtistComponent } from './main-page/artist/artist.component';
 import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
