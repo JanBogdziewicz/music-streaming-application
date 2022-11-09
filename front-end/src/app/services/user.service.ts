@@ -4,6 +4,7 @@ import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Album } from '../database-entities/album';
 import { Artist } from '../database-entities/artist';
+import { Listening } from '../database-entities/listening';
 import { MongoResponse } from '../database-entities/mongo_response';
 import { Playlist } from '../database-entities/playlist';
 import { Song } from '../database-entities/song';
@@ -51,6 +52,12 @@ export class UserService {
     return this.http
       .get<MongoResponse>(`${this.user_address}/${username}/playlists`)
       .pipe(map((response) => response.data as Playlist[]));
+  }
+
+  getUserListenings(username: string): Observable<Listening[]> {
+    return this.http
+      .get<MongoResponse>(`${this.user_address}/${username}/listenings`)
+      .pipe(map((response) => response.data as Listening[]));
   }
 
   getUserAvatar(username: string): Observable<Blob> {
