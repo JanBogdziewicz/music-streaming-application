@@ -79,6 +79,7 @@ class UpdateLibraryModel(BaseModel):
 class TokenSchema(BaseModel):
     access_token: str
     refresh_token: str
+    username: str
 
 
 class TokenPayload(BaseModel):
