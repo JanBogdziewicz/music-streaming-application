@@ -7,9 +7,11 @@ import { Playlist } from 'src/app/database-entities/playlist';
 import { Song } from 'src/app/database-entities/song';
 import { AlbumService } from 'src/app/services/album.service';
 import { ArtistService } from 'src/app/services/artist.service';
+import { HomeService } from 'src/app/services/home.service';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { SongService } from 'src/app/services/song.service';
 import { UserService } from 'src/app/services/user.service';
+import { Emitter } from '../../authEmitter';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +19,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  username: string = 'gmccullough'; // constant for now
+  private username = localStorage.getItem('username') as string;
 
   private playlists$!: Observable<Playlist[]>;
   private albums$!: Observable<Album[]>;
@@ -36,10 +38,20 @@ export class HomeComponent implements OnInit {
     private albumService: AlbumService,
     private artistService: ArtistService,
     private songService: SongService,
-    private playlistService: PlaylistService
+    private playlistService: PlaylistService,
+    private homeService: HomeService
   ) {}
 
   ngOnInit(): void {
+    this.homeService.accessHome().subscribe({
+      next: (res) => {
+        Emitter.authEmitter.emit(true)
+      },
+      error: (err) => {
+        Emitter.authEmitter.emit(false)
+      }
+    })
+
     this.playlists$ = this.userService.getUserLibraryPlaylists(this.username);
     this.playlists$.subscribe((res) => {
       this.playlists = res;

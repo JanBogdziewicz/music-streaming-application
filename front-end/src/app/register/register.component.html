@@ -43,7 +43,8 @@
         <button mat-raised-button type="submit">Register</button>
       </div>
     </section>
-    <div *ngIf="success" style="color: green;">Registration Successful!! Please <a routerLink="/login" [attr.disabled]="!registerForm.valid">Login</a></div>
+    <a *ngIf="!success" routerLink="/login">Log in</a>
+    <div *ngIf="success" style="color: green;">Registration Successful!! Please <a routerLink="/login" [attr.disabled]="!registerForm.valid">Log in</a></div>
     <p *ngIf="errMessage" class="alert alert-danger alert-dismissible fade show">{{errMessage}}</p>
   </div>
 </div>

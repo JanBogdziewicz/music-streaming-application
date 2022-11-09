@@ -76,5 +76,5 @@
   </div>
   <mat-divider></mat-divider>
   <button mat-menu-item [routerLink]="['user', username]">Profile</button>
-  <button mat-menu-item>Log out</button>
+  <button mat-menu-item (click)="logout()">Log out</button>
 </mat-menu>

@@ -9,6 +9,8 @@ import { AlbumComponent } from './main-page/album/album.component';
 import { ArtistComponent } from './artist/artist.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/authGuard';
+
 
 const routes: Routes = [
   {path: 'register', component: RegisterComponent},
@@ -21,6 +23,7 @@ const routes: Routes = [
   {
     path: '',
     component: SidenavWrapperComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'explore', component: ExploreComponent },

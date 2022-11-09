@@ -30,10 +30,11 @@ export class LoginComponent implements OnInit {
     const formValue = this.loginForm.value
     this.loginService.login(formValue.username,formValue.password).subscribe({
       next: (res) => {
-        console.log(res)
-        localStorage.setItem('access_token', res.access_token)
-        localStorage.setItem('refresh_token', res.refresh_token)
-        this.router.navigate(['/'])
+        console.log(res);
+        localStorage.setItem('access_token', res.access_token);
+        localStorage.setItem('refresh_token', res.refresh_token);
+        localStorage.setItem('username', res.username);
+        this.router.navigate(['/']);
       },
       error: (err) => {
         this.message='Wrong username or password!!'

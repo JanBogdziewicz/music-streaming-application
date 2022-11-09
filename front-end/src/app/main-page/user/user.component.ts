@@ -15,7 +15,7 @@ import { Scroll } from '../explore/explore.component';
 export class UserComponent implements OnInit {
   @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
 
-  username: string = 'gmccullough'; // constant for now
+  username: string = localStorage.getItem('username') as string;
 
   private playlists$!: Observable<Playlist[]>;
 
