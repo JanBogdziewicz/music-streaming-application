@@ -79,6 +79,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  goToPlaylist(playlist: Playlist) {
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([`/playlist/${playlist.id}`]));
+  }
+
   goToAlbum(album: Album) {
     this.router
       .navigateByUrl('/', { skipLocationChange: true })

@@ -1,7 +1,7 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let playlist of playlists">
+      <mat-grid-tile *ngFor="let playlist of playlists" (click)="goToPlaylist(playlist)">
         <mat-card>
           <img
             [src]="images.get(playlist.cover) | safeResourceUrl"
