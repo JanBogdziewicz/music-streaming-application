@@ -12,7 +12,7 @@ import { AlbumService } from 'src/app/services/album.service';
 })
 export class AlbumComponent implements OnInit {
   album$!: Observable<Album>;
-  album: Album;
+  album: Album = {} as Album;
   album_songs$!: Observable<Song[]>;
   album_songs: Song[];
 
