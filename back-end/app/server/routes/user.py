@@ -336,6 +336,6 @@ async def get_user_avatar(username: str):
 
 
 # Get current user
-@UserRouter.get('/auth/me', summary='Get details of currently logged in user', response_model=UserSchemaNoPass)
+@UserRouter.get('/auth/me', summary='Get details of currently logged in user')
 async def get_me(user: UserSchemaNoPass = Depends(get_current_user)):
-    return user
+    return ResponseModel(user, "User logged in")
