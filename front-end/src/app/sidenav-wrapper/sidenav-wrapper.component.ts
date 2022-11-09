@@ -4,6 +4,8 @@ import { PlaylistService } from '../services/playlist.service';
 import { Playlist } from '../database-entities/playlist';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { Emitter } from '../authEmitter';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -11,7 +13,7 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./sidenav-wrapper.component.css'],
 })
 export class SidenavWrapperComponent implements OnInit {
-  public username: string = 'gmccullough'; // constant for now
+  public username: string = localStorage.getItem('username') as string; // constant for now
   public avatar: string;
 
   public isExpanded: boolean = false;
@@ -23,7 +25,8 @@ export class SidenavWrapperComponent implements OnInit {
   constructor(
     private playlistService: PlaylistService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -53,5 +56,9 @@ export class SidenavWrapperComponent implements OnInit {
   getUserAvatar(username: string) {
     let image = this.userService.getUserAvatar(username);
     this.createUrl(image);
+  }
+
+  logout() {
+    this.authenticationService.logout();
   }
 }

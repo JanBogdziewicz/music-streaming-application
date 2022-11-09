@@ -1,13 +1,13 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Album } from '../database-entities/album';
+import { Album } from '../../database-entities/album';
 import { Observable } from 'rxjs';
-import { Song } from '../database-entities/song';
-import { ArtistService } from '../services/artist.service';
-import { Artist } from '../database-entities/artist';
+import { Song } from '../../database-entities/song';
+import { ArtistService } from '../../services/artist.service';
+import { Artist } from '../../database-entities/artist';
 import { ScrollableDirective } from 'src/app/common/scrollable-directive';
-import { AlbumService } from '../services/album.service';
-import { SongService } from '../services/song.service';
+import { AlbumService } from '../../services/album.service';
+import { SongService } from '../../services/song.service';
 
 export interface Scroll {
   item_list: ScrollableDirective[];
@@ -26,7 +26,7 @@ export class ArtistComponent implements OnInit {
   songs$!: Observable<Song[]>;
   albums$!: Observable<Album[]>;
 
-  public artist: Artist;
+  public artist: Artist = {} as Artist;
   public songs: Song[];
   public albums: Album[];
 

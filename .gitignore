@@ -8,6 +8,8 @@ front-end/dist
 
 # data
 data/mongo
+data/misc
 
 #vs code
 .vscode/
+

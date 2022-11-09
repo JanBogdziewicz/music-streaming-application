@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
-
+from server.deps import get_current_user
 from server.database.images import download_playlist_cover
-
 from server.database.playlist import *
-
 from server.models.playlist import *
+from server.models.user import UserSchema
 
 PlaylistRouter = APIRouter()
+
 
 # Add a new playlist
 @PlaylistRouter.post("/", response_description="playlist added into the database")
@@ -40,7 +40,8 @@ async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...)):
     req = jsonable_encoder(req)
     updated_playlist = await update_playlist(id, req)
     return ResponseModel(
-        updated_playlist, "playlist with ID: {0} update is successful".format(id)
+        updated_playlist, "playlist with ID: {0} update is successful".format(
+            id)
     )
 
 
@@ -51,7 +52,8 @@ async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...)):
 async def delete_playlist_data(id: str):
     await delete_playlist(id)
     return ResponseModel(
-        "playlist with ID: {0} removed".format(id), "playlist deleted successfully"
+        "playlist with ID: {0} removed".format(
+            id), "playlist deleted successfully"
     )
 
 
@@ -78,7 +80,11 @@ async def get_playlist_songs(id: str):
 @PlaylistRouter.patch(
     "/{playlist_id}/songs/{song_id}", response_description="songs added sucessfully"
 )
-async def add_song_to_playlist(playlist_id: str, song_id: str):
+async def add_song_to_playlist(playlist_id: str, song_id: str, user: UserSchema = Depends(get_current_user)):
+    playlist = await retrieve_playlist(playlist_id)
+    if not playlist["user"] == user.username:
+        raise HTTPException(
+            status_code=401, detail="user not authorized to perform operation")
     song = await append_song_to_playlist(playlist_id, song_id)
     return ResponseModel(song, "Song successfully added to the playlist")
 

@@ -12,7 +12,7 @@ import { Song } from 'src/app/database-entities/song';
 })
 export class PlaylistComponent implements OnInit {
   playlist$!: Observable<Playlist>
-  playlist: Playlist
+  playlist: Playlist = {} as Playlist;
   playlist_songs$!: Observable<Song[]>
   playlist_songs: Song[]
 

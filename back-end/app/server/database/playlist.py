@@ -35,7 +35,11 @@ async def add_playlist(playlist_data: dict) -> dict:
 # Retrieve a playlist with a matching ID
 async def retrieve_playlist(id: str):
     playlist = await playlists_collection.find_one({"_id": ObjectId(id)})
-    return playlist_helper(playlist) if playlist else False
+    if playlist:
+        return playlist_helper(playlist)
+    else:
+        raise HTTPException(status_code=404, detail="Playlist not found")
+    
 
 
 # Update a playlist with a matching ID
@@ -83,7 +87,7 @@ async def append_song_to_playlist(playlist_id: str, song_id: str):
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="playlist not found")
 
-    return song
+    return song_helper(song)
 
 
 # Delete song from playlist
@@ -98,7 +102,7 @@ async def remove_song_from_playlist(playlist_id: str, song_index: int):
 
     await playlists_collection.replace_one({"_id": ObjectId(playlist_id)}, playlist)
 
-    return song
+    return song_helper(song)
 
 
 # Get all user's playlists
