@@ -13,17 +13,17 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 mat-sidenav {
-    background-color: rgb(120, 158, 230);
+  background-color: rgb(120, 158, 230);
 }
 
 mat-toolbar {
-    background-color: rgb(182, 204, 245);
+  background-color: rgb(182, 204, 245);
 }
 
 .logo {
   cursor: pointer;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,10 +34,9 @@ mat-toolbar {
 }
 
 .avatar_div {
-  margin: 2%;
+  padding: 8%;
   float: right;
-  width: 10%;
-  height: 10%;
+  width: 8%;
 }
 
 .avatar_div img {
@@ -52,19 +51,22 @@ mat-toolbar {
   cursor: pointer;
 }
 
+.menu_avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+}
+
 .menu_avatar div {
   display: inline-block;
-  vertical-align: middle;
-  width: 60%;
-  margin-left: 10%;
+  width: 80%;
+  padding: 5%;
 }
 
 .menu_avatar img {
-  padding: 5%;
   width: 20%;
-  height: 20%;
   border-radius: 50%;
   object-fit: cover;
-  display: inline-block;
-  vertical-align: middle;
+  padding: 5%;
 }

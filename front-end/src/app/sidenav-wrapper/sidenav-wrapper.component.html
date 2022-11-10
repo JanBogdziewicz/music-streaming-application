@@ -34,7 +34,7 @@
 
       <mat-list-item [routerLink]="['user', username]">
         <mat-icon mat-list-icon>account_circle_icon</mat-icon>
-        <span *ngIf="isExpanded" class="menu-item">User</span>
+        <span *ngIf="isExpanded" class="menu-item">User Profile</span>
       </mat-list-item>
     </mat-nav-list>
 
@@ -51,8 +51,8 @@
 
   <mat-sidenav-content role="main">
     <mat-toolbar>
-      <mat-form-field c>
-        <input type="tel" matInput placeholder="Search">
+      <mat-form-field>
+        <input type="tel" matInput placeholder="Search" />
       </mat-form-field>
       <span class="example-spacer"></span>
       <mat-list-item>
