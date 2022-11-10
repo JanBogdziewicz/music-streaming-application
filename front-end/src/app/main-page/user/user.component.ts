@@ -32,7 +32,7 @@ export class UserComponent implements OnInit {
   private topArtists$!: Observable<Artist[]>;
 
   public playlists: Playlist[];
-  public user: User;
+  public user: User = {} as User;
   public user_join_time: string;
   public user_birthday_days: number;
   public images: Map<string, string> = new Map<string, string>();
