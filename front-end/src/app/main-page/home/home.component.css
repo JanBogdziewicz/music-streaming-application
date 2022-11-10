@@ -18,3 +18,18 @@ img {
 .title {
   text-align: center;
 }
+
+.no_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 3%;
+}
+
+.no_content h1 {
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,7 +1,10 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let playlist of playlists" (click)="goToPlaylist(playlist)">
+      <mat-grid-tile
+        *ngFor="let playlist of playlists"
+        (click)="goToPlaylist(playlist)"
+      >
         <mat-card>
           <img
             [src]="images.get(playlist.cover) | safeResourceUrl"
@@ -11,6 +14,9 @@
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
+    <div class="no_content" *ngIf="!playlists.length">
+      <h1>No added playlists in library</h1>
+    </div>
   </mat-tab>
   <mat-tab label="Albums">
     <mat-grid-list cols="4" rowHeight="5:4">
@@ -24,10 +30,16 @@
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
+    <div class="no_content" *ngIf="!albums.length">
+      <h1>No added albums in library</h1>
+    </div>
   </mat-tab>
   <mat-tab label="Artists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let artist of artists" (click)="goToArtist(artist)">
+      <mat-grid-tile
+        *ngFor="let artist of artists"
+        (click)="goToArtist(artist)"
+      >
         <mat-card>
           <img
             [src]="images.get(artist.logo) | safeResourceUrl"
@@ -36,6 +48,9 @@
           <div class="title">{{ artist.name }}</div>
         </mat-card>
       </mat-grid-tile>
+      <div class="no_content" *ngIf="!artists.length">
+        <h1>No added artists in library</h1>
+      </div>
     </mat-grid-list>
   </mat-tab>
   <mat-tab label="Songs">
@@ -50,5 +65,8 @@
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
+    <div class="no_content" *ngIf="!songs.length">
+      <h1>No added songs in library</h1>
+    </div>
   </mat-tab>
 </mat-tab-group>

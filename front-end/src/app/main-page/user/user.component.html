@@ -23,7 +23,8 @@
       </div>
       <div class="text_element">
         <mat-icon>today</mat-icon>
-        <div>Joined {{ user_join_time }} ago</div>
+        <div *ngIf="user_join_time">Joined {{ user_join_time }} ago</div>
+        <div *ngIf="!user_join_time">Joined today</div>
       </div>
       <div class="text_element">
         <mat-icon>cake</mat-icon>
@@ -36,7 +37,7 @@
   </div>
   <mat-divider></mat-divider>
   <div class="playlists">
-    <h1>User Playlists</h1>
+    <h1 class="header">User Playlists</h1>
     <mat-nav-list class="list-horizontal">
       <div scrollable id="playlist" *ngFor="let playlist of playlists">
         <mat-card (click)="goToPlaylist(playlist)">
@@ -48,11 +49,27 @@
         </mat-card>
       </div>
     </mat-nav-list>
+    <div class="no_content" *ngIf="!playlists.length">
+      <h1>Add some playlists</h1>
+      <button mat-mini-fab color="basic">
+        <mat-icon>playlist_add</mat-icon>
+      </button>
+    </div>
     <div class="scroll">
-      <button mat-mini-fab color="basic" (click)="scrollLeft(playlist_scroll)">
+      <button
+        mat-mini-fab
+        color="basic"
+        (click)="scrollLeft(playlist_scroll)"
+        disabled="playlists.length > 6"
+      >
         <mat-icon>chevron_left</mat-icon>
       </button>
-      <button mat-mini-fab color="basic" (click)="scrollRight(playlist_scroll)">
+      <button
+        mat-mini-fab
+        color="basic"
+        (click)="scrollRight(playlist_scroll)"
+        disabled="playlists.length > 6"
+      >
         <mat-icon>chevron_right</mat-icon>
       </button>
     </div>
@@ -72,6 +89,9 @@
           <div class="title">{{ topSong.name }}</div>
         </mat-card>
       </div>
+      <div class="no_content" *ngIf="!topSongs.length">
+        <h1>No data to show</h1>
+      </div>
     </div>
     <div>
       <h1>Top Artists</h1>
@@ -85,6 +105,9 @@
           </div>
           <div class="title">{{ topArtist.name }}</div>
         </mat-card>
+      </div>
+      <div class="no_content" *ngIf="!topArtists.length">
+        <h1>No data to show</h1>
       </div>
     </div>
   </div>

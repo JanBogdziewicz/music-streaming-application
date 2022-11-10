@@ -47,7 +47,7 @@ mat-card {
   text-align: center;
 }
 
-.playlists h1 {
+.header {
   margin: 1% 0 1% 2%;
 }
 
@@ -190,5 +190,26 @@ mat-card {
   width: 60%;
   height: 20%;
   display: flex;
+  align-items: center;
+}
+
+.no_content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 3%;
+}
+
+.no_content h1 {
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no_content mat-icon {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }

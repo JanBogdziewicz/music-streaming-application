@@ -14,7 +14,7 @@ import { PlaylistService } from 'src/app/services/playlist.service';
 import { SongService } from 'src/app/services/song.service';
 import { UserService } from 'src/app/services/user.service';
 import { Scroll } from '../explore/explore.component';
-import { getUsernameFromToken } from 'src/app/utils/jwt'
+import { getUsernameFromToken } from 'src/app/utils/jwt';
 
 @Component({
   selector: 'app-user',
@@ -32,13 +32,13 @@ export class UserComponent implements OnInit {
   private topSongs$!: Observable<Song[]>;
   private topArtists$!: Observable<Artist[]>;
 
-  public playlists: Playlist[];
+  public playlists: Playlist[] = [];
   public user: User = {} as User;
   public user_join_time: string;
   public user_birthday_days: number;
   public images: Map<string, string> = new Map<string, string>();
-  public topSongs: Song[];
-  public topArtists: Artist[];
+  public topSongs: Song[] = [];
+  public topArtists: Artist[] = [];
 
   public playlist_scroll: Scroll = { item_list: [], index: 0 };
 
@@ -140,7 +140,6 @@ export class UserComponent implements OnInit {
     keys.sort(function (a, b) {
       return o[b] - o[a];
     });
-    console.log(keys);
     return keys.slice(0, n);
   }
 
