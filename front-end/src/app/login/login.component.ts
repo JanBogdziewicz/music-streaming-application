@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
+import { Emitter } from '../authEmitter';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +33,7 @@ export class LoginComponent implements OnInit {
       next: (res) => {
         console.log(res);
         localStorage.setItem('access_token', res.access_token);
-        localStorage.setItem('username', res.username);
+        Emitter.authEmitter.emit(true)
         this.router.navigate(['/']);
       },
       error: (err) => {
