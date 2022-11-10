@@ -11,7 +11,6 @@ export class AuthenticationService {
 
   logout() {
     localStorage.removeItem('access_token');
-    localStorage.removeItem('username');
     Emitter.authEmitter.emit(false);
     this.router.navigate(['/login']);
   }

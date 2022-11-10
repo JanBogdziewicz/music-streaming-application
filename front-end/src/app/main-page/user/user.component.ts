@@ -14,6 +14,7 @@ import { PlaylistService } from 'src/app/services/playlist.service';
 import { SongService } from 'src/app/services/song.service';
 import { UserService } from 'src/app/services/user.service';
 import { Scroll } from '../explore/explore.component';
+import { getUsernameFromToken } from 'src/app/utils/jwt'
 
 @Component({
   selector: 'app-user',
@@ -23,7 +24,7 @@ import { Scroll } from '../explore/explore.component';
 export class UserComponent implements OnInit {
   @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
 
-  username: string = localStorage.getItem('username') as string;
+  public username: string = getUsernameFromToken();
 
   private playlists$!: Observable<Playlist[]>;
   private user$!: Observable<User>;

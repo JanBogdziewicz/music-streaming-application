@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { Emitter } from '../authEmitter';
 import { AuthenticationService } from '../services/authentication.service';
+import { getUsernameFromToken } from '../utils/jwt';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -13,7 +14,7 @@ import { AuthenticationService } from '../services/authentication.service';
   styleUrls: ['./sidenav-wrapper.component.css'],
 })
 export class SidenavWrapperComponent implements OnInit {
-  public username: string = localStorage.getItem('username') as string; // constant for now
+  public username: string = getUsernameFromToken();
   public avatar: string;
 
   public isExpanded: boolean = false;
