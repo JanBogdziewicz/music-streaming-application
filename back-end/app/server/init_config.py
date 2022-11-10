@@ -13,7 +13,7 @@ USER_SONG_LIBRARY_NR_MIN = 5
 USER_SONG_LIBRARY_NR_MAX = 20
 USER_SONG_LISTENING_NR_MIN = 0
 USER_SONG_LISTENING_NR_MAX = 3
-USER_AVATARS_PATH = "./assets/user_images/"
+USER_AVATARS_PATH = "./assets/user_images/non_default/"
 
 ARTIST_NR = 8
 ARTIST_ALBUMS_NR_MIN = 1
@@ -47,3 +47,5 @@ SONG_LENGTH_MAX = 300
 PLAYLIST_SONG_NR_MIN = 5
 PLAYLIST_SONG_NR_MAX = 20
 PLAYLIST_COVERS_PATH = "./assets/playlist_images/"
+
+DEFAULT_AVATAR = "./assets/user_images/default/default.png"

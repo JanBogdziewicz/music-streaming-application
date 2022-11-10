@@ -1,3 +1,4 @@
+import inspect
 from bson.objectid import ObjectId
 from fastapi import HTTPException
 from server.database.library import (
@@ -6,11 +7,10 @@ from server.database.library import (
     pull_items_library,
     append_items_library,
 )
-from server.config import users_collection, songs_collection
+from server.config import users_collection, songs_collection, init_default_avatar
 from server.database.song import song_helper
 from server.utils import get_hashed_password
-from uuid import uuid4, UUID
-
+from uuid import uuid4
 
 # helper
 def user_helper(user) -> dict:
@@ -26,9 +26,11 @@ def user_helper(user) -> dict:
         "library": str(user["library"]),
     }
 
+
 def drop_password(user: dict) -> dict:
-    user.pop('password')
+    user.pop("password")
     return user
+
 
 # Retrieve all users present in the database
 async def retrieve_users():
@@ -44,6 +46,8 @@ async def add_user(user_data: dict) -> dict:
     user_data["library"] = library["id"]
     user_data["password"] = get_hashed_password(user_data["password"])
     user_data["auth_id"] = str(uuid4())
+    if not user_data["avatar"]:
+        user_data["avatar"] = await init_default_avatar()
     user = await users_collection.insert_one(user_data)
     new_user = await users_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
@@ -66,6 +70,7 @@ async def retrieve_user(username: str):
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
+
 # Retrieve a user without a password
 async def retrieve_user_no_pass(username: str):
     user = await users_collection.find_one({"username": username})
@@ -73,6 +78,7 @@ async def retrieve_user_no_pass(username: str):
         return drop_password(user_helper(user))
     else:
         raise HTTPException(status_code=404, detail="User not found")
+
 
 # Update a user with a matching ID
 async def update_user(username: str, data: dict):
