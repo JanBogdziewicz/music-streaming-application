@@ -60,7 +60,7 @@ async def add_user_data(user: UserSchema = Body(...)):
 
 
 # Login user
-@UserRouter.post("/login", summary="Create access and refresh tokens for user", response_model=TokenSchema)
+@UserRouter.post("/login", summary="Create access token for user", response_model=TokenSchema)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await retrieve_user(form_data.username)
     if user is None:
@@ -78,7 +78,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
     return {
         "access_token": create_access_token(user['username']),
-        "refresh_token": create_refresh_token(user['username']),
         "username": user['username']
     }
 
