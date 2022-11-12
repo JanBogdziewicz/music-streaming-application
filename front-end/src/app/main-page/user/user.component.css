@@ -71,10 +71,23 @@ mat-card {
   margin-left: 5%;
 }
 
-.text .text_element {
+.text div {
+  padding: 1%;
+}
+
+.text_element {
   display: inline-flex;
   align-items: center;
-  font-size: 0.9vw;
+  font-size: 0.8vw;
+}
+
+.type {
+  display: inline-flex;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 0.6vw;
+  font-weight: 500;
+  opacity: 0.6;
 }
 
 .text h1 {
@@ -142,11 +155,9 @@ mat-card {
 
 .user_data mat-icon {
   font-size: 1vw;
-  margin: 0.5vw;
-  transform: scale(1.3);
+  transform: scale(1.1);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
 }
 
 .top_list {

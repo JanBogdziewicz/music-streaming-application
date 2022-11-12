@@ -1,48 +1,23 @@
 <mat-list>
-  <h1>{{ playlist.name }}</h1>
-  <mat-list-item *ngFor="let song of playlist_songs">{{ song.name }}</mat-list-item>
-  <!-- <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let song of songs$ | async">
-      {{ song.name }}
-    </a>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+  <div class="playlist_data">
+    <div class="cover">
+      <mat-card>
+        <img [src]="cover | safeResourceUrl" alt="Playlist Cover" />
+      </mat-card>
+    </div>
+    <div class="text">
+      <h1>{{ playlist.name }}</h1>
+      <div class="type">Playlist</div>
+      <div class="creator">By {{ playlist.user }}</div>
+      <div class="size">
+        <mat-icon>library_music</mat-icon>
+        {{ playlist_songs.length }} songs
+      </div>
+      <div class="time">
+        <mat-icon>access_time</mat-icon>
+        {{ secondsToHms(playlist.length) }}
+      </div>
+    </div>
   </div>
   <mat-divider></mat-divider>
-  <h1>Albums</h1>
-  <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let album of albums$ | async">
-      {{ album.name }}
-    </a>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div>
-  <mat-divider></mat-divider>
-  <h1>Artists</h1>
-  <mat-nav-list class="list-horizontal">
-    <a mat-list-item href="..." *ngFor="let artist of artists$ | async">
-      {{ artist.name }}
-    </a>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
-  </div> -->
 </mat-list>
-  

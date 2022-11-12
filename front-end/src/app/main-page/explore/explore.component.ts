@@ -38,8 +38,7 @@ export class ExploreComponent implements OnInit {
   constructor(
     private songService: SongService,
     private artistService: ArtistService,
-    private albumService: AlbumService,
-    private router: Router
+    private albumService: AlbumService
   ) {}
 
   ngOnInit(): void {

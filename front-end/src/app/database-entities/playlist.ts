@@ -3,7 +3,7 @@ export interface Playlist {
   name: string;
   creation_date: Date;
   songs: string[];
-  length: Number;
+  length: number;
   user: string;
   cover: string;
 }

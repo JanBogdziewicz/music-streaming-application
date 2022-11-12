@@ -32,7 +32,6 @@ export class HomeComponent implements OnInit {
   public images: Map<string, string> = new Map<string, string>();
 
   constructor(
-    private router: Router,
     private userService: UserService,
     private albumService: AlbumService,
     private artistService: ArtistService,

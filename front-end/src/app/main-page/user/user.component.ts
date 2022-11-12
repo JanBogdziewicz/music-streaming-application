@@ -48,8 +48,7 @@ export class UserComponent implements OnInit {
     private userService: UserService,
     private playlistService: PlaylistService,
     private songService: SongService,
-    private artistService: ArtistService,
-    private router: Router
+    private artistService: ArtistService
   ) {}
 
   ngOnInit(): void {
