@@ -3,11 +3,21 @@
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
       <mat-card>
-        <img
-          [src]="images.get(song.cover) | safeResourceUrl"
-          alt="Song Cover"
-        />
-        <div class="title">{{ song.name }}</div>
+        <div class="song_image">
+          <img
+            [src]="images.get(song.cover) | safeResourceUrl"
+            alt="Song Cover"
+          />
+          <div class="song_image_content">
+            <button mat-mini-fab color="basic" #play_button>
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="title">
+          {{ song.name }}
+          <div>{{ song.artist }}</div>
+        </div>
       </mat-card>
     </div>
   </mat-nav-list>
@@ -26,14 +36,17 @@
       scrollable
       id="album"
       *ngFor="let album of albums"
-      (click)="goToAlbum(album)"
+      [routerLink]="['/album', album.id]"
     >
       <mat-card>
         <img
           [src]="images.get(album.cover) | safeResourceUrl"
           alt="Album Cover"
         />
-        <div class="title">{{ album.name }}</div>
+        <div class="title">
+          {{ album.name }}
+          <div>{{ album.artist }}</div>
+        </div>
       </mat-card>
     </div>
   </mat-nav-list>
@@ -48,7 +61,12 @@
   <mat-divider></mat-divider>
   <h1>Artists</h1>
   <mat-nav-list class="list-horizontal">
-    <div scrollable id="artist" *ngFor="let artist of artists" (click)="goToArtist(artist)">
+    <div
+      scrollable
+      id="artist"
+      *ngFor="let artist of artists"
+      [routerLink]="['/artist', artist.name]"
+    >
       <mat-card>
         <img
           [src]="images.get(artist.logo) | safeResourceUrl"
