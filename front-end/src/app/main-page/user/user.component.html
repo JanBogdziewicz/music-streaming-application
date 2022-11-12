@@ -78,7 +78,11 @@
   <div class="top_list">
     <div>
       <h1>Top Songs</h1>
-      <div class="top_content" *ngFor="let topSong of topSongs; let i = index">
+      <div
+        class="top_content"
+        id="song"
+        *ngFor="let topSong of topSongs; let i = index"
+      >
         <mat-card>
           <div
             class="top_place"
@@ -98,6 +102,11 @@
               [src]="images.get(topSong.cover) | safeResourceUrl"
               alt="Song Cover"
             />
+            <div class="top_image_content">
+              <button mat-mini-fab color="basic" #play_button>
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </div>
           </div>
           <div class="top_title">
             {{ topSong.name }}
