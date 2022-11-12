@@ -45,6 +45,7 @@ mat-card {
 
 .title {
   text-align: center;
+  font-weight: 500;
 }
 
 .header {
@@ -163,14 +164,14 @@ mat-card {
 }
 
 .top_image {
-  width: 50%;
+  max-width: 35%;
 }
 
 .top_image img {
   width: 50%;
-  height: 80%;
   border-radius: 2%;
   object-fit: cover;
+  padding: 3%;
 }
 
 .top_list mat-card:hover {
@@ -188,9 +189,36 @@ mat-card {
 
 .top_content mat-card {
   width: 60%;
-  height: 20%;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.top_place {
+  max-width: 2%;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.top_title {
+  max-width: 30%;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+}
+
+.top_title div {
+  font-style: italic;
+  font-weight: 400;
+  margin-top: 2%;
+}
+
+.listening_number {
+  max-width: 30%;
+}
+
+.listening_number h1 {
+  font-weight: 500;
 }
 
 .no_content {

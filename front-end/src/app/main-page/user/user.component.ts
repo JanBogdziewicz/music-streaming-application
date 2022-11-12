@@ -37,6 +37,8 @@ export class UserComponent implements OnInit {
   public user_join_time: string;
   public user_birthday_days: number;
   public images: Map<string, string> = new Map<string, string>();
+  public songCount: { [index: string]: number } = {};
+  public artistCount: { [index: string]: number } = {};
   public topSongs: Song[] = [];
   public topArtists: Artist[] = [];
 
@@ -107,12 +109,12 @@ export class UserComponent implements OnInit {
   }
 
   private getTopSongs(songs: Song[]) {
-    let songCount = songs.reduce((r, { id }) => {
+    this.songCount = songs.reduce((r, { id }) => {
       r[id] = r[id] || 0;
       r[id]++;
       return r;
     }, {} as { [index: string]: number });
-    let topSongIds = this.getTopKeys(songCount, 3);
+    let topSongIds = this.getTopKeys(this.songCount, 3);
     return forkJoin(
       topSongIds.map((id) => {
         return this.songService.getSong(id);
@@ -121,13 +123,13 @@ export class UserComponent implements OnInit {
   }
 
   private getTopArtists(songs: Song[]) {
-    let artistCount = songs.reduce((r, { artist }) => {
+    this.artistCount = songs.reduce((r, { artist }) => {
       r[artist] = r[artist] || 0;
       r[artist]++;
       return r;
     }, {} as { [index: string]: number });
 
-    let topArtistNames = this.getTopKeys(artistCount, 3);
+    let topArtistNames = this.getTopKeys(this.artistCount, 3);
     return forkJoin(
       topArtistNames.map((name) => {
         return this.artistService.getArtistByName(name);

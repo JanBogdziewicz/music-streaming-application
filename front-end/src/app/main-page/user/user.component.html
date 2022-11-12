@@ -78,15 +78,35 @@
   <div class="top_list">
     <div>
       <h1>Top Songs</h1>
-      <div class="top_content" *ngFor="let topSong of topSongs">
+      <div class="top_content" *ngFor="let topSong of topSongs; let i = index">
         <mat-card>
+          <div
+            class="top_place"
+            *ngIf="
+              i == 0 ||
+                songCount[topSongs[i].id] != songCount[topSongs[i - 1].id];
+              else equalSong
+            "
+          >
+            {{ i + 1 }}.
+          </div>
+          <ng-template #equalSong>
+            <label class="top_place">=</label>
+          </ng-template>
           <div class="top_image">
             <img
               [src]="images.get(topSong.cover) | safeResourceUrl"
               alt="Song Cover"
             />
           </div>
-          <div class="title">{{ topSong.name }}</div>
+          <div class="top_title">
+            {{ topSong.name }}
+            <div>{{ topSong.artist }}</div>
+          </div>
+          <div class="listening_number">
+            <h1>{{ songCount[topSong.id] }}</h1>
+            listenings
+          </div>
         </mat-card>
       </div>
       <div class="no_content" *ngIf="!topSongs.length">
@@ -95,15 +115,36 @@
     </div>
     <div>
       <h1>Top Artists</h1>
-      <div class="top_content" *ngFor="let topArtist of topArtists">
+      <div
+        class="top_content"
+        *ngFor="let topArtist of topArtists; let i = index"
+      >
         <mat-card>
+          <div
+            class="top_place"
+            *ngIf="
+              i == 0 ||
+                artistCount[topArtists[i].name] !=
+                  artistCount[topArtists[i - 1].name];
+              else equalArtist
+            "
+          >
+            {{ i + 1 }}.
+          </div>
+          <ng-template #equalArtist>
+            <label class="top_place">=</label>
+          </ng-template>
           <div class="top_image">
             <img
               [src]="images.get(topArtist.logo) | safeResourceUrl"
               alt="Artist Logo"
             />
           </div>
-          <div class="title">{{ topArtist.name }}</div>
+          <div class="top_title">{{ topArtist.name }}</div>
+          <div class="listening_number">
+            <h1>{{ artistCount[topArtist.name] }}</h1>
+            listenings
+          </div>
         </mat-card>
       </div>
       <div class="no_content" *ngIf="!topArtists.length">
