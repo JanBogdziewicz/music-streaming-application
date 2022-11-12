@@ -24,7 +24,6 @@ export class SidenavWrapperComponent implements OnInit {
   public playlists: Playlist[];
 
   constructor(
-    private playlistService: PlaylistService,
     private userService: UserService,
     private router: Router,
     private authenticationService: AuthenticationService

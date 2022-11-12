@@ -40,7 +40,7 @@
     <h1 class="header">User Playlists</h1>
     <mat-nav-list class="list-horizontal">
       <div scrollable id="playlist" *ngFor="let playlist of playlists">
-        <mat-card (click)="goToPlaylist(playlist)">
+        <mat-card [routerLink]="['/playlist', playlist.id]">
           <img
             [src]="images.get(playlist.cover) | safeResourceUrl"
             alt="Playlist Cover"
@@ -119,7 +119,7 @@
         class="top_content"
         *ngFor="let topArtist of topArtists; let i = index"
       >
-        <mat-card>
+        <mat-card [routerLink]="['/artist', topArtist.name]">
           <div
             class="top_place"
             *ngIf="

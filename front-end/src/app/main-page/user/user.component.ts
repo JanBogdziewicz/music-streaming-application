@@ -163,12 +163,6 @@ export class UserComponent implements OnInit {
     this.scrollMove(s.item_list[s.index]);
   }
 
-  goToPlaylist(playlist: Playlist) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/playlist/${playlist.id}`]));
-  }
-
   createUrl(image: Observable<Blob>, image_id: string) {
     image.subscribe((data) => {
       if (!this.images.has(image_id)) {

@@ -104,11 +104,11 @@ mat-card {
 }
 
 .profilepic:hover .profilepic_content {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .profilepic:hover .profilepic_image {
-  opacity: 0.2;
+  opacity: 0.4;
 }
 
 .profilepic {
