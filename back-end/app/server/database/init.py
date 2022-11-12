@@ -261,9 +261,10 @@ async def init_listenings(fake: Faker, user_ids: list[str], song_ids: list[str])
         listening_number = 0
         for user_id in user_ids:
             user = await retrieve_user(user_id)
-            user_song_listening_number = random.randint(
-                USER_SONG_LISTENING_NR_MIN, USER_SONG_LISTENING_NR_MAX
-            )
+            user_song_listening_number = random.choices(
+                range(USER_SONG_LISTENING_NR_MIN, USER_SONG_LISTENING_NR_MAX + 1),
+                USER_LISTENING_WEIGHTS,
+            )[0]
             for _ in range(user_song_listening_number):
                 listening_data = {
                     "song": song,

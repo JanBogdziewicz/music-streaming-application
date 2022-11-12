@@ -12,7 +12,16 @@ USER_ALBUM_LIBRARY_NR_MAX = 8
 USER_SONG_LIBRARY_NR_MIN = 5
 USER_SONG_LIBRARY_NR_MAX = 20
 USER_SONG_LISTENING_NR_MIN = 0
-USER_SONG_LISTENING_NR_MAX = 3
+USER_SONG_LISTENING_NR_MAX = 20
+USER_LISTENING_WEIGHTS = (
+    [0.6]
+    + [0.04 for _ in range(5)]
+    + [0.02 for _ in range(5)]
+    + [
+        (0.1) / (USER_SONG_LISTENING_NR_MAX - 10)
+        for _ in range(USER_SONG_LISTENING_NR_MAX - 10)
+    ]
+)
 USER_AVATARS_PATH = "./assets/user_images/non_default/"
 
 ARTIST_NR = 8
