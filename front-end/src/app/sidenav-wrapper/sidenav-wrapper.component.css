@@ -20,6 +20,26 @@ mat-toolbar {
   background-color: rgb(182, 204, 245);
 }
 
+.playlist_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10%;
+  font-size: 16px;
+}
+
+.nav_playlist div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 14px;
+}
+
+.nav_playlist mat-icon {
+  padding: 8px;
+}
+
 .logo {
   cursor: pointer;
   margin-top: 10px;

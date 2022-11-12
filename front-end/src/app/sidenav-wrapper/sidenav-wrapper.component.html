@@ -37,14 +37,19 @@
         <span *ngIf="isExpanded" class="menu-item">User Profile</span>
       </mat-list-item>
     </mat-nav-list>
-
     <mat-nav-list *ngIf="isExpanded">
+      <mat-divider></mat-divider>
+      <div class="playlist_header">Playlists</div>
+      <mat-divider></mat-divider>
       <mat-list-item
         *ngFor="let playlist of playlists"
-        class="example-item"
+        class="nav_playlist"
         (click)="goToPlaylist(playlist)"
       >
-        {{ playlist.name }}
+        <mat-icon>queue_music</mat-icon>
+        <div>
+          {{ playlist.name }}
+        </div>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
