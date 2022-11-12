@@ -80,24 +80,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  goToPlaylist(playlist: Playlist) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/playlist/${playlist.id}`]));
-  }
-
-  goToAlbum(album: Album) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/album/${album.id}`]));
-  }
-
-  goToArtist(artist: Artist) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/artist/${artist.name}`]));
-  }
-
   createUrl(image: Observable<Blob>, image_id: string) {
     image.subscribe((data) => {
       if (!this.images.has(image_id)) {

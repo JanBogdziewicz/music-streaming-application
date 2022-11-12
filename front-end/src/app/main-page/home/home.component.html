@@ -1,16 +1,16 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile
-        *ngFor="let playlist of playlists"
-        (click)="goToPlaylist(playlist)"
-      >
-        <mat-card>
+      <mat-grid-tile *ngFor="let playlist of playlists">
+        <mat-card [routerLink]="['/playlist', playlist.id]">
           <img
             [src]="images.get(playlist.cover) | safeResourceUrl"
             alt="Playlist Cover"
           />
-          <div class="title">{{ playlist.name }}</div>
+          <div class="title">
+            {{ playlist.name }}
+            <div>{{ playlist.user }}</div>
+          </div>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
@@ -21,12 +21,15 @@
   <mat-tab label="Albums">
     <mat-grid-list cols="4" rowHeight="5:4">
       <mat-grid-tile *ngFor="let album of albums">
-        <mat-card (click)="goToAlbum(album)">
+        <mat-card [routerLink]="['/album', album.id]">
           <img
             [src]="images.get(album.cover) | safeResourceUrl"
             alt="Album Cover"
           />
-          <div class="title">{{ album.name }}</div>
+          <div class="title">
+            {{ album.name }}
+            <div>{{ album.artist }}</div>
+          </div>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>
@@ -36,11 +39,8 @@
   </mat-tab>
   <mat-tab label="Artists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile
-        *ngFor="let artist of artists"
-        (click)="goToArtist(artist)"
-      >
-        <mat-card>
+      <mat-grid-tile *ngFor="let artist of artists">
+        <mat-card [routerLink]="['/artist', artist.name]">
           <img
             [src]="images.get(artist.logo) | safeResourceUrl"
             alt="Artist Logo"
@@ -55,13 +55,23 @@
   </mat-tab>
   <mat-tab label="Songs">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let song of songs">
+      <mat-grid-tile *ngFor="let song of songs" id="song">
         <mat-card>
-          <img
-            [src]="images.get(song.cover) | safeResourceUrl"
-            alt="Song Cover"
-          />
-          <div class="title">{{ song.name }}</div>
+          <div class="song_image">
+            <img
+              [src]="images.get(song.cover) | safeResourceUrl"
+              alt="Song Cover"
+            />
+            <div class="song_image_content">
+              <button mat-fab color="basic" #play_button>
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="title">
+            {{ song.name }}
+            <div>{{ song.artist }}</div>
+          </div>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>

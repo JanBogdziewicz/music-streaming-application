@@ -10,13 +10,77 @@ mat-card:hover {
 
 img {
   width: 100%;
-  height: 90%;
+  height: 86%;
   border-radius: 2%;
   object-fit: cover;
 }
 
+.song_image {
+  width: 100%;
+  height: 85%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.song_image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 2%;
+  object-fit: cover;
+  opacity: 1;
+  transition: 0.5s ease;
+  backface-visibility: hidden;
+}
+
+#song:hover img {
+  opacity: 0.6;
+}
+
+#song:hover .song_image_content {
+  opacity: 1;
+}
+
+.song_image_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition: 0.2s ease;
+}
+
+.song_image_content mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+#song .title {
+  margin-top: 2%;
+}
+
 .title {
-  text-align: center;
+  width: 100%;
+  height: 14%;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title div {
+  font-style: italic;
+  font-weight: 400;
 }
 
 .no_content {

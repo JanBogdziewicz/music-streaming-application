@@ -106,18 +106,6 @@ export class ExploreComponent implements OnInit {
     this.scrollMove(s.item_list[s.index]);
   }
 
-  goToAlbum(album: Album) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/album/${album.id}`]));
-  }
-
-  goToArtist(artist: Artist) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/artist/${artist.name}`]));
-  }
-
   createUrl(image: Observable<Blob>, image_id: string) {
     image.subscribe((data) => {
       if (!this.images.has(image_id)) {

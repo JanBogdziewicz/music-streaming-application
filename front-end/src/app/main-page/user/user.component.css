@@ -202,6 +202,12 @@ mat-card {
   transition: 0.2s ease;
 }
 
+.top_image_content mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .top_list mat-card:hover {
   box-shadow: 1px 5px 10px grey;
   cursor: pointer;
