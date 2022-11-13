@@ -1,47 +1,112 @@
 mat-nav-list.list-horizontal {
-    display: flex;
-    overflow: auto;
-  }
-  
-  mat-nav-list.list-horizontal::-webkit-scrollbar {
-    display: none;
-  }
-  
-  mat-nav-list.list-horizontal div {
-    flex: 0 0 calc(100% / 6);
-    text-align: center;
-    box-sizing: border-box;
-    padding: 0 1%;
-  }
-  
-  mat-card {
-    width: 90%;
-    height: 80%;
-  }
-  
-  mat-card:hover {
-    box-shadow: 1px 5px 10px grey;
-    cursor: pointer;
-  }
-  
-  .scroll {
-    padding: 0 1% 1% 1%;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  h1 {
-    margin: 1% 0 1% 2%;
-  }
-  
-  img {
-    width: 100%;
-    height: 90%;
-    border-radius: 2%;
-    object-fit: cover;
-  }
-  
-  .title {
-    text-align: center;
-  }
-  
+  display: flex;
+  overflow: auto;
+}
+
+mat-nav-list.list-horizontal::-webkit-scrollbar {
+  display: none;
+}
+
+mat-nav-list.list-horizontal div {
+  flex: 0 0 calc(100% / 6);
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0 1%;
+}
+
+mat-card {
+  width: 90%;
+  height: 80%;
+}
+
+.list-horizontal mat-card:hover {
+  box-shadow: 1px 5px 10px grey;
+  cursor: pointer;
+}
+
+.scroll {
+  padding: 0 1% 1% 1%;
+  display: flex;
+  justify-content: space-between;
+}
+
+h1 {
+  margin: 1% 0 1% 2%;
+}
+
+img {
+  width: 100%;
+  height: 90%;
+  border-radius: 2%;
+  object-fit: cover;
+}
+
+.title {
+  text-align: center;
+}
+
+.artist_data {
+  display: flex;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.text {
+  box-sizing: border-box;
+  width: 50%;
+  height: 100%;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 5%;
+}
+
+.text h1 {
+  font-size: 3vw;
+  font-weight: 750;
+  padding-bottom: 1%;
+  margin-left: 0;
+}
+
+.text div {
+  display: flex;
+  align-items: center;
+  padding: 0.5%;
+}
+
+.type {
+  text-transform: uppercase;
+  font-size: 0.6vw;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+mat-icon {
+  display: flex;
+  align-items: center;
+  font-size: 1vw;
+  transform: scale(1.1);
+}
+
+.cover {
+  width: 50%;
+  box-sizing: border-box;
+  padding: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.cover mat-card {
+  width: 13vw;
+  height: 100%;
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

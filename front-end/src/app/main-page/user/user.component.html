@@ -20,18 +20,20 @@
       <div class="type">User</div>
       <div class="text_element">
         <mat-icon>flag</mat-icon>
-        <div>{{ user.country }}</div>
+        {{ user.country }}
       </div>
       <div class="text_element">
         <mat-icon>today</mat-icon>
-        <div *ngIf="user_join_time">Joined {{ user_join_time }} ago</div>
+        <ng-container *ngIf="user_join_time">
+          Joined {{ user_join_time }} ago
+        </ng-container>
         <div *ngIf="!user_join_time">Joined today</div>
       </div>
       <div class="text_element">
         <mat-icon>cake</mat-icon>
-        <div *ngIf="user_birthday_days">
+        <ng-container *ngIf="user_birthday_days">
           Birthday in {{ user_birthday_days }} days
-        </div>
+        </ng-container>
         <div *ngIf="!user_birthday_days">Happy Birthday!</div>
       </div>
     </div>

@@ -63,7 +63,7 @@ mat-card {
 
 .text {
   box-sizing: border-box;
-  width: 25%;
+  width: 50%;
   height: 100%;
   display: inline-flex;
   flex-direction: column;
@@ -72,7 +72,7 @@ mat-card {
 }
 
 .text div {
-  padding: 1%;
+  padding: 0.5%;
 }
 
 .text_element {
@@ -93,7 +93,8 @@ mat-card {
 .text h1 {
   font-size: 3vw;
   font-weight: 750;
-  padding-bottom: 5%;
+  padding-bottom: 1%;
+  margin-left: 0;
 }
 
 .avatar {
@@ -101,6 +102,8 @@ mat-card {
   padding: 2%;
   display: flex;
   align-items: center;
+  justify-content: right;
+  width: 50%;
 }
 
 .avatar mat-card {

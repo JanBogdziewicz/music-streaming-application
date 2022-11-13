@@ -14,7 +14,11 @@
       <div class="creator">By {{ playlist.user }}</div>
       <div class="size">
         <mat-icon>library_music</mat-icon>
-        {{ playlist_songs.length }} songs
+        <ng-container *ngIf="playlist_songs.length > 0; else empty">
+          {{ playlist_songs.length }}
+          song<ng-container *ngIf="playlist_songs.length > 1">s</ng-container>
+        </ng-container>
+        <ng-template #empty>empty</ng-template>
       </div>
       <div class="time">
         <mat-icon>access_time</mat-icon>

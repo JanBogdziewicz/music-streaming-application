@@ -1,23 +1,27 @@
 <mat-list>
-  <h1>Songs</h1>
-  <mat-nav-list class="list-horizontal">
-    <div scrollable id="song" *ngFor="let song of songs">
+  <div class="artist_data">
+    <div class="cover">
       <mat-card>
         <img
-          [src]="images.get(song.cover) | safeResourceUrl"
-          alt="Song Cover"
+          [src]="images.get(artist.logo) | safeResourceUrl"
+          alt="Artist Cover"
         />
-        <div class="title">{{ song.name }}</div>
       </mat-card>
     </div>
-  </mat-nav-list>
-  <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(song_scroll)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(song_scroll)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+    <div class="text">
+      <h1>{{ artist.name }}</h1>
+      <div class="type">Artist</div>
+      <div class="album_nr">
+        <mat-icon>album</mat-icon>
+        {{ albums.length }}
+        album<ng-container *ngIf="albums.length > 1">s</ng-container>
+      </div>
+      <div class="song_nr">
+        <mat-icon>library_music</mat-icon>
+        {{ songs.length }}
+        song<ng-container *ngIf="songs.length > 1">s</ng-container>
+      </div>
+    </div>
   </div>
   <mat-divider></mat-divider>
   <h1>Albums</h1>
@@ -38,12 +42,52 @@
     </div>
   </mat-nav-list>
   <div class="scroll">
-    <button mat-mini-fab color="basic" (click)="scrollLeft(album_scroll)">
+    <button
+      mat-mini-fab
+      color="basic"
+      (click)="scrollLeft(album_scroll)"
+      [disabled]="albums.length < 6"
+    >
       <mat-icon>chevron_left</mat-icon>
     </button>
-    <button mat-mini-fab color="basic" (click)="scrollRight(album_scroll)">
+    <button
+      mat-mini-fab
+      color="basic"
+      (click)="scrollRight(album_scroll)"
+      [disabled]="albums.length < 6"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <h1>Songs</h1>
+  <mat-nav-list class="list-horizontal">
+    <div scrollable id="song" *ngFor="let song of songs">
+      <mat-card>
+        <img
+          [src]="images.get(song.cover) | safeResourceUrl"
+          alt="Song Cover"
+        />
+        <div class="title">{{ song.name }}</div>
+      </mat-card>
+    </div>
+  </mat-nav-list>
+  <div class="scroll">
+    <button
+      mat-mini-fab
+      color="basic"
+      (click)="scrollLeft(song_scroll)"
+      [disabled]="songs.length < 6"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button
+      mat-mini-fab
+      color="basic"
+      (click)="scrollRight(song_scroll)"
+      [disabled]="songs.length < 6"
+    >
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
 </mat-list>
-  
