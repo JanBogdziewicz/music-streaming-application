@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Playlist } from 'src/app/database-entities/playlist';
 import { Song } from 'src/app/database-entities/song';
 import { SongService } from 'src/app/services/song.service';
+import { Album } from 'src/app/database-entities/album';
 
 @Component({
   selector: 'app-playlist',
@@ -17,6 +18,7 @@ export class PlaylistComponent implements OnInit {
 
   public playlist: Playlist = {} as Playlist;
   public playlist_songs: Song[];
+  public playlist_songs_albums: Map<string, Album> = new Map<string, Album>();
   public images: Map<string, string> = new Map<string, string>();
 
   constructor(
@@ -36,6 +38,10 @@ export class PlaylistComponent implements OnInit {
     this.playlist_songs$.subscribe((res) => {
       this.playlist_songs = res;
       this.playlist_songs.forEach((song) => {
+        let album$ = this.songService.getSongAlbum(song.id);
+        album$.subscribe((res) => {
+          this.playlist_songs_albums.set(song.id, res);
+        });
         this.getSongCover(song.id, song.cover);
       });
     });

@@ -21,6 +21,9 @@ mat-card {
 
 .list-horizontal mat-card:hover {
   box-shadow: 1px 5px 10px grey;
+}
+
+#album mat-card:hover {
   cursor: pointer;
 }
 
@@ -100,8 +103,15 @@ h1 {
 mat-icon {
   display: flex;
   align-items: center;
-  font-size: 1vw;
   transform: scale(1.1);
+}
+
+.artist_data mat-icon {
+  font-size: 1vw;
+}
+
+.scroll mat-icon {
+  justify-content: center;
 }
 
 .cover {
@@ -145,11 +155,11 @@ mat-icon {
   backface-visibility: hidden;
 }
 
-#song:hover img {
+#song mat-card:hover img {
   opacity: 0.6;
 }
 
-#song:hover .song_image_content {
+#song mat-card:hover .song_image_content {
   opacity: 1;
 }
 

@@ -106,7 +106,6 @@ mat-nav-list.list-vertical div {
 
 .songs mat-card:hover {
   box-shadow: 1px 5px 10px grey;
-  cursor: pointer;
 }
 
 .song_image {
@@ -149,6 +148,14 @@ mat-nav-list.list-vertical div {
 }
 
 .song_image_content mat-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.song_image_content button {
+  width: 2vw;
+  height: 2vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -200,6 +207,11 @@ mat-nav-list.list-vertical div {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .no_content {

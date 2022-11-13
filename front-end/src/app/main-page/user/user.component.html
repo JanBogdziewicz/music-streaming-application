@@ -113,7 +113,9 @@
           </div>
           <div class="top_title">
             {{ topSong.name }}
-            <div>{{ topSong.artist }}</div>
+            <div class="link" [routerLink]="['/artist', topSong.artist]">
+              {{ topSong.artist }}
+            </div>
           </div>
           <div class="listening_number">
             <h1>{{ songCount[topSong.id] }}</h1>
@@ -128,6 +130,7 @@
     <div>
       <h1>Top Artists</h1>
       <div
+        id="artist"
         class="top_content"
         *ngFor="let topArtist of topArtists; let i = index"
       >

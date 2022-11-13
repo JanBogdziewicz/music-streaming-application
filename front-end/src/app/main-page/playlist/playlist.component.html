@@ -57,10 +57,17 @@
             {{ song.name }}
           </div>
           <div class="album">
-            {{ song.album }}
+            <div
+              class="link"
+              [routerLink]="['/album', playlist_songs_albums.get(song.id)?.id]"
+            >
+              {{ song.album }}
+            </div>
           </div>
           <div class="artist">
-            {{ song.artist }}
+            <div class="link" [routerLink]="['/artist', song.artist]">
+              {{ song.artist }}
+            </div>
           </div>
           <div class="genre">
             {{ song.genres.join(", ") }}

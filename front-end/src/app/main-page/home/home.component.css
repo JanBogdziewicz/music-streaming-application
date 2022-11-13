@@ -5,6 +5,11 @@ mat-card {
 
 mat-card:hover {
   box-shadow: 1px 5px 10px grey;
+}
+
+#playlist mat-card:hover,
+#album mat-card:hover,
+#artist mat-card:hover {
   cursor: pointer;
 }
 
@@ -35,11 +40,11 @@ img {
   backface-visibility: hidden;
 }
 
-#song:hover img {
+#song mat-card:hover img {
   opacity: 0.6;
 }
 
-#song:hover .song_image_content {
+#song mat-card:hover .song_image_content {
   opacity: 1;
 }
 
@@ -81,6 +86,11 @@ img {
 .title div {
   font-style: italic;
   font-weight: 400;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .no_content {

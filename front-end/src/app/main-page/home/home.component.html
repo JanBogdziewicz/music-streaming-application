@@ -1,7 +1,7 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let playlist of playlists">
+      <mat-grid-tile id="playlist" *ngFor="let playlist of playlists">
         <mat-card [routerLink]="['/playlist', playlist.id]">
           <img
             [src]="images.get(playlist.cover) | safeResourceUrl"
@@ -9,7 +9,9 @@
           />
           <div class="title">
             {{ playlist.name }}
-            <div>{{ playlist.user }}</div>
+            <div>
+              {{ playlist.user }}
+            </div>
           </div>
         </mat-card>
       </mat-grid-tile>
@@ -20,7 +22,7 @@
   </mat-tab>
   <mat-tab label="Albums">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let album of albums">
+      <mat-grid-tile id="album" *ngFor="let album of albums">
         <mat-card [routerLink]="['/album', album.id]">
           <img
             [src]="images.get(album.cover) | safeResourceUrl"
@@ -28,7 +30,13 @@
           />
           <div class="title">
             {{ album.name }}
-            <div>{{ album.artist }}</div>
+            <div
+              class="link"
+              [routerLink]="['/artist', album.artist]"
+              (click)="$event.stopPropagation()"
+            >
+              {{ album.artist }}
+            </div>
           </div>
         </mat-card>
       </mat-grid-tile>
@@ -39,7 +47,7 @@
   </mat-tab>
   <mat-tab label="Artists">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let artist of artists">
+      <mat-grid-tile id="artist" *ngFor="let artist of artists">
         <mat-card [routerLink]="['/artist', artist.name]">
           <img
             [src]="images.get(artist.logo) | safeResourceUrl"
@@ -55,7 +63,7 @@
   </mat-tab>
   <mat-tab label="Songs">
     <mat-grid-list cols="4" rowHeight="5:4">
-      <mat-grid-tile *ngFor="let song of songs" id="song">
+      <mat-grid-tile id="song" *ngFor="let song of songs" id="song">
         <mat-card>
           <div class="song_image">
             <img
@@ -70,7 +78,9 @@
           </div>
           <div class="title">
             {{ song.name }}
-            <div>{{ song.artist }}</div>
+            <div class="link" [routerLink]="['/artist', song.artist]">
+              {{ song.artist }}
+            </div>
           </div>
         </mat-card>
       </mat-grid-tile>

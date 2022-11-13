@@ -16,7 +16,9 @@
         </div>
         <div class="title">
           {{ song.name }}
-          <div>{{ song.artist }}</div>
+          <div class="link" [routerLink]="['/artist', song.artist]">
+            {{ song.artist }}
+          </div>
         </div>
       </mat-card>
     </div>
@@ -45,7 +47,13 @@
         />
         <div class="title">
           {{ album.name }}
-          <div>{{ album.artist }}</div>
+          <div
+            class="link"
+            [routerLink]="['/artist', album.artist]"
+            (click)="$event.stopPropagation()"
+          >
+            {{ album.artist }}
+          </div>
         </div>
       </mat-card>
     </div>

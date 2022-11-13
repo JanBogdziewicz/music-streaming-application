@@ -11,7 +11,12 @@
     <div class="text">
       <h1>{{ album.name }}</h1>
       <div class="type">{{ album.album_type.replace("_", " ") }}</div>
-      <div class="creator">By {{ album.artist }}</div>
+      <div class="creator">
+        By
+        <div class="link" [routerLink]="['/artist', album.artist]">
+          {{ album.artist }}
+        </div>
+      </div>
       <div class="size">
         <mat-icon>library_music</mat-icon>
         {{ album_songs.length }}
@@ -54,7 +59,9 @@
             {{ song.name }}
           </div>
           <div class="artist">
-            {{ song.artist }}
+            <div class="link" [routerLink]="['/artist', album.artist]">
+              {{ song.artist }}
+            </div>
           </div>
           <div class="genre">
             {{ song.genres.join(", ") }}

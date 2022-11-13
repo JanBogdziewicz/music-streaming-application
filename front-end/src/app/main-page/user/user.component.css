@@ -185,7 +185,9 @@ mat-card {
 .top_image {
   max-width: 35%;
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .top_image img {
@@ -199,11 +201,11 @@ mat-card {
   backface-visibility: hidden;
 }
 
-#song:hover img {
+#song mat-card:hover img {
   opacity: 0.6;
 }
 
-#song:hover .top_image_content {
+#song mat-card:hover .top_image_content {
   opacity: 1;
 }
 
@@ -225,10 +227,22 @@ mat-card {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 1vw;
+}
+
+.top_image_content button {
+  width: 2vw;
+  height: 2vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .top_list mat-card:hover {
   box-shadow: 1px 5px 10px grey;
+}
+
+#artist mat-card:hover {
   cursor: pointer;
 }
 
@@ -272,6 +286,11 @@ mat-card {
 
 .listening_number h1 {
   font-weight: 500;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .no_content {
