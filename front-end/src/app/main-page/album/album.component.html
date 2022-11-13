@@ -1,4 +1,67 @@
 <mat-list>
-  <h1>{{ album.name }}</h1>
-  <mat-list-item *ngFor="let song of album_songs">{{ song.name }}</mat-list-item>
+  <div class="album_data">
+    <div class="cover">
+      <mat-card>
+        <img
+          [src]="images.get(album.cover) | safeResourceUrl"
+          alt="Album Cover"
+        />
+      </mat-card>
+    </div>
+    <div class="text">
+      <h1>{{ album.name }}</h1>
+      <div class="type">{{ album.album_type.replace("_", " ") }}</div>
+      <div class="creator">By {{ album.artist }}</div>
+      <div class="size">
+        <mat-icon>library_music</mat-icon>
+        {{ album_songs.length }} songs
+      </div>
+      <div class="time">
+        <mat-icon>access_time</mat-icon>
+        {{ secondsToHms(album_length) }}
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="songs">
+    <div class="description">
+      <div class="place">#</div>
+      <div class="song_image"></div>
+      <div class="title">Title</div>
+      <div class="artist">Artist</div>
+      <div class="genre">Genres</div>
+      <div class="album"></div>
+      <div class="length">Length</div>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-nav-list class="list-vertical">
+      <div id="song" *ngFor="let song of album_songs; let i = index">
+        <mat-card>
+          <div class="place">{{ i + 1 }}.</div>
+          <div class="song_image">
+            <img
+              [src]="images.get(song.cover) | safeResourceUrl"
+              alt="Song Cover"
+            />
+            <div class="song_image_content">
+              <button mat-mini-fab color="basic" #play_button>
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="title">
+            {{ song.name }}
+          </div>
+          <div class="artist">
+            {{ song.artist }}
+          </div>
+          <div class="genre">
+            {{ song.genres.join(", ") }}
+          </div>
+          <div class="album"></div>
+          <div class="length">{{ fancyTimeFormat(song.length) }}</div>
+        </mat-card>
+      </div>
+    </mat-nav-list>
+  </div>
 </mat-list>
