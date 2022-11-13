@@ -117,6 +117,7 @@ mat-card {
   object-fit: cover;
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
+  display: block;
 }
 
 .profilepic:hover .profilepic_content {
@@ -161,6 +162,10 @@ mat-card {
   transform: scale(1.1);
   display: inline-flex;
   align-items: center;
+}
+
+.avatar mat-icon {
+  justify-content: center;
 }
 
 .top_list {
