@@ -1,5 +1,4 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ScrollableDirective } from 'src/app/common/scrollable-directive';
 import { Album } from 'src/app/database-entities/album';
@@ -68,17 +67,8 @@ export class ExploreComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.listItems.changes.subscribe(() => {
-      this.song_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'song'
-      );
-      this.album_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'album'
-      );
-      this.artist_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'artist'
-      );
-    });
+    this.scrollableProcess();
+    this.listItems.changes.subscribe(() => this.scrollableProcess());
   }
 
   ngOnDestroy() {
@@ -87,7 +77,19 @@ export class ExploreComponent implements OnInit {
     });
   }
 
-  public scrollMove(element: ScrollableDirective) {
+  private scrollableProcess() {
+    this.song_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'song'
+    );
+    this.album_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'album'
+    );
+    this.artist_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'artist'
+    );
+  }
+
+  private scrollMove(element: ScrollableDirective) {
     element.scrollIntoView();
   }
 

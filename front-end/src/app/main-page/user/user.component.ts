@@ -94,17 +94,20 @@ export class UserComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.listItems.changes.subscribe(() => {
-      this.playlist_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'playlist'
-      );
-    });
+    this.scrollableProcess();
+    this.listItems.changes.subscribe(() => this.scrollableProcess());
   }
 
   ngOnDestroy() {
     this.images.forEach((image) => {
       URL.revokeObjectURL(image);
     });
+  }
+
+  private scrollableProcess() {
+    this.playlist_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'playlist'
+    );
   }
 
   private getTopSongs(songs: Song[]) {

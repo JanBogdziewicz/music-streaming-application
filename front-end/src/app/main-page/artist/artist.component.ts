@@ -1,13 +1,13 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Album } from '../../database-entities/album';
 import { Observable } from 'rxjs';
 import { Song } from '../../database-entities/song';
 import { ArtistService } from '../../services/artist.service';
 import { Artist } from '../../database-entities/artist';
-import { ScrollableDirective } from 'src/app/common/scrollable-directive';
 import { AlbumService } from '../../services/album.service';
 import { SongService } from '../../services/song.service';
+import { ScrollableDirective } from 'src/app/common/scrollable-directive';
 
 export interface Scroll {
   item_list: ScrollableDirective[];
@@ -17,38 +17,36 @@ export interface Scroll {
 @Component({
   selector: 'app-artist',
   templateUrl: './artist.component.html',
-  styleUrls: ['./artist.component.css']
+  styleUrls: ['./artist.component.css'],
 })
 export class ArtistComponent implements OnInit {
   @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
 
-  artist$!: Observable<Artist>;
-  songs$!: Observable<Song[]>;
-  albums$!: Observable<Album[]>;
+  private artist$!: Observable<Artist>;
+  private songs$!: Observable<Song[]>;
+  private albums$!: Observable<Album[]>;
 
   public artist: Artist = {} as Artist;
   public songs: Song[];
   public albums: Album[];
-
   public images: Map<string, string> = new Map<string, string>();
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
   public album_scroll: Scroll = { item_list: [], index: 0 };
 
   constructor(
-    private router: Router, 
-    private artistService: ArtistService, 
-    private route: ActivatedRoute, 
+    private artistService: ArtistService,
+    private route: ActivatedRoute,
     private albumService: AlbumService,
     private songService: SongService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.artist$ = this.getArtist();
     this.songs$ = this.getArtistSongs();
     this.albums$ = this.getArtistAlbums();
 
-    this.artist$.subscribe(res => {
+    this.artist$.subscribe((res) => {
       this.artist = res;
       this.getArtistLogo(this.artist.name, this.artist.logo);
     });
@@ -67,14 +65,8 @@ export class ArtistComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.listItems.changes.subscribe(() => {
-      this.song_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'song'
-      );
-      this.album_scroll.item_list = this.listItems.filter(
-        (item) => item.element.id === 'album'
-      );
-    });
+    this.scrollableProcess();
+    this.listItems.changes.subscribe(() => this.scrollableProcess());
   }
 
   ngOnDestroy() {
@@ -83,10 +75,13 @@ export class ArtistComponent implements OnInit {
     });
   }
 
-  goToAlbum(album: Album) {
-    this.router
-      .navigateByUrl('/', { skipLocationChange: true })
-      .then(() => this.router.navigate([`/album/${album.id}`]));
+  private scrollableProcess() {
+    this.album_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'album'
+    );
+    this.song_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'song'
+    );
   }
 
   getArtist() {
@@ -104,7 +99,7 @@ export class ArtistComponent implements OnInit {
     return this.artistService.getArtistAlbums(name);
   }
 
-  public scrollMove(element: ScrollableDirective) {
+  private scrollMove(element: ScrollableDirective) {
     element.scrollIntoView();
   }
 

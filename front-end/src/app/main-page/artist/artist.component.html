@@ -30,7 +30,7 @@
       scrollable
       id="album"
       *ngFor="let album of albums"
-      (click)="goToAlbum(album)"
+      [routerLink]="['/album', album.id]"
     >
       <mat-card>
         <img
@@ -46,7 +46,7 @@
       mat-mini-fab
       color="basic"
       (click)="scrollLeft(album_scroll)"
-      [disabled]="albums.length < 6"
+      [disabled]="albums.length <= 6"
     >
       <mat-icon>chevron_left</mat-icon>
     </button>
@@ -54,7 +54,7 @@
       mat-mini-fab
       color="basic"
       (click)="scrollRight(album_scroll)"
-      [disabled]="albums.length < 6"
+      [disabled]="albums.length <= 6"
     >
       <mat-icon>chevron_right</mat-icon>
     </button>
@@ -64,11 +64,21 @@
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
       <mat-card>
-        <img
-          [src]="images.get(song.cover) | safeResourceUrl"
-          alt="Song Cover"
-        />
-        <div class="title">{{ song.name }}</div>
+        <div class="song_image">
+          <img
+            [src]="images.get(song.cover) | safeResourceUrl"
+            alt="Song Cover"
+          />
+          <div class="song_image_content">
+            <button mat-fab color="basic" #play_button>
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="title">
+          {{ song.name }}
+          <div>{{ song.listenings }} listenings</div>
+        </div>
       </mat-card>
     </div>
   </mat-nav-list>
@@ -77,7 +87,7 @@
       mat-mini-fab
       color="basic"
       (click)="scrollLeft(song_scroll)"
-      [disabled]="songs.length < 6"
+      [disabled]="songs.length <= 6"
     >
       <mat-icon>chevron_left</mat-icon>
     </button>
@@ -85,7 +95,7 @@
       mat-mini-fab
       color="basic"
       (click)="scrollRight(song_scroll)"
-      [disabled]="songs.length < 6"
+      [disabled]="songs.length <= 6"
     >
       <mat-icon>chevron_right</mat-icon>
     </button>
