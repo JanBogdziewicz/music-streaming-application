@@ -13,13 +13,13 @@
       <div class="type">Artist</div>
       <div class="album_nr">
         <mat-icon>album</mat-icon>
-        {{ albums.length }}
-        album<ng-container *ngIf="albums.length > 1">s</ng-container>
+        {{ album_nr }}
+        album<ng-container *ngIf="album_nr > 1">s</ng-container>
       </div>
       <div class="song_nr">
         <mat-icon>library_music</mat-icon>
-        {{ songs.length }}
-        song<ng-container *ngIf="songs.length > 1">s</ng-container>
+        {{ song_nr }}
+        song<ng-container *ngIf="song_nr > 1">s</ng-container>
       </div>
     </div>
   </div>
@@ -60,7 +60,7 @@
     </button>
   </div>
   <mat-divider></mat-divider>
-  <h1>Songs</h1>
+  <h1>Top Songs</h1>
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
       <mat-card>

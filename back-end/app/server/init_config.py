@@ -14,9 +14,9 @@ USER_SONG_LIBRARY_NR_MAX = 20
 USER_SONG_LISTENING_NR_MIN = 0
 USER_SONG_LISTENING_NR_MAX = 20
 USER_LISTENING_WEIGHTS = (
-    [0.6]
+    [0.4]
+    + [0.06 for _ in range(5)]
     + [0.04 for _ in range(5)]
-    + [0.02 for _ in range(5)]
     + [
         (0.1) / (USER_SONG_LISTENING_NR_MAX - 10)
         for _ in range(USER_SONG_LISTENING_NR_MAX - 10)

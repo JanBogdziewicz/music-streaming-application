@@ -29,6 +29,8 @@ export class ArtistComponent implements OnInit {
   public artist: Artist = {} as Artist;
   public songs: Song[];
   public albums: Album[];
+  public song_nr: number;
+  public album_nr: number;
   public images: Map<string, string> = new Map<string, string>();
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
@@ -51,12 +53,16 @@ export class ArtistComponent implements OnInit {
       this.getArtistLogo(this.artist.name, this.artist.logo);
     });
     this.songs$.subscribe((res) => {
-      this.songs = res.sort(() => 0.5 - Math.random()).slice(0, 12);
+      this.song_nr = res.length;
+      this.songs = res
+        .sort((s1, s2) => s2.listenings - s1.listenings)
+        .slice(0, 12);
       this.songs.forEach((song) => {
         this.getSongCover(song.id, song.cover);
       });
     });
     this.albums$.subscribe((res) => {
+      this.album_nr = res.length;
       this.albums = res.sort(() => 0.5 - Math.random()).slice(0, 12);
       this.albums.forEach((album) => {
         this.getAlbumCover(album.id, album.cover);
