@@ -2,7 +2,10 @@
   <div class="playlist_data">
     <div class="cover">
       <mat-card>
-        <img [src]="cover | safeResourceUrl" alt="Playlist Cover" />
+        <img
+          [src]="images.get(playlist.cover) | safeResourceUrl"
+          alt="Playlist Cover"
+        />
       </mat-card>
     </div>
     <div class="text">
@@ -20,4 +23,53 @@
     </div>
   </div>
   <mat-divider></mat-divider>
+  <div class="songs">
+    <div class="description">
+      <div class="place">#</div>
+      <div class="song_image"></div>
+      <div class="title">Title</div>
+      <div class="album">Album</div>
+      <div class="artist">Artist</div>
+      <div class="genre">Genres</div>
+      <div class="length">Length</div>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-nav-list class="list-vertical">
+      <div id="song" *ngFor="let song of playlist_songs; let i = index">
+        <mat-card>
+          <div class="place">{{ i + 1 }}.</div>
+          <div class="song_image">
+            <img
+              [src]="images.get(song.cover) | safeResourceUrl"
+              alt="Song Cover"
+            />
+            <div class="song_image_content">
+              <button mat-mini-fab color="basic" #play_button>
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div class="title">
+            {{ song.name }}
+          </div>
+          <div class="album">
+            {{ song.album }}
+          </div>
+          <div class="artist">
+            {{ song.artist }}
+          </div>
+          <div class="genre">
+            {{ song.genres.join(", ") }}
+          </div>
+          <div class="length">{{ fancyTimeFormat(song.length) }}</div>
+        </mat-card>
+      </div>
+    </mat-nav-list>
+    <div class="no_content" *ngIf="!playlist_songs.length">
+      <h1>Add some songs</h1>
+      <button mat-mini-fab color="basic">
+        <mat-icon>playlist_add</mat-icon>
+      </button>
+    </div>
+  </div>
 </mat-list>

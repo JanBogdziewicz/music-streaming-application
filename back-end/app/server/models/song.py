@@ -51,7 +51,7 @@ class UpdateSongModel(BaseModel):
         schema_extra = {
             "example": {
                 "name": "Paint It, Pink",
-                "genre": ["disco"],
+                "genres": ["disco"],
                 "artist": "The Rolling Stones",
                 "album": "Aftermath",
                 "length": 225,
