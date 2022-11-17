@@ -41,7 +41,11 @@
     </div>
     <mat-divider></mat-divider>
     <mat-nav-list class="list-vertical">
-      <div id="song" *ngFor="let song of album_songs; let i = index">
+      <div
+        id="song"
+        *ngFor="let song of album_songs; let i = index"
+        (contextmenu)="onContextMenu($event, song.id)"
+      >
         <mat-card>
           <div class="place">{{ i + 1 }}.</div>
           <div class="song_image">
@@ -73,3 +77,37 @@
     </mat-nav-list>
   </div>
 </mat-list>
+<div
+  class="context_menu_trigger"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu" class="context_menu">
+  <ng-template matMenuContent let-id="id">
+    <button mat-menu-item (click)="playSong(id)">Play song</button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="addToQueue([id])">Add to queue</button>
+    <button mat-menu-item (click)="addToLibrary([id], 'songs')">
+      Add to library
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="playlistsMenu">
+      Add to playlist
+    </button>
+    <mat-menu #playlistsMenu="matMenu" class="subcontext_menu">
+      <div class="playlist_header">Playlists</div>
+      <mat-divider></mat-divider>
+      <button
+        class="add_to_playlist"
+        mat-menu-item
+        *ngFor="let playlist of user_playlists"
+        (click)="addToPlaylist(playlist.id, id)"
+      >
+        <mat-icon>queue_music</mat-icon>
+        <div>
+          {{ playlist.name }}
+        </div>
+      </button>
+    </mat-menu>
+  </ng-template>
+</mat-menu>

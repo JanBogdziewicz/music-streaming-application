@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Album } from 'src/app/database-entities/album';
 import { ActivatedRoute } from '@angular/router';
 import { Song } from 'src/app/database-entities/song';
 import { AlbumService } from 'src/app/services/album.service';
 import { SongService } from 'src/app/services/song.service';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { Playlist } from 'src/app/database-entities/playlist';
+import { UserService } from 'src/app/services/user.service';
+import { getUsernameFromToken } from 'src/app/utils/jwt';
+import { PlaylistService } from 'src/app/services/playlist.service';
 
 @Component({
   selector: 'app-album',
@@ -12,18 +17,28 @@ import { SongService } from 'src/app/services/song.service';
   styleUrls: ['./album.component.css'],
 })
 export class AlbumComponent implements OnInit {
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
+  public contextMenuPosition = { x: '0px', y: '0px' };
+
+  private username: string = getUsernameFromToken();
+
   private album$!: Observable<Album>;
   private album_songs$!: Observable<Song[]>;
+  private user_playlists$!: Observable<Playlist[]>;
 
-  public album: Album = {} as Album;
+  public album: Album = { album_type: '' } as Album;
   public album_length: number = 0;
-  public album_songs: Song[];
+  public album_songs: Song[] = [];
+  public user_playlists: Playlist[] = [];
   public images: Map<string, string> = new Map<string, string>();
 
   constructor(
     private route: ActivatedRoute,
     private albumService: AlbumService,
-    private songService: SongService
+    private songService: SongService,
+    private userService: UserService,
+    private playlistService: PlaylistService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +55,11 @@ export class AlbumComponent implements OnInit {
         this.album_length += song.length;
         this.getSongCover(song.id, song.cover);
       });
+    });
+
+    this.user_playlists$ = this.userService.getUserPlaylists(this.username);
+    this.user_playlists$.subscribe((res) => {
+      this.user_playlists = res;
     });
   }
 
@@ -78,6 +98,28 @@ export class AlbumComponent implements OnInit {
     this.createUrl(image, image_id);
   }
 
+  playSong(song_id: string) {
+    this.songService.playSong(song_id);
+  }
+
+  addToQueue(song_ids: string[]) {
+    this.userService
+      .addToQueue(this.username, song_ids)
+      .subscribe((res) => console.log(res));
+  }
+
+  addToLibrary(song_ids: string[], collection_name: string) {
+    this.userService
+      .addToLibrary(this.username, song_ids, collection_name)
+      .subscribe((res) => console.log(res));
+  }
+
+  addToPlaylist(playlist_id: string, song_id: string) {
+    this.playlistService
+      .addToPlaylist(playlist_id, song_id)
+      .subscribe((res) => console.log(res));
+  }
+
   secondsToHms(d: number) {
     let h = Math.floor(d / 3600);
     let m = Math.floor((d % 3600) / 60);
@@ -98,5 +140,14 @@ export class AlbumComponent implements OnInit {
     ret += '' + mins + ':' + (secs < 10 ? '0' : '');
     ret += '' + secs;
     return ret;
+  }
+
+  onContextMenu(event: MouseEvent, song_id: string) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { id: song_id };
+    this.contextMenu.menu!.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
   }
 }

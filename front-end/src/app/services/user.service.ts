@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -14,7 +14,12 @@ import { User } from '../database-entities/user';
   providedIn: 'root',
 })
 export class UserService {
-  user_address: string = `${environment.backend_address}/users`;
+  private user_address: string = `${environment.backend_address}/users`;
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -64,5 +69,28 @@ export class UserService {
     return this.http.get(`${this.user_address}/${username}/avatar`, {
       responseType: 'blob',
     });
+  }
+
+  addToQueue(username: string, song_ids: string[]) {
+    return this.http
+      .post<MongoResponse>(
+        `${this.user_address}/${username}/queue/append`,
+        song_ids,
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
+  }
+
+  addToLibrary(username: string, ids: string[], collection_name: string) {
+    return this.http
+      .put<MongoResponse>(
+        `${this.user_address}/${username}/library/append`,
+        {
+          collection_name: collection_name,
+          item_ids: ids,
+        },
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
   }
 }

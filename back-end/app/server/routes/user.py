@@ -60,24 +60,26 @@ async def add_user_data(user: UserSchema = Body(...)):
 
 
 # Login user
-@UserRouter.post("/login", summary="Create access token for user", response_model=TokenSchema)
+@UserRouter.post(
+    "/login", summary="Create access token for user", response_model=TokenSchema
+)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await retrieve_user(form_data.username)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            detail="Incorrect email or password",
         )
 
-    hashed_pass = user['password']
+    hashed_pass = user["password"]
     if not verify_password(form_data.password, hashed_pass):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password"
+            detail="Incorrect email or password",
         )
 
     return {
-        "access_token": create_access_token(user['username']),
+        "access_token": create_access_token(user["username"]),
     }
 
 
@@ -169,8 +171,7 @@ async def get_library_data(username: str):
 async def append_queue_data(username: str, req: list[str] = Body(...)):
     await append_queue(username, req)
     return ResponseModel(
-        "Song/s with IDs: {0} appeneded to queue of user {1}".format(
-            req, username),
+        "Song/s with IDs: {0} appeneded to queue of user {1}".format(req, username),
         "Song/s added succesfully to user's queue",
     )
 
@@ -183,8 +184,7 @@ async def append_queue_data(username: str, req: list[str] = Body(...)):
 async def prepend_queue_data(username: str, req: list[str] = Body(...)):
     await prepend_queue(username, req)
     return ResponseModel(
-        "Song/s with IDs: {0} prepended to queue of user {1}".format(
-            req, username),
+        "Song/s with IDs: {0} prepended to queue of user {1}".format(req, username),
         "Song/s added succesfully to user's queue",
     )
 
@@ -197,8 +197,7 @@ async def prepend_queue_data(username: str, req: list[str] = Body(...)):
 async def pull_queue_data(username: str, req: list[int] = Body(...)):
     await pull_queue(username, req)
     return ResponseModel(
-        "Song/s with indexes: {0} pulled from queue of user {1}".format(
-            req, username),
+        "Song/s with indexes: {0} pulled from queue of user {1}".format(req, username),
         "Song/s pulled succesfully from user's queue",
     )
 
@@ -334,6 +333,6 @@ async def get_user_avatar(username: str):
 
 
 # Get current user
-@UserRouter.get('/auth/me', summary='Get details of currently logged in user')
+@UserRouter.get("/auth/me", summary="Get details of currently logged in user")
 async def get_me(user: UserSchemaNoPass = Depends(get_current_user)):
     return ResponseModel(user, "User logged in")

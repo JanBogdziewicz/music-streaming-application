@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -11,7 +11,12 @@ import { Playlist } from '../database-entities/playlist';
   providedIn: 'root',
 })
 export class PlaylistService {
-  playlist_address: string = `${environment.backend_address}/playlists`;
+  private playlist_address: string = `${environment.backend_address}/playlists`;
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+    }),
+  };
 
   constructor(private http: HttpClient) {}
 
@@ -41,5 +46,14 @@ export class PlaylistService {
     return this.http.get(`${this.playlist_address}/${id}/cover`, {
       responseType: 'blob',
     });
+  }
+
+  addToPlaylist(id: string, song_id: string) {
+    return this.http
+      .patch<MongoResponse>(
+        `${this.playlist_address}/${id}/songs/${song_id}`,
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
   }
 }

@@ -46,4 +46,9 @@ export class SongService {
       .get<MongoResponse>(`${this.song_address}/${id}/album`)
       .pipe(map((response) => response.data as Album));
   }
+
+  playSong(id: string) {
+    console.log('Song played!');
+    // for now empty
+  }
 }
