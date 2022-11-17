@@ -28,6 +28,30 @@
       </div>
     </div>
   </div>
+  <div class="album_buttons">
+    <div class="play_album">
+      <button mat-fab color="basic" #play_button>
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+    </div>
+    <div class="add_library">
+      <mat-icon
+        matTooltip="Remove from library"
+        (click)="removeFromLibrary([album.id], 'albums')"
+        *ngIf="elementInLibrary.get(album.id); else notInLibrary"
+      >
+        star
+      </mat-icon>
+      <ng-template #notInLibrary>
+        <mat-icon
+          matTooltip="Add to library"
+          (click)="addToLibrary([album.id], 'albums')"
+        >
+          star_border
+        </mat-icon>
+      </ng-template>
+    </div>
+  </div>
   <mat-divider></mat-divider>
   <div class="songs">
     <div class="description">
@@ -88,9 +112,18 @@
     <button mat-menu-item (click)="playSong(id)">Play song</button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="addToQueue([id])">Add to queue</button>
-    <button mat-menu-item (click)="addToLibrary([id], 'songs')">
-      Add to library
+    <button
+      mat-menu-item
+      (click)="removeFromLibrary([id], 'songs')"
+      *ngIf="elementInLibrary.get(id); else notInLibrary"
+    >
+      Remove from library
     </button>
+    <ng-template #notInLibrary>
+      <button mat-menu-item (click)="addToLibrary([id], 'songs')">
+        Add to library
+      </button>
+    </ng-template>
     <button mat-menu-item [matMenuTriggerFor]="playlistsMenu">
       Add to playlist
     </button>

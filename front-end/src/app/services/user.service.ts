@@ -93,4 +93,17 @@ export class UserService {
       )
       .pipe(map((response) => response.data as string));
   }
+
+  removeFromLibrary(username: string, ids: string[], collection_name: string) {
+    return this.http
+      .put<MongoResponse>(
+        `${this.user_address}/${username}/library/pull`,
+        {
+          collection_name: collection_name,
+          item_ids: ids,
+        },
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
+  }
 }

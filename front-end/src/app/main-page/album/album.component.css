@@ -18,7 +18,7 @@
 }
 
 .text h1 {
-  font-size: 3vw;
+  font-size: calc(16px + 2vw);
   font-weight: 750;
   padding-bottom: 1%;
   margin-left: 0;
@@ -32,31 +32,30 @@
 
 .type {
   text-transform: uppercase;
-  font-size: 0.6vw;
+  font-size: calc(8px + 0.1vw);
   font-weight: 500;
   opacity: 0.6;
 }
 
 .creator {
   font-style: italic;
-  font-size: 0.9vw;
+  font-size: calc(12px + 0.3vw);
 }
 
 .size {
-  font-size: 0.8vw;
+  font-size: calc(10px + 0.3vw);
 }
 
 .time {
   display: flex;
   align-items: center;
-  font-size: 0.8vw;
+  font-size: calc(10px + 0.3vw);
 }
 
-mat-icon {
+.album_data mat-icon {
   display: flex;
   align-items: center;
-  font-size: 1vw;
-  transform: scale(1.1);
+  font-size: calc(12px + 0.4vw);
 }
 
 .cover {
@@ -70,6 +69,7 @@ mat-icon {
 
 .cover mat-card {
   width: 13vw;
+  min-width: 100px;
   height: 100%;
 }
 
@@ -112,7 +112,6 @@ mat-nav-list.list-vertical div {
   width: 5%;
   height: 100%;
   position: relative;
-  display: inline-block;
 }
 
 .song_image img {
@@ -151,6 +150,7 @@ mat-nav-list.list-vertical div {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: calc(4px + 0.9vw);
 }
 
 .song_image_content button {
@@ -173,7 +173,7 @@ mat-nav-list.list-vertical div {
 
 .description div {
   text-transform: uppercase;
-  font-size: 0.6vw;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -220,7 +220,7 @@ mat-nav-list.list-vertical div {
 }
 
 ::ng-deep.mat-menu-panel.context_menu {
-  width: 200px;
+  width: 220px;
 }
 
 ::ng-deep.mat-menu-panel.subcontext_menu {
@@ -247,4 +247,41 @@ mat-nav-list.list-vertical div {
 
 .add_to_playlist mat-icon {
   transform: scale(0.95);
+}
+
+.album_buttons {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.album_buttons div {
+  padding: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_library {
+  margin-left: calc(8px + 0.3vw);
+}
+
+.add_library mat-icon {
+  transform: scale(2.5);
+  color: #d4af37;
+  opacity: 0.5;
+}
+
+.play_album {
+  margin-left: 2%;
+}
+
+.play_album mat-icon {
+  transform: scale(1.2);
+}
+
+.add_library mat-icon:hover {
+  opacity: 1;
+  cursor: pointer;
 }
