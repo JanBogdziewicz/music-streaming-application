@@ -25,10 +25,10 @@ export class HomeComponent implements OnInit {
   private artists$!: Observable<Artist[]>;
   private songs$!: Observable<Song[]>;
 
-  public playlists: Playlist[];
-  public albums: Album[];
-  public artists: Artist[];
-  public songs: Song[];
+  public playlists: Playlist[] = [];
+  public albums: Album[] = [];
+  public artists: Artist[] = [];
+  public songs: Song[] = [];
   public images: Map<string, string> = new Map<string, string>();
 
   constructor(

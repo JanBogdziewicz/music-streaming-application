@@ -21,7 +21,7 @@ export class SidenavWrapperComponent implements OnInit {
 
   private playlists$!: Observable<Playlist[]>;
 
-  public playlists: Playlist[];
+  public playlists: Playlist[] = [];
 
   constructor(
     private userService: UserService,

@@ -25,9 +25,9 @@ export class ExploreComponent implements OnInit {
   private albums$!: Observable<Album[]>;
   private artists$!: Observable<Artist[]>;
 
-  public songs: Song[];
-  public albums: Album[];
-  public artists: Artist[];
+  public songs: Song[] = [];
+  public albums: Album[] = [];
+  public artists: Artist[] = [];
   public images: Map<string, string> = new Map<string, string>();
 
   public song_scroll: Scroll = { item_list: [], index: 0 };

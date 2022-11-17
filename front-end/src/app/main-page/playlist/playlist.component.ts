@@ -17,7 +17,7 @@ export class PlaylistComponent implements OnInit {
   private playlist_songs$!: Observable<Song[]>;
 
   public playlist: Playlist = {} as Playlist;
-  public playlist_songs: Song[];
+  public playlist_songs: Song[] = [];
   public playlist_songs_albums: Map<string, Album> = new Map<string, Album>();
   public images: Map<string, string> = new Map<string, string>();
 

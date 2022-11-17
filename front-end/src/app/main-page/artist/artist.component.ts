@@ -27,8 +27,8 @@ export class ArtistComponent implements OnInit {
   private albums$!: Observable<Album[]>;
 
   public artist: Artist = {} as Artist;
-  public songs: Song[];
-  public albums: Album[];
+  public songs: Song[] = [];
+  public albums: Album[] = [];
   public song_nr: number;
   public album_nr: number;
   public images: Map<string, string> = new Map<string, string>();
