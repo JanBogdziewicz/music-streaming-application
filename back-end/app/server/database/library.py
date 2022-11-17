@@ -61,9 +61,11 @@ async def delete_library(id: str):
 
 # Pull item/s from library collection
 async def pull_items_library(id: str, collection: str, ids: list[str]):
+    if not collection == "artists":
+        ids = list(map(lambda x: ObjectId(x), ids))
     updated = await libraries_collection.update_one(
         {"_id": ObjectId(id)},
-        {"$pull": {collection: {"$in": list(map(lambda x: ObjectId(x), ids))}}},
+        {"$pull": {collection: {"$in": ids}}},
     )
     if updated.matched_count < 1:
         raise HTTPException(status_code=404, detail="User library not found")

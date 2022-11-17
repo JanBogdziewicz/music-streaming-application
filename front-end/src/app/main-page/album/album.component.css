@@ -68,8 +68,7 @@
 }
 
 .cover mat-card {
-  width: 13vw;
-  min-width: 100px;
+  width: calc(100px + 8vw);
   height: 100%;
 }
 

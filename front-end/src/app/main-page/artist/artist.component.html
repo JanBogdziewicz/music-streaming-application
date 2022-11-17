@@ -23,6 +23,35 @@
       </div>
     </div>
   </div>
+  <div class="artist_buttons">
+    <div class="play_artist">
+      <button
+        mat-fab
+        color="basic"
+        #play_button
+        (click)="playSong(songs[0].id)"
+      >
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+    </div>
+    <div class="add_library">
+      <mat-icon
+        matTooltip="Remove from library"
+        (click)="removeFromLibrary([artist.name], 'artists')"
+        *ngIf="elementInLibrary.get(artist.name); else notInLibrary"
+      >
+        star
+      </mat-icon>
+      <ng-template #notInLibrary>
+        <mat-icon
+          matTooltip="Add to library"
+          (click)="addToLibrary([artist.name], 'artists')"
+        >
+          star_border
+        </mat-icon>
+      </ng-template>
+    </div>
+  </div>
   <mat-divider></mat-divider>
   <h1>Albums</h1>
   <mat-nav-list class="list-horizontal">
@@ -32,7 +61,7 @@
       *ngFor="let album of albums"
       [routerLink]="['/album', album.id]"
     >
-      <mat-card>
+      <mat-card (contextmenu)="onContextMenu($event, album.id, 'album')">
         <img
           [src]="images.get(album.cover) | safeResourceUrl"
           alt="Album Cover"
@@ -63,14 +92,19 @@
   <h1>Top Songs</h1>
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
-      <mat-card>
+      <mat-card (contextmenu)="onContextMenu($event, song.id, 'song')">
         <div class="song_image">
           <img
             [src]="images.get(song.cover) | safeResourceUrl"
             alt="Song Cover"
           />
           <div class="song_image_content">
-            <button mat-fab color="basic" #play_button>
+            <button
+              mat-fab
+              color="basic"
+              #play_button
+              (click)="playSong(song.id)"
+            >
               <mat-icon>play_arrow</mat-icon>
             </button>
           </div>
@@ -101,3 +135,61 @@
     </button>
   </div>
 </mat-list>
+<div
+  class="context_menu_trigger"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu"
+></div>
+<mat-menu #contextMenu="matMenu" class="context_menu">
+  <ng-template matMenuContent let-id="id" let-type="type">
+    <button
+      mat-menu-item
+      (click)="playSong(id)"
+      *ngIf="type === 'song'; else album"
+    >
+      Play song
+    </button>
+    <ng-template #album>
+      <button mat-menu-item [routerLink]="['/album', id]">Go to album</button>
+    </ng-template>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'song'">
+      Add to queue
+    </button>
+    <button
+      mat-menu-item
+      (click)="removeFromLibrary([id], 'songs')"
+      *ngIf="elementInLibrary.get(id); else notInLibrary"
+    >
+      Remove from library
+    </button>
+    <ng-template #notInLibrary>
+      <button mat-menu-item (click)="addToLibrary([id], 'songs')">
+        Add to library
+      </button>
+    </ng-template>
+    <button
+      mat-menu-item
+      [matMenuTriggerFor]="playlistsMenu"
+      *ngIf="type === 'song'"
+    >
+      Add to playlist
+    </button>
+    <mat-menu #playlistsMenu="matMenu" class="subcontext_menu">
+      <div class="playlist_header">Playlists</div>
+      <mat-divider></mat-divider>
+      <button
+        class="add_to_playlist"
+        mat-menu-item
+        *ngFor="let playlist of user_playlists"
+        (click)="addToPlaylist(playlist.id, id)"
+      >
+        <mat-icon>queue_music</mat-icon>
+        <div>
+          {{ playlist.name }}
+        </div>
+      </button>
+    </mat-menu>
+  </ng-template>
+</mat-menu>

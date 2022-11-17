@@ -65,12 +65,8 @@
     </div>
     <mat-divider></mat-divider>
     <mat-nav-list class="list-vertical">
-      <div
-        id="song"
-        *ngFor="let song of album_songs; let i = index"
-        (contextmenu)="onContextMenu($event, song.id)"
-      >
-        <mat-card>
+      <div id="song" *ngFor="let song of album_songs; let i = index">
+        <mat-card (contextmenu)="onContextMenu($event, song.id)">
           <div class="place">{{ i + 1 }}.</div>
           <div class="song_image">
             <img
