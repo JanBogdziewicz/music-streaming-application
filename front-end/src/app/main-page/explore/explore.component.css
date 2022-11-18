@@ -1,6 +1,7 @@
 mat-nav-list.list-horizontal {
   display: flex;
   overflow: auto;
+  padding-bottom: 12px;
 }
 
 mat-nav-list.list-horizontal::-webkit-scrollbar {
@@ -9,14 +10,17 @@ mat-nav-list.list-horizontal::-webkit-scrollbar {
 
 mat-nav-list.list-horizontal div {
   flex: 0 0 calc(100% / 6);
-  text-align: center;
   box-sizing: border-box;
-  padding: 0 1%;
+  padding: 0 calc(14px + 0.2vw) 0 calc(6px + 0.5vw);
 }
 
 mat-card {
   width: 90%;
   height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 mat-card:hover {
@@ -34,34 +38,12 @@ mat-card:hover {
   justify-content: space-between;
 }
 
-mat-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: scale(1.1);
-}
-
 h1 {
   margin: 1% 0 1% 2%;
 }
 
-.song_image {
-  width: 100%;
-  height: 85%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.song_image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 2%;
-  object-fit: cover;
+#song img {
   opacity: 1;
-  transition: 0.5s ease;
   backface-visibility: hidden;
 }
 
@@ -95,15 +77,18 @@ h1 {
 }
 
 #album img,
-#artist img {
+#artist img,
+#song img {
   width: 100%;
   height: 85%;
   border-radius: 2%;
   object-fit: cover;
+  width: calc(200px + 3vw);
 }
 
-#song .title {
-  margin-top: 2%;
+#album img,
+#song img {
+  padding-bottom: 4px;
 }
 
 .title {
@@ -114,14 +99,91 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
 }
 
 .title div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-style: italic;
   font-weight: 400;
+  font-size: 14px;
 }
 
 .link:hover {
   text-decoration: underline;
+  cursor: pointer;
+}
+
+.context_menu_trigger {
+  visibility: hidden;
+  position: fixed;
+}
+
+::ng-deep.mat-menu-panel.context_menu {
+  width: 220px;
+}
+
+::ng-deep.mat-menu-panel.subcontext_menu {
+  width: 160px;
+  margin-left: 2%;
+}
+
+.playlist_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  font-size: 14px;
+}
+
+.add_to_playlist {
+  display: flex;
+  align-items: center;
+}
+
+.add_to_playlist div {
+  font-size: 15px;
+}
+
+.add_to_playlist mat-icon {
+  transform: scale(0.95);
+}
+
+.artist_buttons {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.artist_buttons div {
+  padding: 1%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_library {
+  margin-left: calc(8px + 0.3vw);
+}
+
+.add_library mat-icon {
+  transform: scale(2.5);
+  color: #d4af37;
+  opacity: 0.5;
+}
+
+.play_artist {
+  margin-left: 2%;
+}
+
+.play_artist mat-icon {
+  transform: scale(1.2);
+}
+
+.add_library mat-icon:hover {
+  opacity: 1;
   cursor: pointer;
 }

@@ -61,7 +61,7 @@
       *ngFor="let album of albums"
       [routerLink]="['/album', album.id]"
     >
-      <mat-card (contextmenu)="onContextMenu($event, album.id, 'album')">
+      <mat-card (contextmenu)="onContextMenu($event, album.id, 'albums')">
         <img
           [src]="images.get(album.cover) | safeResourceUrl"
           alt="Album Cover"
@@ -92,7 +92,7 @@
   <h1>Top Songs</h1>
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
-      <mat-card (contextmenu)="onContextMenu($event, song.id, 'song')">
+      <mat-card (contextmenu)="onContextMenu($event, song.id, 'songs')">
         <div class="song_image">
           <img
             [src]="images.get(song.cover) | safeResourceUrl"
@@ -146,7 +146,7 @@
     <button
       mat-menu-item
       (click)="playSong(id)"
-      *ngIf="type === 'song'; else album"
+      *ngIf="type === 'songs'; else album"
     >
       Play song
     </button>
@@ -154,25 +154,25 @@
       <button mat-menu-item [routerLink]="['/album', id]">Go to album</button>
     </ng-template>
     <mat-divider></mat-divider>
-    <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'song'">
+    <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'songs'">
       Add to queue
     </button>
     <button
       mat-menu-item
-      (click)="removeFromLibrary([id], 'songs')"
+      (click)="removeFromLibrary([id], type)"
       *ngIf="elementInLibrary.get(id); else notInLibrary"
     >
       Remove from library
     </button>
     <ng-template #notInLibrary>
-      <button mat-menu-item (click)="addToLibrary([id], 'songs')">
+      <button mat-menu-item (click)="addToLibrary([id], type)">
         Add to library
       </button>
     </ng-template>
     <button
       mat-menu-item
       [matMenuTriggerFor]="playlistsMenu"
-      *ngIf="type === 'song'"
+      *ngIf="type === 'songs'"
     >
       Add to playlist
     </button>

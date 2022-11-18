@@ -30,7 +30,12 @@
   </div>
   <div class="album_buttons">
     <div class="play_album">
-      <button mat-fab color="basic" #play_button>
+      <button
+        mat-fab
+        color="basic"
+        #play_button
+        (click)="playSong(album_songs[0].id)"
+      >
         <mat-icon>play_arrow</mat-icon>
       </button>
     </div>
@@ -74,7 +79,12 @@
               alt="Song Cover"
             />
             <div class="song_image_content">
-              <button mat-mini-fab color="basic" #play_button>
+              <button
+                mat-mini-fab
+                color="basic"
+                #play_button
+                (click)="playSong(song.id)"
+              >
                 <mat-icon>play_arrow</mat-icon>
               </button>
             </div>
