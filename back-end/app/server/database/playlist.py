@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from bson.objectid import ObjectId
 from server.config import playlists_collection, songs_collection
 from server.database.song import song_helper
+import server.database.library as libraryService
+import server.database.user as userService
 
 
 # helper
@@ -29,6 +31,10 @@ async def retrieve_playlists():
 async def add_playlist(playlist_data: dict) -> dict:
     playlist = await playlists_collection.insert_one(playlist_data)
     new_playlist = await playlists_collection.find_one({"_id": playlist.inserted_id})
+    playlist_user = await userService.retrieve_user(new_playlist["user"])
+    await libraryService.append_items_library(
+        playlist_user["library"], "playlists", [new_playlist["_id"]]
+    )
     return playlist_helper(new_playlist)
 
 
@@ -39,7 +45,6 @@ async def retrieve_playlist(id: str):
         return playlist_helper(playlist)
     else:
         raise HTTPException(status_code=404, detail="Playlist not found")
-    
 
 
 # Update a playlist with a matching ID
@@ -54,6 +59,11 @@ async def update_playlist(id: str, data: dict):
 
 # Delete a playlist from the database
 async def delete_playlist(id: str):
+    playlist = await retrieve_playlist(id)
+    playlist_user = await userService.retrieve_user(playlist["user"])
+    await libraryService.pull_items_library(
+        playlist_user["library"], "playlists", [playlist["id"]]
+    )
     deleted = await playlists_collection.delete_one({"_id": ObjectId(id)})
     if deleted.deleted_count < 1:
         raise HTTPException(status_code=404, detail="playlist not found")
