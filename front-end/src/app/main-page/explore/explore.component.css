@@ -53,6 +53,7 @@ h1 {
 
 #song mat-card:hover .song_image_content {
   opacity: 1;
+  transition: 0.4s ease;
 }
 
 .song_image_content {

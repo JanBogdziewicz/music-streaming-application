@@ -93,21 +93,19 @@
   <mat-nav-list class="list-horizontal">
     <div scrollable id="song" *ngFor="let song of songs">
       <mat-card (contextmenu)="onContextMenu($event, song.id, 'songs')">
-        <div class="song_image">
-          <img
-            [src]="images.get(song.cover) | safeResourceUrl"
-            alt="Song Cover"
-          />
-          <div class="song_image_content">
-            <button
-              mat-fab
-              color="basic"
-              #play_button
-              (click)="playSong(song.id)"
-            >
-              <mat-icon>play_arrow</mat-icon>
-            </button>
-          </div>
+        <img
+          [src]="images.get(song.cover) | safeResourceUrl"
+          alt="Song Cover"
+        />
+        <div class="song_image_content">
+          <button
+            mat-fab
+            color="basic"
+            #play_button
+            (click)="playSong(song.id)"
+          >
+            <mat-icon>play_arrow</mat-icon>
+          </button>
         </div>
         <div class="title">
           {{ song.name }}
