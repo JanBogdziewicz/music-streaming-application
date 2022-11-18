@@ -77,6 +77,7 @@ async def get_artist_songs(artist_name: str):
         return ResponseModel(songs, "All artist songs retrieved successfully")
     return ResponseModel(songs, "Empty list returned")
 
+
 # Get logo of an artist
 @ArtistRouter.get(
     "/{artist_name}/logo", response_description="artist logo retrieved sucessfully"

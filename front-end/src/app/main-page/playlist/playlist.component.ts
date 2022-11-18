@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlaylistService } from 'src/app/services/playlist.service';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { Playlist } from 'src/app/database-entities/playlist';
 import { Song } from 'src/app/database-entities/song';
 import { SongService } from 'src/app/services/song.service';
 import { Album } from 'src/app/database-entities/album';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from 'src/app/services/user.service';
+import { getUsernameFromToken } from 'src/app/utils/jwt';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-playlist',
@@ -13,36 +17,81 @@ import { Album } from 'src/app/database-entities/album';
   styleUrls: ['./playlist.component.css'],
 })
 export class PlaylistComponent implements OnInit {
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
+  public contextMenuPosition = { x: '0px', y: '0px' };
+
+  private username: string = getUsernameFromToken();
+
   private playlist$!: Observable<Playlist>;
   private playlist_songs$!: Observable<Song[]>;
+  private user_playlists$!: Observable<Playlist[]>;
+  private library_songs$!: Observable<Song[]>;
+  private library_playlists$!: Observable<Playlist[]>;
 
   public playlist: Playlist = {} as Playlist;
   public playlist_songs: Song[] = [];
+  public library_songs: Song[] = [];
+  private library_playlists: Playlist[];
+  public user_playlists: Playlist[] = [];
   public playlist_songs_albums: Map<string, Album> = new Map<string, Album>();
   public images: Map<string, string> = new Map<string, string>();
+  public elementInLibrary: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(
     private route: ActivatedRoute,
     private playlistService: PlaylistService,
-    private songService: SongService
+    private songService: SongService,
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.playlist$ = this.getPlaylist();
-    this.playlist$.subscribe((res) => {
-      this.playlist = res;
-      this.getPlaylistCover(this.playlist.id, this.playlist.cover);
+    this.user_playlists$ = this.playlist$.pipe(
+      switchMap((source) => {
+        this.playlist = source;
+        this.getPlaylistCover(this.playlist.id, this.playlist.cover);
+        return this.userService.getUserPlaylists(this.username);
+      })
+    );
+    this.library_playlists$ = this.user_playlists$.pipe(
+      switchMap((source) => {
+        this.user_playlists = source.filter(
+          (playlist) => playlist.id !== this.playlist.id
+        );
+        return this.userService.getUserLibraryPlaylists(this.username);
+      })
+    );
+    this.library_playlists$.subscribe((res) => {
+      this.library_playlists = res;
+      this.elementInLibrary.set(
+        this.playlist.id,
+        this.inLibrary(this.library_playlists, this.playlist.id)
+      );
     });
 
     this.playlist_songs$ = this.getPlaylistSongs();
-    this.playlist_songs$.subscribe((res) => {
-      this.playlist_songs = res;
-      this.playlist_songs.forEach((song) => {
-        let album$ = this.songService.getSongAlbum(song.id);
-        album$.subscribe((res) => {
-          this.playlist_songs_albums.set(song.id, res);
+    this.library_songs$ = this.playlist_songs$.pipe(
+      switchMap((source) => {
+        this.playlist_songs = source;
+        this.playlist_songs.forEach((song) => {
+          let album$ = this.songService.getSongAlbum(song.id);
+          album$.subscribe((res) => {
+            this.playlist_songs_albums.set(song.id, res);
+          });
+          this.getSongCover(song.id, song.cover);
         });
-        this.getSongCover(song.id, song.cover);
+        return this.userService.getUserLibrarySongs(this.username);
+      })
+    );
+    this.library_songs$.subscribe((res) => {
+      this.library_songs = res;
+      this.playlist_songs.forEach((song) => {
+        this.elementInLibrary.set(
+          song.id,
+          this.inLibrary(this.library_songs, song.id)
+        );
       });
     });
   }
@@ -82,6 +131,58 @@ export class PlaylistComponent implements OnInit {
     this.createUrl(image, image_id);
   }
 
+  playSong(song_id: string) {
+    this.songService.playSong(song_id);
+  }
+
+  addToQueue(song_ids: string[]) {
+    this.userService.addToQueue(this.username, song_ids).subscribe((res) => {
+      if (res) {
+        this.openSnackBar('Song added to queue', 'OK');
+      }
+    });
+  }
+
+  inLibrary(collection: any[], id: string) {
+    return collection.some((e) => e.id === id || e.name === id);
+  }
+
+  addToLibrary(ids: string[], collection_name: string) {
+    this.userService
+      .addToLibrary(this.username, ids, collection_name)
+      .subscribe((res) => {
+        if (res) {
+          ids.forEach((id) => {
+            this.elementInLibrary.set(id, true);
+          });
+          this.openSnackBar('Added to library', 'OK');
+        }
+      });
+  }
+
+  removeFromLibrary(ids: string[], collection_name: string) {
+    this.userService
+      .removeFromLibrary(this.username, ids, collection_name)
+      .subscribe((res) => {
+        if (res) {
+          ids.forEach((id) => {
+            this.elementInLibrary.set(id, false);
+          });
+          this.openSnackBar('Removed from library', 'OK');
+        }
+      });
+  }
+
+  addToPlaylist(playlist_id: string, song_id: string) {
+    this.playlistService
+      .addToPlaylist(playlist_id, song_id)
+      .subscribe((res) => {
+        if (res) {
+          this.openSnackBar('Song added to playlist', 'OK');
+        }
+      });
+  }
+
   secondsToHms(d: number) {
     let h = Math.floor(d / 3600);
     let m = Math.floor((d % 3600) / 60);
@@ -105,5 +206,21 @@ export class PlaylistComponent implements OnInit {
     ret += '' + mins + ':' + (secs < 10 ? '0' : '');
     ret += '' + secs;
     return ret;
+  }
+
+  onContextMenu(event: MouseEvent, id: string, type: string) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { id: id, type: type };
+    this.contextMenu.menu!.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: ['snackbar'],
+    });
   }
 }
