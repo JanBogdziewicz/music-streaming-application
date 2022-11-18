@@ -33,7 +33,7 @@ mat-card:hover {
 }
 
 .scroll {
-  padding: 0 1% 1% 1%;
+  padding: 0 12px 12px 12px;
   display: flex;
   justify-content: space-between;
 }
@@ -68,6 +68,7 @@ h1 {
   right: 0;
   top: 0;
   transition: 0.2s ease;
+  margin-bottom: 20px;
 }
 
 .song_image_content mat-icon {
@@ -150,41 +151,4 @@ h1 {
 
 .add_to_playlist mat-icon {
   transform: scale(0.95);
-}
-
-.artist_buttons {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.artist_buttons div {
-  padding: 1%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add_library {
-  margin-left: calc(8px + 0.3vw);
-}
-
-.add_library mat-icon {
-  transform: scale(2.5);
-  color: #d4af37;
-  opacity: 0.5;
-}
-
-.play_artist {
-  margin-left: 2%;
-}
-
-.play_artist mat-icon {
-  transform: scale(1.2);
-}
-
-.add_library mat-icon:hover {
-  opacity: 1;
-  cursor: pointer;
 }

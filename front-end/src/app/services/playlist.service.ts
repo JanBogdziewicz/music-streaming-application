@@ -56,4 +56,10 @@ export class PlaylistService {
       )
       .pipe(map((response) => response.data as string));
   }
+
+  removePlaylist(id: string) {
+    return this.http
+      .delete<MongoResponse>(`${this.playlist_address}/${id}`)
+      .pipe(map((response) => response.data as string));
+  }
 }

@@ -33,7 +33,7 @@ mat-card {
 }
 
 .scroll {
-  padding: 0 1% 1% 1%;
+  padding: 0 12px 12px 12px;
   display: flex;
   justify-content: space-between;
 }
@@ -166,6 +166,7 @@ h1 {
   right: 0;
   top: 0;
   transition: 0.2s ease;
+  margin-bottom: 20px;
 }
 
 .song_image_content mat-icon {

@@ -1,6 +1,15 @@
+mat-grid-list {
+  min-width: 1000px;
+  height: 45vh;
+}
+
 mat-card {
-  width: 90%;
+  width: 85%;
   height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 mat-card:hover {
@@ -13,30 +22,18 @@ mat-card:hover {
   cursor: pointer;
 }
 
-img {
-  width: 100%;
-  height: 86%;
-  border-radius: 2%;
-  object-fit: cover;
-}
-
-.song_image {
+#album img,
+#artist img,
+#song img,
+#playlist img {
   width: 100%;
   height: 85%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.song_image img {
-  width: 100%;
-  height: 100%;
   border-radius: 2%;
   object-fit: cover;
+}
+
+#song img {
   opacity: 1;
-  transition: 0.5s ease;
   backface-visibility: hidden;
 }
 
@@ -46,6 +43,7 @@ img {
 
 #song mat-card:hover .song_image_content {
   opacity: 1;
+  transition: 0.4s ease;
 }
 
 .song_image_content {
@@ -60,6 +58,7 @@ img {
   right: 0;
   top: 0;
   transition: 0.2s ease;
+  margin-bottom: 20px;
 }
 
 .song_image_content mat-icon {
@@ -69,23 +68,30 @@ img {
   font-size: 30px;
 }
 
-#song .title {
-  margin-top: 2%;
+#album img,
+#song img,
+#playlist img {
+  padding-bottom: 10px;
 }
 
 .title {
   width: 100%;
-  height: 14%;
+  height: 15%;
   font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
 }
 
 .title div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-style: italic;
   font-weight: 400;
+  font-size: 14px;
 }
 
 .link:hover {
@@ -106,4 +112,39 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.context_menu_trigger {
+  visibility: hidden;
+  position: fixed;
+}
+
+::ng-deep.mat-menu-panel.context_menu {
+  width: 220px;
+}
+
+::ng-deep.mat-menu-panel.subcontext_menu {
+  width: 160px;
+  margin-left: 2%;
+}
+
+.playlist_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  font-size: 14px;
+}
+
+.add_to_playlist {
+  display: flex;
+  align-items: center;
+}
+
+.add_to_playlist div {
+  font-size: 15px;
+}
+
+.add_to_playlist mat-icon {
+  transform: scale(0.95);
 }
