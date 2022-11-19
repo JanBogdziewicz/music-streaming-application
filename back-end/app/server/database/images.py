@@ -25,6 +25,12 @@ async def download_playlist_cover(file_id: str):
     return bytes
 
 
+async def upload_playlist_cover(file_id: str, file):
+    await playlist_covers_fs.delete(ObjectId(file_id))
+    new_file_id = await playlist_covers_fs.upload_from_stream("playlist_cover", file)
+    return new_file_id
+
+
 async def download_user_avatar(file_id: str):
     data = await user_avatars_fs.open_download_stream(ObjectId(file_id))
     bytes = await data.read()

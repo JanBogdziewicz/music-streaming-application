@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, File, UploadFile
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
 from server.deps import get_current_user
-from server.database.images import download_playlist_cover
+from server.database.images import download_playlist_cover, upload_playlist_cover
 from server.database.playlist import *
+from server.database.user import retrieve_user, update_user
 from server.models.playlist import *
 from server.models.user import UserSchema
 
@@ -105,3 +106,17 @@ async def get_playlist_cover(id: str):
     playlist = await retrieve_playlist(id)
     cover = await download_playlist_cover(playlist["cover"])
     return Response(cover)
+
+
+# Update cover of a playlist
+@PlaylistRouter.put(
+    "/{id}/cover", response_description="playlist cover updated sucessfully"
+)
+async def update_playlist_cover(id: str, file: UploadFile = File(...)):
+    playlist = await retrieve_playlist(id)
+    updated_cover_id = await upload_playlist_cover(playlist["cover"], file.file)
+    playlist["cover"] = str(updated_cover_id)
+    updated_playlist = await update_playlist(id, playlist)
+    return ResponseModel(
+        updated_playlist, "playlist with ID: {0} update is successful".format(id)
+    )
