@@ -10,9 +10,12 @@
             [src]="images.get(playlist.cover) | safeResourceUrl"
             alt="Playlist Cover"
           />
+
           <div class="title">
-            {{ playlist.name }}
-            <div>
+            <div class="name">
+              {{ playlist.name }}
+            </div>
+            <div class="user">
               {{ playlist.user }}
             </div>
           </div>
