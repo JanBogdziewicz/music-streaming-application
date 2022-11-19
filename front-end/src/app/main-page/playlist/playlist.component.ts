@@ -24,6 +24,7 @@ export class PlaylistComponent implements OnInit {
   public contextMenuPosition = { x: '0px', y: '0px' };
 
   private username: string = getUsernameFromToken();
+  public isUserPlaylist: boolean;
 
   private playlist$!: Observable<Playlist>;
   private playlist_songs$!: Observable<Song[]>;
@@ -54,6 +55,7 @@ export class PlaylistComponent implements OnInit {
     this.user_playlists$ = this.playlist$.pipe(
       switchMap((source) => {
         this.playlist = source;
+        this.isUserPlaylist = this.playlist.user === this.username;
         this.getPlaylistCover(this.playlist.id, this.playlist.cover);
         return this.userService.getUserPlaylists(this.username);
       })

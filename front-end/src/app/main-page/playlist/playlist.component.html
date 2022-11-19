@@ -37,7 +37,7 @@
         <mat-icon>play_arrow</mat-icon>
       </button>
     </div>
-    <div class="edit_playlist">
+    <div class="edit_playlist" *ngIf="isUserPlaylist">
       <mat-icon matTooltip="Edit playlist" (click)="openDialog()"
         >settings</mat-icon
       >
