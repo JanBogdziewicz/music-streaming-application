@@ -242,6 +242,10 @@ mat-nav-list.list-vertical div {
 
 .add_to_playlist div {
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
 }
 
 .add_to_playlist mat-icon {

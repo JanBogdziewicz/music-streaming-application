@@ -21,11 +21,11 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .nav_playlist div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  max-width: 120px;
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav_playlist mat-icon {

@@ -143,6 +143,10 @@ mat-card:hover {
 
 .add_to_playlist div {
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
 }
 
 .add_to_playlist mat-icon {
