@@ -1,20 +1,27 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { forkJoin, Observable, switchMap } from 'rxjs';
 import { ScrollableDirective } from 'src/app/common/scrollable-directive';
-import { Album } from 'src/app/database-entities/album';
 import { Artist } from 'src/app/database-entities/artist';
 import { Listening } from 'src/app/database-entities/listening';
 import { Playlist } from 'src/app/database-entities/playlist';
 import { Song } from 'src/app/database-entities/song';
 import { User } from 'src/app/database-entities/user';
-import { AlbumService } from 'src/app/services/album.service';
 import { ArtistService } from 'src/app/services/artist.service';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { SongService } from 'src/app/services/song.service';
 import { UserService } from 'src/app/services/user.service';
 import { Scroll } from '../explore/explore.component';
 import { getUsernameFromToken } from 'src/app/utils/jwt';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @Component({
   selector: 'app-user',
@@ -23,24 +30,35 @@ import { getUsernameFromToken } from 'src/app/utils/jwt';
 })
 export class UserComponent implements OnInit {
   @ViewChildren(ScrollableDirective) listItems: QueryList<ScrollableDirective>;
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
 
-  public username: string = getUsernameFromToken();
+  public contextMenuPosition = { x: '0px', y: '0px' };
+
+  private username: string = getUsernameFromToken();
+  public isOwner: boolean;
 
   private playlists$!: Observable<Playlist[]>;
   private user$!: Observable<User>;
   private listenings$!: Observable<Listening[]>;
   private topSongs$!: Observable<Song[]>;
   private topArtists$!: Observable<Artist[]>;
+  private user_playlists$!: Observable<Playlist[]>;
+  private library_songs$!: Observable<Song[]>;
+  private library_artists$!: Observable<Artist[]>;
 
   public playlists: Playlist[] = [];
   public user: User = {} as User;
   public user_join_time: string;
   public user_birthday_days: number;
   public images: Map<string, string> = new Map<string, string>();
+  public elementInLibrary: Map<string, boolean> = new Map<string, boolean>();
   public songCount: { [index: string]: number } = {};
   public artistCount: { [index: string]: number } = {};
   public topSongs: Song[] = [];
   public topArtists: Artist[] = [];
+  public library_songs: Song[] = [];
+  public library_artists: Artist[] = [];
+  public user_playlists: Playlist[] = [];
 
   public playlist_scroll: Scroll = { item_list: [], index: 0 };
 
@@ -48,7 +66,9 @@ export class UserComponent implements OnInit {
     private userService: UserService,
     private playlistService: PlaylistService,
     private songService: SongService,
-    private artistService: ArtistService
+    private artistService: ArtistService,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +83,7 @@ export class UserComponent implements OnInit {
     this.user$ = this.userService.getUser(this.username);
     this.user$.subscribe((res) => {
       this.user = res;
+      this.isOwner = this.user.username === this.username;
       this.getUserAvatar(this.user.username, this.user.avatar);
       this.user_join_time = this.getTimeSinceJoin(this.user.join_date);
       this.user_birthday_days = this.getDaysTillBirthday(this.user.birth_date);
@@ -81,15 +102,44 @@ export class UserComponent implements OnInit {
         return this.getTopArtists(songs);
       })
     );
-    this.topSongs$.subscribe((res) => {
-      this.topSongs = res;
-      this.topSongs.forEach((song) => this.getSongCover(song.id, song.cover));
+    this.library_songs$ = this.topSongs$.pipe(
+      switchMap((source) => {
+        this.topSongs = source;
+        this.topSongs.forEach((song) => this.getSongCover(song.id, song.cover));
+        return this.userService.getUserLibrarySongs(this.username);
+      })
+    );
+    this.library_artists$ = this.topArtists$.pipe(
+      switchMap((source) => {
+        this.topArtists = source;
+        this.topArtists.forEach((artist) =>
+          this.getArtistLogo(artist.name, artist.logo)
+        );
+        return this.userService.getUserLibraryArtists(this.username);
+      })
+    );
+    this.library_songs$.subscribe((res) => {
+      this.library_songs = res;
+      this.topSongs.forEach((song) => {
+        this.elementInLibrary.set(
+          song.id,
+          this.inLibrary(this.library_songs, song.id)
+        );
+      });
     });
-    this.topArtists$.subscribe((res) => {
-      this.topArtists = res;
-      this.topArtists.forEach((artist) =>
-        this.getArtistLogo(artist.name, artist.logo)
-      );
+    this.library_artists$.subscribe((res) => {
+      this.library_artists = res;
+      this.topArtists.forEach((artist) => {
+        this.elementInLibrary.set(
+          artist.name,
+          this.inLibrary(this.library_artists, artist.name)
+        );
+      });
+    });
+
+    this.user_playlists$ = this.userService.getUserPlaylists(this.username);
+    this.user_playlists$.subscribe((res) => {
+      this.user_playlists = res;
     });
   }
 
@@ -194,6 +244,58 @@ export class UserComponent implements OnInit {
     this.createUrl(image, image_id);
   }
 
+  playSong(song_id: string) {
+    this.songService.playSong(song_id);
+  }
+
+  addToQueue(song_ids: string[]) {
+    this.userService.addToQueue(this.username, song_ids).subscribe((res) => {
+      if (res) {
+        this.openSnackBar('Song added to queue', 'OK');
+      }
+    });
+  }
+
+  inLibrary(collection: any[], id: string) {
+    return collection.some((e) => e.id === id || e.name === id);
+  }
+
+  addToLibrary(ids: string[], collection_name: string) {
+    this.userService
+      .addToLibrary(this.username, ids, collection_name)
+      .subscribe((res) => {
+        if (res) {
+          ids.forEach((id) => {
+            this.elementInLibrary.set(id, true);
+          });
+          this.openSnackBar('Added to library', 'OK');
+        }
+      });
+  }
+
+  removeFromLibrary(ids: string[], collection_name: string) {
+    this.userService
+      .removeFromLibrary(this.username, ids, collection_name)
+      .subscribe((res) => {
+        if (res) {
+          ids.forEach((id) => {
+            this.elementInLibrary.set(id, false);
+          });
+          this.openSnackBar('Removed from library', 'OK');
+        }
+      });
+  }
+
+  addToPlaylist(playlist_id: string, song_id: string) {
+    this.playlistService
+      .addToPlaylist(playlist_id, song_id)
+      .subscribe((res) => {
+        if (res) {
+          this.openSnackBar('Song added to playlist', 'OK');
+        }
+      });
+  }
+
   getTimeSinceJoin(join_date: string): string {
     let diff = this.dateDiff(join_date, new Date().toISOString());
     return this.formatOutput(diff);
@@ -264,5 +366,32 @@ export class UserComponent implements OnInit {
     }
     let diff = bday.getTime() - now.getTime();
     return Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+
+  onContextMenu(event: MouseEvent, id: string, type: string) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menuData = { id: id, type: type };
+    this.contextMenu.menu!.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+      panelClass: ['snackbar'],
+    });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      data: {
+        user: this.user,
+        user_avatar: this.images.get(this.user.avatar),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => this.ngOnInit());
   }
 }

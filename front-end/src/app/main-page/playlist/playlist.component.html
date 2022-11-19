@@ -114,16 +114,9 @@
 ></div>
 <mat-menu #contextMenu="matMenu" class="context_menu">
   <ng-template matMenuContent let-id="id" let-type="type">
-    <button
-      mat-menu-item
-      (click)="playSong(id)"
-      *ngIf="type === 'songs'; else album"
-    >
+    <button mat-menu-item (click)="playSong(id)" *ngIf="type === 'songs'">
       Play song
     </button>
-    <ng-template #album>
-      <button mat-menu-item [routerLink]="['/album', id]">Go to album</button>
-    </ng-template>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'songs'">
       Add to queue
@@ -152,7 +145,7 @@
       <mat-divider></mat-divider>
       <button
         class="add_to_playlist"
-        title="{{ playlist.name }}"
+        matTooltip="{{ playlist.name }}"
         mat-menu-item
         *ngFor="let playlist of user_playlists"
         (click)="addToPlaylist(playlist.id, id)"

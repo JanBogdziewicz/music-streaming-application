@@ -12,7 +12,7 @@
           />
 
           <div class="title">
-            <div class="name" title="{{ playlist.name }}">
+            <div class="name" matTooltip="{{ playlist.name }}">
               {{ playlist.name }}
             </div>
             <div class="user">
@@ -160,7 +160,7 @@
       <mat-divider></mat-divider>
       <button
         class="add_to_playlist"
-        title="{{ playlist.name }}"
+        matTooltip="{{ playlist.name }}"
         mat-menu-item
         *ngFor="let playlist of user_playlists"
         (click)="addToPlaylist(playlist.id, id)"

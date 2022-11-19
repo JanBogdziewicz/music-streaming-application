@@ -8,6 +8,7 @@ import { Listening } from '../database-entities/listening';
 import { MongoResponse } from '../database-entities/mongo_response';
 import { Playlist } from '../database-entities/playlist';
 import { Song } from '../database-entities/song';
+import { UpdateUser } from '../database-entities/update_user';
 import { User } from '../database-entities/user';
 
 @Injectable({
@@ -104,6 +105,21 @@ export class UserService {
         },
         this.httpOptions
       )
+      .pipe(map((response) => response.data as string));
+  }
+
+  updateUser(id: string, user: UpdateUser) {
+    return this.http
+      .put<MongoResponse>(`${this.user_address}/${id}`, user, this.httpOptions)
+      .pipe(map((response) => response.data as string));
+  }
+
+  updateUserAvatar(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .put<MongoResponse>(`${this.user_address}/${id}/avatar`, formData)
       .pipe(map((response) => response.data as string));
   }
 }
