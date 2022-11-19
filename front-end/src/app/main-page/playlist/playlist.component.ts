@@ -10,6 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from 'src/app/services/user.service';
 import { getUsernameFromToken } from 'src/app/utils/jwt';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { EditPlaylistDialogComponent } from './edit-playlist-dialog/edit-playlist-dialog.component';
 
 @Component({
   selector: 'app-playlist',
@@ -43,7 +45,8 @@ export class PlaylistComponent implements OnInit {
     private playlistService: PlaylistService,
     private songService: SongService,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -222,5 +225,16 @@ export class PlaylistComponent implements OnInit {
       duration: 2000,
       panelClass: ['snackbar'],
     });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(EditPlaylistDialogComponent, {
+      data: {
+        playlist: this.playlist,
+        playlist_cover: this.images.get(this.playlist.cover),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => this.ngOnInit());
   }
 }

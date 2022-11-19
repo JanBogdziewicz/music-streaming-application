@@ -6,6 +6,7 @@ import { MongoResponse } from 'src/app/database-entities/mongo_response';
 import { Song } from 'src/app/database-entities/song';
 import { environment } from 'src/environments/environment';
 import { Playlist } from '../database-entities/playlist';
+import { UpdatePlaylist } from '../database-entities/update_playlist';
 
 @Injectable({
   providedIn: 'root',
@@ -60,6 +61,25 @@ export class PlaylistService {
   removePlaylist(id: string) {
     return this.http
       .delete<MongoResponse>(`${this.playlist_address}/${id}`)
+      .pipe(map((response) => response.data as string));
+  }
+
+  updatePlaylist(id: string, playlist: UpdatePlaylist) {
+    return this.http
+      .put<MongoResponse>(
+        `${this.playlist_address}/${id}`,
+        playlist,
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
+  }
+
+  updatePlaylistCover(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .put<MongoResponse>(`${this.playlist_address}/${id}/cover`, formData)
       .pipe(map((response) => response.data as string));
   }
 }

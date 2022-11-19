@@ -37,22 +37,10 @@
         <mat-icon>play_arrow</mat-icon>
       </button>
     </div>
-    <div class="add_library">
-      <mat-icon
-        matTooltip="Remove from library"
-        (click)="removeFromLibrary([playlist.id], 'playlists')"
-        *ngIf="elementInLibrary.get(playlist.id); else notInLibrary"
+    <div class="edit_playlist">
+      <mat-icon matTooltip="Edit playlist" (click)="openDialog()"
+        >settings</mat-icon
       >
-        star
-      </mat-icon>
-      <ng-template #notInLibrary>
-        <mat-icon
-          matTooltip="Add to library"
-          (click)="addToLibrary([playlist.id], 'playlists')"
-        >
-          star_border
-        </mat-icon>
-      </ng-template>
     </div>
   </div>
   <mat-divider></mat-divider>

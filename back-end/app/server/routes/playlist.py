@@ -115,8 +115,8 @@ async def get_playlist_cover(id: str):
 async def update_playlist_cover(id: str, file: UploadFile = File(...)):
     playlist = await retrieve_playlist(id)
     updated_cover_id = await upload_playlist_cover(playlist["cover"], file.file)
-    playlist["cover"] = str(updated_cover_id)
-    updated_playlist = await update_playlist(id, playlist)
+    playlist["cover"] = updated_cover_id
+    await update_playlist(id, playlist)
     return ResponseModel(
-        updated_playlist, "playlist with ID: {0} update is successful".format(id)
+        updated_cover_id, "playlist with ID: {0} update is successful".format(id)
     )

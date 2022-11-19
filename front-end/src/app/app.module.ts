@@ -22,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthGuard } from './guards/authGuard';
-
+import { EditPlaylistDialogComponent } from './main-page/playlist/edit-playlist-dialog/edit-playlist-dialog.component';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { AuthGuard } from './guards/authGuard';
     ArtistComponent,
     RegisterComponent,
     LoginComponent,
+    EditPlaylistDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -47,15 +49,15 @@ import { AuthGuard } from './guards/authGuard';
     AppRoutingModule,
     BrowserAnimationsModule,
     ScrollingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [
     {
-        provide: HTTP_INTERCEPTORS, 
-        useClass: AuthInterceptor, 
-        multi: true
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
     },
-    AuthGuard
+    AuthGuard,
   ],
   bootstrap: [AppComponent],
 })

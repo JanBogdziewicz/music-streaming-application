@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Edit Playlist</h2>
+<form [formGroup]="updateForm" (submit)="updatePlaylist()">
+  <div class="edit_form">
+    <img
+      id="playlist_cover"
+      [src]="playlist_cover | safeResourceUrl"
+      alt="Playlist Cover"
+    />
+    <div class="change_cover">
+      <button type="button" mat-raised-button (click)="fileInput.click()">
+        Change Playlist Cover
+      </button>
+      <input
+        hidden
+        (change)="onFileSelected($event)"
+        #fileInput
+        type="file"
+        id="file"
+        accept=".jpg, .jpeg, .png"
+      />
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Playlist Name</mat-label>
+      <input matInput #input maxlength="64" formControlName="name" />
+    </mat-form-field>
+    <div class="action">
+      <button type="submit" mat-raised-button [mat-dialog-close]="true">
+        Update
+      </button>
+      <div class="spacer"></div>
+      <button type="button" mat-raised-button (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>
