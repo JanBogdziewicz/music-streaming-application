@@ -36,6 +36,7 @@ class UserSchema(UserSchemaNoPass):
 
 
 class UpdateUserModel(BaseModel):
+    username: str = Field(..., min_length=1, max_length=32)
     birth_date: date = Field(...)
     country: str = Field(...)
     avatar: str = Field(None)
@@ -49,6 +50,7 @@ class UpdateUserModel(BaseModel):
     class Config:
         schema_extra = {
             "example": {
+                "username": "test",
                 "birth_date": date(1980, 12, 30),
                 "country": "Canada",
             }
@@ -87,8 +89,7 @@ class TokenPayload(BaseModel):
 
 class UserAuth(BaseModel):
     email: str = Field(..., description="user email")
-    password: str = Field(..., min_length=5, max_length=24,
-                          description="user password")
+    password: str = Field(..., min_length=5, max_length=24, description="user password")
 
 
 class UserOut(BaseModel):

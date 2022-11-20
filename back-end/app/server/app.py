@@ -1,3 +1,4 @@
+import traceback
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -25,10 +26,16 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 
-@app.exception_handler(Exception)
-async def catch_exceptions_middleware(request, err):
-    return JSONResponse(status_code=500, content={"message": str(err)})
+async def cors_exceptions_middleware(request, call_next):
+    try:
+        return await call_next(request)
+    except Exception as err:
+        return JSONResponse(
+            status_code=500, content={"error": type(err).__name__, "message": str(err)}
+        )
 
+
+app.middleware("http")(cors_exceptions_middleware)
 
 origins = ["*"]
 

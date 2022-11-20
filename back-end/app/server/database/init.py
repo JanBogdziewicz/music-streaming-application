@@ -49,7 +49,7 @@ async def clear_database():
 async def create_unique_constraint(collection: Collection, fields: list[str]):
     logger.info("creating index")
     fields_array = list(map(lambda x: (x, pymongo.ASCENDING), fields))
-    collection.create_index(fields_array, unique=True)
+    await collection.create_index(fields_array, unique=True)
 
 
 async def initialize_db_schema():
