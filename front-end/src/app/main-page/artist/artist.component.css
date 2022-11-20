@@ -240,7 +240,7 @@ h1 {
 }
 
 .add_library {
-  margin-left: calc(8px + 0.3vw);
+  margin-left: calc(10px + 0.3vw);
 }
 
 .add_library mat-icon {

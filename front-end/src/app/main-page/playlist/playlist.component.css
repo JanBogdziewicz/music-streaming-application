@@ -314,3 +314,18 @@ mat-nav-list.list-vertical div {
   transform: rotate(120deg);
   transition: all 0.6s ease-in-out;
 }
+
+.add_library {
+  margin-left: calc(10px + 0.3vw);
+}
+
+.add_library mat-icon {
+  transform: scale(2.5);
+  color: #d4af37;
+  opacity: 0.5;
+}
+
+.add_library mat-icon:hover {
+  opacity: 1;
+  cursor: pointer;
+}
