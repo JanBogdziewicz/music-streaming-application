@@ -1,7 +1,6 @@
 from fastapi import (
     APIRouter,
     Body,
-    FastAPI,
     status,
     HTTPException,
     Depends,
@@ -10,12 +9,10 @@ from fastapi import (
 )
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
-from fastapi.responses import RedirectResponse
-from server.models.user import UserOut, UserAuth, UserSchemaNoPass
+from server.models.user import UserSchemaNoPass
 from server.utils import *
-from uuid import uuid4
 from fastapi.security import OAuth2PasswordRequestForm
-from server.models.user import TokenSchema, SystemUser
+from server.models.user import TokenSchema
 from server.deps import get_current_user
 from server.database.images import upload_user_avatar
 
@@ -78,14 +75,14 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password",
+            detail="Incorrect username or password",
         )
 
     hashed_pass = user["password"]
     if not verify_password(form_data.password, hashed_pass):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Incorrect email or password",
+            detail="Incorrect username or password",
         )
 
     return {
@@ -112,6 +109,7 @@ async def get_user_data(username: str):
 # Update a user with a matching username
 @UserRouter.put("/{username}")
 async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
+    print(req)
     req = jsonable_encoder(req)
     await update_user(username, req)
     return ResponseModel(

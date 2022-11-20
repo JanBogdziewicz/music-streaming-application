@@ -6,9 +6,8 @@ import { User } from 'src/app/database-entities/user';
 import { UpdateUser } from 'src/app/database-entities/update_user';
 import { UserService } from 'src/app/services/user.service';
 import { Country, getData } from 'country-list';
-import { LoginService } from 'src/app/services/login.service';
-import { Emitter } from 'src/app/authEmitter';
-import { Router } from '@angular/router';
+import { getUsernameFromToken } from 'src/app/utils/jwt';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'edit-user-dialog',
@@ -16,46 +15,46 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit-user-dialog.component.css'],
 })
 export class EditUserDialogComponent {
-  updateForm: FormGroup;
-  public hide = true;
-  public maxDate = new Date(
+  private username: string = getUsernameFromToken();
+
+  private user$: Observable<User>;
+  private maxDate = new Date(
     new Date().setFullYear(new Date().getFullYear() - 12)
   );
+  private avatar_file: File;
+
+  updateForm: FormGroup;
+  public hide = true;
 
   public user: User;
   public user_avatar: string;
   public countries: Country[] = getData();
-  private avatar_file: File;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<EditUserDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private userService: UserService,
-    private loginService: LoginService,
-    private router: Router
+    private userService: UserService
   ) {}
 
   ngOnInit() {
-    this.user = this.data.user;
+    this.user$ = this.userService.getUser(this.username);
+    this.user$.subscribe((res) => {
+      this.user = res;
+      this.updateForm = this.formBuilder.group({
+        birth_date: [this.user.birth_date],
+        country: [this.user.country],
+      });
+    });
 
     this.user_avatar = this.data.user_avatar;
-
-    this.updateForm = this.formBuilder.group({
-      username: [this.user.username],
-      password: [''],
-      birth_date: [this.user.birth_date],
-      country: [this.user.country],
-    });
   }
 
   resetForm() {
     this.user_avatar = this.data.user_avatar;
 
     this.updateForm = this.formBuilder.group({
-      username: [this.user.username],
-      password: [''],
       birth_date: [this.user.birth_date],
       country: [this.user.country],
     });
@@ -65,23 +64,17 @@ export class EditUserDialogComponent {
     let new_avatar_id;
     const formValue = this.updateForm.value;
 
-    if (formValue.password.length < 6) {
-      this.openSnackBar('Password has to have at least 6 characters', 'OK');
-      return;
-    }
-
     if (new Date(formValue.birth_date).getTime() > this.maxDate.getTime()) {
       this.openSnackBar('User has to be 12 years or older', 'OK');
       return;
     }
 
     const user: UpdateUser = {
-      username: formValue.username ? formValue.username : '',
-      password: formValue.password,
       birth_date: formValue.birth_date,
       country: formValue.country,
       avatar: this.user.avatar,
     };
+
     if (this.avatar_file) {
       new_avatar_id = this.userService.updateUserAvatar(
         this.user.id,
@@ -102,27 +95,14 @@ export class EditUserDialogComponent {
     this.userService.updateUser(this.user.username, user).subscribe({
       next: () => {
         this.openSnackBar('User updated', 'OK');
-        this.updatedLogin();
-        setTimeout(() => this.dialogRef.close(), 500);
+        this.dialogRef.close();
       },
       error: (err) => {
-        console.log(err);
         if (err.error.error === 'DuplicateKeyError')
           this.openSnackBar('User already exists!! Try something else.', 'OK');
         else this.openSnackBar('Something went wrong!!', 'OK');
       },
     });
-  }
-
-  updatedLogin() {
-    const formValue = this.updateForm.value;
-    this.loginService
-      .login(formValue.username, formValue.password)
-      .subscribe((res) => {
-        localStorage.setItem('access_token', res.access_token);
-        Emitter.authEmitter.emit(true);
-        this.router.navigate([`/user/${formValue.username}`]);
-      });
   }
 
   onFileSelected(e: Event) {

@@ -110,7 +110,7 @@ mat-nav-list.list-horizontal div {
 .text h1 {
   font-size: calc(16px + 2vw);
   max-width: 40vw;
-  line-height: calc(10px + 2vw);
+  line-height: calc(14px + 2vw);
   word-wrap: break-word;
   font-weight: 750;
   padding-bottom: 1%;

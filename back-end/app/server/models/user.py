@@ -1,4 +1,5 @@
 from datetime import date, datetime
+from typing import Optional
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel, Field, validator
 from uuid import UUID
@@ -36,8 +37,8 @@ class UserSchema(UserSchemaNoPass):
 
 
 class UpdateUserModel(BaseModel):
-    username: str = Field(..., min_length=1, max_length=32)
-    password: str = Field(..., min_length=6, max_length=32)
+    username: Optional[str] = Field(None, min_length=1, max_length=32)
+    password: Optional[str] = Field(None, min_length=6, max_length=32)
     birth_date: date = Field(...)
     country: str = Field(...)
     avatar: str = Field(None)
