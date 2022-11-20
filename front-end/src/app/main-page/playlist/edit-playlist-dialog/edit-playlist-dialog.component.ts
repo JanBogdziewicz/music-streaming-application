@@ -59,7 +59,6 @@ export class EditPlaylistDialogComponent {
     if (new_cover_id) {
       new_cover_id.subscribe((res) => {
         playlist.cover = res;
-        console.log(res);
         this.playlistService
           .updatePlaylist(this.playlist.id, playlist)
           .subscribe((res) => {

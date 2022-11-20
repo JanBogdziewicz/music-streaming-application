@@ -20,21 +20,43 @@
       />
     </div>
     <mat-form-field appearance="fill">
-      <mat-label>User Name</mat-label>
-      <input matInput #input maxlength="50" formControlName="name" />
+      <mat-label>Username</mat-label>
+      <input matInput #input maxlength="32" formControlName="username" />
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Select</mat-label>
-      <mat-select>
-        <mat-option *ngFor="let country of countries">{{
-          country.name
-        }}</mat-option>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        maxlength="32"
+        minlength="6"
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+        type="button"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Date of birth</mat-label>
+      <input matInput [type]="'date'" formControlName="birth_date" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Country</mat-label>
+      <mat-select matInput formControlName="country">
+        <mat-option [value]="country.name" *ngFor="let country of countries">
+          {{ country.name }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
     <div class="action">
-      <button type="submit" mat-raised-button [mat-dialog-close]="true">
-        Update
-      </button>
+      <button type="submit" mat-raised-button>Update</button>
       <div class="spacer"></div>
       <button type="button" mat-raised-button (click)="resetForm()">
         Reset

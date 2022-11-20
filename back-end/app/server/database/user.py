@@ -88,6 +88,8 @@ async def update_user(username: str, data: dict):
         await update_users_searches(username, data["username"])
         await update_users_playlists(username, data["username"])
         await update_users_listenings(username, data["username"])
+    data["password"] = get_hashed_password(data["password"])
+    data["auth_id"] = str(uuid4())
     updated = await users_collection.update_one({"username": username}, {"$set": data})
     if updated.matched_count < 1:
         raise HTTPException(status_code=404, detail="User not found")

@@ -403,6 +403,9 @@ export class UserComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(() => this.ngOnInit());
+    dialogRef.afterClosed().subscribe(() => {
+      this.username = getUsernameFromToken();
+      this.ngOnInit();
+    });
   }
 }

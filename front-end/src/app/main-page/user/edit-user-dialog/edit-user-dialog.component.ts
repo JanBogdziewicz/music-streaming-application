@@ -1,11 +1,14 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/database-entities/user';
 import { UpdateUser } from 'src/app/database-entities/update_user';
 import { UserService } from 'src/app/services/user.service';
 import { Country, getData } from 'country-list';
+import { LoginService } from 'src/app/services/login.service';
+import { Emitter } from 'src/app/authEmitter';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'edit-user-dialog',
@@ -14,6 +17,10 @@ import { Country, getData } from 'country-list';
 })
 export class EditUserDialogComponent {
   updateForm: FormGroup;
+  public hide = true;
+  public maxDate = new Date(
+    new Date().setFullYear(new Date().getFullYear() - 12)
+  );
 
   public user: User;
   public user_avatar: string;
@@ -22,9 +29,12 @@ export class EditUserDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<EditUserDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
+    private loginService: LoginService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -33,6 +43,8 @@ export class EditUserDialogComponent {
     this.user_avatar = this.data.user_avatar;
 
     this.updateForm = this.formBuilder.group({
+      username: [this.user.username],
+      password: [''],
       birth_date: [this.user.birth_date],
       country: [this.user.country],
     });
@@ -42,6 +54,8 @@ export class EditUserDialogComponent {
     this.user_avatar = this.data.user_avatar;
 
     this.updateForm = this.formBuilder.group({
+      username: [this.user.username],
+      password: [''],
       birth_date: [this.user.birth_date],
       country: [this.user.country],
     });
@@ -50,7 +64,20 @@ export class EditUserDialogComponent {
   updateUser() {
     let new_avatar_id;
     const formValue = this.updateForm.value;
+
+    if (formValue.password.length < 6) {
+      this.openSnackBar('Password has to have at least 6 characters', 'OK');
+      return;
+    }
+
+    if (new Date(formValue.birth_date).getTime() > this.maxDate.getTime()) {
+      this.openSnackBar('User has to be 12 years or older', 'OK');
+      return;
+    }
+
     const user: UpdateUser = {
+      username: formValue.username ? formValue.username : '',
+      password: formValue.password,
       birth_date: formValue.birth_date,
       country: formValue.country,
       avatar: this.user.avatar,
@@ -64,20 +91,38 @@ export class EditUserDialogComponent {
     if (new_avatar_id) {
       new_avatar_id.subscribe((res) => {
         user.avatar = res;
-        console.log(res);
-        this.userService.updateUser(this.user.id, user).subscribe((res) => {
-          if (res) {
-            this.openSnackBar('User updated', 'OK');
-          }
-        });
+        this.updateUserRequest(user);
       });
     } else {
-      this.userService.updateUser(this.user.id, user).subscribe((res) => {
-        if (res) {
-          this.openSnackBar('User updated', 'OK');
-        }
-      });
+      this.updateUserRequest(user);
     }
+  }
+
+  updateUserRequest(user: UpdateUser) {
+    this.userService.updateUser(this.user.username, user).subscribe({
+      next: () => {
+        this.openSnackBar('User updated', 'OK');
+        this.updatedLogin();
+        setTimeout(() => this.dialogRef.close(), 500);
+      },
+      error: (err) => {
+        console.log(err);
+        if (err.error.error === 'DuplicateKeyError')
+          this.openSnackBar('User already exists!! Try something else.', 'OK');
+        else this.openSnackBar('Something went wrong!!', 'OK');
+      },
+    });
+  }
+
+  updatedLogin() {
+    const formValue = this.updateForm.value;
+    this.loginService
+      .login(formValue.username, formValue.password)
+      .subscribe((res) => {
+        localStorage.setItem('access_token', res.access_token);
+        Emitter.authEmitter.emit(true);
+        this.router.navigate([`/user/${formValue.username}`]);
+      });
   }
 
   onFileSelected(e: Event) {
@@ -85,44 +130,46 @@ export class EditUserDialogComponent {
     let files = event.files;
 
     let extension = event.value.split('.').pop();
-    switch (extension) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png': {
-        if (files && files[0]) {
-          if (files[0].size > 500000) {
-            this.openSnackBar(
-              'Unable to upload. File too big (max 500kb)',
-              'OK'
-            );
-            return;
-          }
-          let img = new Image();
-          let url = URL.createObjectURL(files[0]);
-          img.src = url;
-          img.onload = () => {
-            let ratio = img.width / img.height;
-            if (ratio > 2 || ratio < 0.5) {
-              URL.revokeObjectURL(url);
+    if (extension) {
+      switch (extension) {
+        case 'jpg':
+        case 'jpeg':
+        case 'png': {
+          if (files && files[0]) {
+            if (files[0].size > 500000) {
               this.openSnackBar(
-                'Unable to upload. Ratio of the image should be between 2 and 0.5',
+                'Unable to upload. File too big (max 500kb)',
                 'OK'
               );
-            } else {
-              this.avatar_file = files![0];
-              this.user_avatar = url;
-              this.openSnackBar('Image uploaded', 'OK');
+              return;
             }
-          };
+            let img = new Image();
+            let url = URL.createObjectURL(files[0]);
+            img.src = url;
+            img.onload = () => {
+              let ratio = img.width / img.height;
+              if (ratio > 2 || ratio < 0.5) {
+                URL.revokeObjectURL(url);
+                this.openSnackBar(
+                  'Unable to upload. Ratio of the image should be between 2 and 0.5',
+                  'OK'
+                );
+              } else {
+                this.avatar_file = files![0];
+                this.user_avatar = url;
+                this.openSnackBar('Image uploaded', 'OK');
+              }
+            };
+          }
+          break;
         }
-        break;
-      }
-      default: {
-        this.openSnackBar(
-          'Invalid file type (jpg, jpeg and png supported)',
-          'OK'
-        );
-        break;
+        default: {
+          this.openSnackBar(
+            'Invalid file type (jpg, jpeg and png supported)',
+            'OK'
+          );
+          break;
+        }
       }
     }
   }

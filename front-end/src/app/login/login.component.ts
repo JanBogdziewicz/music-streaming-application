@@ -7,39 +7,37 @@ import { Emitter } from '../authEmitter';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  loginForm : FormGroup
+  loginForm: FormGroup;
   message = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private router:Router
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username:['',Validators.required],
-      password:['',Validators.required],
-    }) 
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
   }
 
   login() {
-    const formValue = this.loginForm.value
-    this.loginService.login(formValue.username,formValue.password).subscribe({
+    const formValue = this.loginForm.value;
+    this.loginService.login(formValue.username, formValue.password).subscribe({
       next: (res) => {
-        console.log(res);
         localStorage.setItem('access_token', res.access_token);
-        Emitter.authEmitter.emit(true)
+        Emitter.authEmitter.emit(true);
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.message='Wrong username or password!!'
-      }
-    })
+        this.message = 'Wrong username or password!!';
+      },
+    });
   }
-
 }
