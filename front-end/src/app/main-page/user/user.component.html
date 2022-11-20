@@ -33,7 +33,7 @@
   </div>
   <div class="user_buttons">
     <div class="edit_user" *ngIf="isOwner">
-      <mat-icon matTooltip="Edit user" (click)="openDialog()">
+      <mat-icon matTooltip="Edit profile" (click)="openDialog()">
         settings
       </mat-icon>
     </div>
@@ -82,7 +82,7 @@
   </div>
   <mat-divider></mat-divider>
   <div class="top_list">
-    <div>
+    <div class="top_wrapper">
       <h1>Top Songs</h1>
       <div
         class="top_content"
@@ -135,7 +135,7 @@
         <h1>No data to show</h1>
       </div>
     </div>
-    <div>
+    <div class="top_wrapper">
       <h1>Top Artists</h1>
       <div
         id="artist"
@@ -144,7 +144,7 @@
       >
         <mat-card
           [routerLink]="['/artist', topArtist.name]"
-          (contextmenu)="onContextMenu($event, topArtist.id, 'artists')"
+          (contextmenu)="onContextMenu($event, topArtist.name, 'artists')"
         >
           <div
             class="top_place"
@@ -190,12 +190,19 @@
     <button
       mat-menu-item
       (click)="playSong(id)"
-      *ngIf="type === 'songs'; else album"
+      *ngIf="type === 'songs'; else playlist"
     >
       Play song
     </button>
-    <ng-template #album>
-      <button mat-menu-item [routerLink]="['/album', id]">Go to album</button>
+    <ng-template #playlist>
+      <ng-container *ngIf="type === 'playlists'; else artist">
+        <button mat-menu-item [routerLink]="['/playlist', id]">
+          Go to playlist
+        </button>
+      </ng-container>
+    </ng-template>
+    <ng-template #artist>
+      <button mat-menu-item [routerLink]="['/artist', id]">Go to artist</button>
     </ng-template>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'songs'">
@@ -203,15 +210,24 @@
     </button>
     <button
       mat-menu-item
-      (click)="removeFromLibrary([id], type)"
-      *ngIf="elementInLibrary.get(id); else notInLibrary"
+      (click)="removePlaylist(id)"
+      *ngIf="type === 'playlists' && isOwner; else notUserPlaylist"
     >
-      Remove from library
+      Delete playlist
     </button>
-    <ng-template #notInLibrary>
-      <button mat-menu-item (click)="addToLibrary([id], type)">
-        Add to library
+    <ng-template #notUserPlaylist>
+      <button
+        mat-menu-item
+        (click)="removeFromLibrary([id], type)"
+        *ngIf="elementInLibrary.get(id); else notInLibrary"
+      >
+        Remove from library
       </button>
+      <ng-template #notInLibrary>
+        <button mat-menu-item (click)="addToLibrary([id], type)">
+          Add to library
+        </button>
+      </ng-template>
     </ng-template>
     <button
       mat-menu-item

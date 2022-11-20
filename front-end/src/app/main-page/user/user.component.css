@@ -102,7 +102,7 @@ mat-nav-list.list-horizontal div {
 
 .type {
   text-transform: uppercase;
-  font-size: calc(8px + 0.1vw);
+  font-size: calc(8px + 0.2vw);
   font-weight: 500;
   opacity: 0.6;
 }
@@ -145,10 +145,15 @@ mat-nav-list.list-horizontal div {
 .top_list {
   display: flex;
   padding: 2%;
+  overflow: auto;
 }
 
 .top_list h1 {
   margin: 2% 0 2% 0;
+}
+
+.top_wrapper {
+  min-width: 400px;
 }
 
 .top_list div {
@@ -201,12 +206,12 @@ mat-nav-list.list-horizontal div {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(4px + 0.9vw);
+  font-size: calc(8px + 0.9vw);
 }
 
 .top_image_content button {
-  width: 2vw;
-  height: 2vw;
+  width: calc(12px + 2vw);
+  height: calc(12px + 2vw);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -230,6 +235,7 @@ mat-nav-list.list-horizontal div {
 
 .top_content mat-card {
   width: 60%;
+  min-width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,7 +244,7 @@ mat-nav-list.list-horizontal div {
 .top_place {
   max-width: 2%;
   font-weight: 500;
-  font-size: 15px;
+  font-size: calc(10px + 0.3vw);
 }
 
 .top_title {
@@ -246,20 +252,24 @@ mat-nav-list.list-horizontal div {
   font-weight: 500;
   display: flex;
   flex-direction: column;
+  font-size: calc(10px + 0.2vw);
 }
 
 .top_title div {
   font-style: italic;
   font-weight: 400;
   margin-top: 2%;
+  font-size: calc(10px + 0.2vw);
 }
 
 .listening_number {
   max-width: 30%;
+  font-size: calc(10px + 0.2vw);
 }
 
 .listening_number h1 {
   font-weight: 500;
+  font-size: calc(16px + 0.5vw);
 }
 
 .link:hover {
@@ -342,7 +352,7 @@ mat-nav-list.list-horizontal div {
 }
 
 .edit_user {
-  margin: calc(10px + 2vw) 0 calc(10px + 0.5vw) calc(10px + 2.5vw);
+  margin: calc(10px + 0.1vw) 0 calc(10px + 0.5vw) calc(10px + 2.5vw);
 }
 
 .edit_user mat-icon {

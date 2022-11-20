@@ -244,6 +244,17 @@ export class UserComponent implements OnInit {
     this.createUrl(image, image_id);
   }
 
+  removePlaylist(playlist_id: string) {
+    this.playlistService.removePlaylist(playlist_id).subscribe((res) => {
+      if (res) {
+        this.playlists = this.playlists.filter(
+          (playlist) => playlist.id !== playlist_id
+        );
+        this.openSnackBar('Playlist deleted', 'OK');
+      }
+    });
+  }
+
   playSong(song_id: string) {
     this.songService.playSong(song_id);
   }

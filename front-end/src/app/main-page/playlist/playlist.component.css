@@ -35,7 +35,7 @@
 
 .type {
   text-transform: uppercase;
-  font-size: calc(8px + 0.1vw);
+  font-size: calc(8px + 0.2vw);
   font-weight: 500;
   opacity: 0.6;
 }
@@ -152,12 +152,12 @@ mat-nav-list.list-vertical div {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: calc(4px + 0.9vw);
+  font-size: calc(6px + 0.9vw);
 }
 
 .song_image_content button {
-  width: 2vw;
-  height: 2vw;
+  width: calc(6px + 2vw);
+  height: calc(6px + 2vw);
   display: flex;
   justify-content: center;
   align-items: center;
