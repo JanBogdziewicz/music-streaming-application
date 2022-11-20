@@ -22,6 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-user',
@@ -35,6 +36,7 @@ export class UserComponent implements OnInit {
   public contextMenuPosition = { x: '0px', y: '0px' };
 
   private username: string = getUsernameFromToken();
+  private profileUsername: string;
   public isOwner: boolean;
 
   private playlists$!: Observable<Playlist[]>;
@@ -68,11 +70,21 @@ export class UserComponent implements OnInit {
     private songService: SongService,
     private artistService: ArtistService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.playlists$ = this.userService.getUserPlaylists(this.username);
+    this.route.paramMap.subscribe((paramMap) => {
+      let username = paramMap.get('username');
+      if (username) {
+        this.profileUsername = username;
+      }
+    });
+
+    this.isOwner = this.profileUsername === this.username;
+
+    this.playlists$ = this.userService.getUserPlaylists(this.profileUsername);
     this.playlists$.subscribe((res) => {
       this.playlists = res;
       this.playlists.forEach((playlist) => {
@@ -80,16 +92,15 @@ export class UserComponent implements OnInit {
       });
     });
 
-    this.user$ = this.userService.getUser(this.username);
+    this.user$ = this.userService.getUser(this.profileUsername);
     this.user$.subscribe((res) => {
       this.user = res;
-      this.isOwner = this.user.username === this.username;
       this.getUserAvatar(this.user.username, this.user.avatar);
       this.user_join_time = this.getTimeSinceJoin(this.user.join_date);
       this.user_birthday_days = this.getDaysTillBirthday(this.user.birth_date);
     });
 
-    this.listenings$ = this.userService.getUserListenings(this.username);
+    this.listenings$ = this.userService.getUserListenings(this.profileUsername);
     this.topSongs$ = this.listenings$.pipe(
       switchMap((source) => {
         let songs = source.map((listening) => listening.song);
@@ -398,7 +409,6 @@ export class UserComponent implements OnInit {
   openDialog() {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       data: {
-        user: this.user,
         user_avatar: this.images.get(this.user.avatar),
       },
     });

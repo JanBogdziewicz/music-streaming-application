@@ -109,6 +109,7 @@ async def get_user_data(username: str):
 # Update a user with a matching username
 @UserRouter.put("/{username}")
 async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
+    print(req)
     req = jsonable_encoder(req)
     await update_user(username, req)
     return ResponseModel(
