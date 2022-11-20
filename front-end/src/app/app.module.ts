@@ -23,7 +23,6 @@ import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { AuthGuard } from './guards/authGuard';
 import { EditPlaylistDialogComponent } from './main-page/playlist/edit-playlist-dialog/edit-playlist-dialog.component';
-import { NgxImageCompressService } from 'ngx-image-compress';
 import { EditUserDialogComponent } from './main-page/user/edit-user-dialog/edit-user-dialog.component';
 
 @NgModule({

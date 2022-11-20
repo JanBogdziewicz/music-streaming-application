@@ -23,6 +23,14 @@
       <mat-label>User Name</mat-label>
       <input matInput #input maxlength="50" formControlName="name" />
     </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Select</mat-label>
+      <mat-select>
+        <mat-option *ngFor="let country of countries">{{
+          country.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <div class="action">
       <button type="submit" mat-raised-button [mat-dialog-close]="true">
         Update
