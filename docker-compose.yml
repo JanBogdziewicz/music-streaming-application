@@ -2,6 +2,8 @@ version: "3.9"
 
 services:
   back-end:
+    depends_on:
+      - mongodb
     container_name: music-streaming-back-end
     build: ./back-end
     working_dir: /code/app
