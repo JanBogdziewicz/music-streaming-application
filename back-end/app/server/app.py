@@ -30,6 +30,7 @@ async def cors_exceptions_middleware(request, call_next):
     try:
         return await call_next(request)
     except Exception as err:
+        logger.error(err)
         return JSONResponse(
             status_code=500, content={"error": type(err).__name__, "message": str(err)}
         )

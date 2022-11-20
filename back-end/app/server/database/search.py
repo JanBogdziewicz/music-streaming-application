@@ -50,3 +50,10 @@ async def retrieve_user_searches(username: str):
     async for search in searches_collection.find({"user": username}):
         searches.append(search_helper(search))
     return searches
+
+
+# Update username of all user's searches
+async def update_users_searches(username: str, new_username: str):
+    await searches_collection.update_many(
+        {"user": username}, {"$set": {"user": new_username}}
+    )

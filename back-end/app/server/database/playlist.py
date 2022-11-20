@@ -122,3 +122,10 @@ async def retrieve_users_playlists(username: str):
         playlists.append(playlist_helper(playlist))
 
     return playlists
+
+
+# Update username of all user's playlists
+async def update_users_playlists(username: str, new_username: str):
+    await playlists_collection.update_many(
+        {"user": username}, {"$set": {"user": new_username}}
+    )

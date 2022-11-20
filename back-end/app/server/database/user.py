@@ -1,4 +1,3 @@
-import inspect
 from bson.objectid import ObjectId
 from fastapi import HTTPException
 from server.database.library import (
@@ -7,6 +6,9 @@ from server.database.library import (
     pull_items_library,
     append_items_library,
 )
+from server.database.search import update_users_searches
+from server.database.playlist import update_users_playlists
+from server.database.listening import update_users_listenings
 from server.config import users_collection, songs_collection, init_default_avatar
 from server.database.song import song_helper
 from server.utils import get_hashed_password
@@ -82,6 +84,10 @@ async def retrieve_user_no_pass(username: str):
 
 # Update a user with a matching ID
 async def update_user(username: str, data: dict):
+    if username != data["username"]:
+        await update_users_searches(username, data["username"])
+        await update_users_playlists(username, data["username"])
+        await update_users_listenings(username, data["username"])
     updated = await users_collection.update_one({"username": username}, {"$set": data})
     if updated.matched_count < 1:
         raise HTTPException(status_code=404, detail="User not found")

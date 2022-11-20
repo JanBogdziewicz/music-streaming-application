@@ -49,3 +49,10 @@ async def retrieve_user_listenings(username: str):
     async for listening in listenings_collection.find({"user": username}):
         listenings.append(listening_helper(listening))
     return listenings
+
+
+# Update username of all user's listenings
+async def update_users_listenings(username: str, new_username: str):
+    await listenings_collection.update_many(
+        {"user": username}, {"$set": {"user": new_username}}
+    )
