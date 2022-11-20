@@ -1,4 +1,13 @@
-from fastapi import APIRouter, Body, FastAPI, status, HTTPException, Depends
+from fastapi import (
+    APIRouter,
+    Body,
+    FastAPI,
+    status,
+    HTTPException,
+    Depends,
+    UploadFile,
+    File,
+)
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
 from fastapi.responses import RedirectResponse
@@ -8,6 +17,7 @@ from uuid import uuid4
 from fastapi.security import OAuth2PasswordRequestForm
 from server.models.user import TokenSchema, SystemUser
 from server.deps import get_current_user
+from server.database.images import upload_user_avatar
 
 
 from server.database.images import download_user_avatar
@@ -336,3 +346,15 @@ async def get_user_avatar(username: str):
 @UserRouter.get("/auth/me", summary="Get details of currently logged in user")
 async def get_me(user: UserSchemaNoPass = Depends(get_current_user)):
     return ResponseModel(user, "User logged in")
+
+
+# Update avatar of a user
+@UserRouter.put("/{id}/avatar", response_description="user avatar updated sucessfully")
+async def update_user_avatar(username: str, file: UploadFile = File(...)):
+    user = await retrieve_user(username)
+    updated_cover_id = await upload_user_avatar(user["avatar"], file.file)
+    user["avatar"] = updated_cover_id
+    await update_user(username, user)
+    return ResponseModel(
+        updated_cover_id, "user {0} update is successful".format(username)
+    )

@@ -35,3 +35,9 @@ async def download_user_avatar(file_id: str):
     data = await user_avatars_fs.open_download_stream(ObjectId(file_id))
     bytes = await data.read()
     return bytes
+
+
+async def upload_user_avatar(file_id: str, file):
+    await user_avatars_fs.delete(ObjectId(file_id))
+    new_file_id = await user_avatars_fs.upload_from_stream("user_avatar", file)
+    return str(new_file_id)
