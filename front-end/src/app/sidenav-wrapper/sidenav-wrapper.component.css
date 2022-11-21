@@ -34,11 +34,14 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 
 .logo {
   cursor: pointer;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+mat-toolbar {
+  height: 80px;
 }
 
 .example-spacer {
@@ -46,14 +49,14 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .avatar_div {
-  padding: 6%;
+  margin-right: calc(30px + 3vw);
   float: right;
   width: 10%;
 }
 
 .avatar_div img {
-  width: 100%;
-  height: 100%;
+  width: calc(50px + 0.6vw);
+  height: calc(50px + 0.6vw);
   border-radius: 50%;
   object-fit: cover;
 }
@@ -81,4 +84,13 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   border-radius: 50%;
   object-fit: cover;
   padding: 5%;
+}
+
+.placeholder {
+  opacity: 0.6;
+}
+
+.mat-focused .placeholder {
+  opacity: 0;
+  transition: all 0.2s ease-in;
 }

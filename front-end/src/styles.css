@@ -60,3 +60,8 @@ body {
   font-size: 12px;
   padding: 0.2%;
 }
+
+mat-list,
+mat-toolbar {
+  min-width: 400px;
+}
