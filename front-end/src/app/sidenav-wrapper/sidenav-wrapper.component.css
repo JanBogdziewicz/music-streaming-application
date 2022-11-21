@@ -49,7 +49,7 @@ mat-toolbar {
 }
 
 .avatar_div {
-  margin-right: calc(30px + 3vw);
+  margin-right: calc(75px + 0.6vw);
   float: right;
   width: 10%;
 }
@@ -75,12 +75,13 @@ mat-toolbar {
 
 .menu_avatar div {
   display: inline-block;
-  width: 80%;
+  width: 400px;
   padding: 5%;
 }
 
 .menu_avatar img {
-  width: 25%;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
   padding: 5%;

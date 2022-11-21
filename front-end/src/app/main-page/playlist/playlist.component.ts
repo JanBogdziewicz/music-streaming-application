@@ -188,6 +188,19 @@ export class PlaylistComponent implements OnInit {
       });
   }
 
+  removeFromPlaylist(playlist_id: string, song_index: number) {
+    this.playlistService
+      .removeFromPlaylist(playlist_id, song_index)
+      .subscribe((res) => {
+        if (res) {
+          this.playlist_songs = this.playlist_songs.filter(
+            (song) => song.id !== res.id
+          );
+          this.openSnackBar('Song removed from playlist', 'OK');
+        }
+      });
+  }
+
   secondsToHms(d: number) {
     let h = Math.floor(d / 3600);
     let m = Math.floor((d % 3600) / 60);
@@ -213,11 +226,11 @@ export class PlaylistComponent implements OnInit {
     return ret;
   }
 
-  onContextMenu(event: MouseEvent, id: string, type: string) {
+  onContextMenu(event: MouseEvent, id: string, type: string, index: number) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
-    this.contextMenu.menuData = { id: id, type: type };
+    this.contextMenu.menuData = { id: id, type: type, index: index };
     this.contextMenu.menu!.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }

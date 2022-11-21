@@ -15,7 +15,11 @@
             <div class="name" matTooltip="{{ playlist.name }}">
               {{ playlist.name }}
             </div>
-            <div class="user">
+            <div
+              class="link"
+              [routerLink]="['/user', playlist.user]"
+              (click)="$event.stopPropagation()"
+            >
               {{ playlist.user }}
             </div>
           </div>

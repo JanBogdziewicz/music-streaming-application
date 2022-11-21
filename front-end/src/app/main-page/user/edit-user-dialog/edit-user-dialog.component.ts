@@ -77,7 +77,7 @@ export class EditUserDialogComponent {
 
     if (this.avatar_file) {
       new_avatar_id = this.userService.updateUserAvatar(
-        this.user.id,
+        this.user.username,
         this.avatar_file
       );
     }
