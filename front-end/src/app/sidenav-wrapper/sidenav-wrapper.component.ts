@@ -7,7 +7,7 @@ import { UserService } from '../services/user.service';
 import { Emitter } from '../authEmitter';
 import { AuthenticationService } from '../services/authentication.service';
 import { getUsernameFromToken } from '../utils/jwt';
-import { AudioService } from '../services/audio.service';
+import { AudioService, StreamState } from '../services/audio.service';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -24,12 +24,36 @@ export class SidenavWrapperComponent implements OnInit {
 
   public playlists: Playlist[] = [];
 
+  public state: StreamState;
+
+  currentFile: any = {};
+
+  pause() {
+    this.audioService.pause();
+  }
+
+  play() {
+    this.audioService.play();
+  }
+
+  stop() {
+    this.audioService.stop();
+  }
+
+  onSliderChangeEnd(change: any) {
+    this.audioService.seekTo(change.value);
+  }
+
   constructor(
     private userService: UserService,
     private router: Router,
     private authenticationService: AuthenticationService,
     private audioService: AudioService
-  ) {}
+  ) {
+    this.audioService.getState().subscribe(state => {
+      this.state = state;
+    });
+  }
 
   ngOnInit(): void {
     this.playlists$ = this.userService.getUserPlaylists(this.username);
@@ -65,13 +89,5 @@ export class SidenavWrapperComponent implements OnInit {
 
   logout() {
     this.authenticationService.logout();
-  }
-
-  play() {
-    this.audioService.play();
-  }
-
-  pause() {
-    this.audioService.pause();
   }
 }

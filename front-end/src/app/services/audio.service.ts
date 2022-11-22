@@ -4,7 +4,7 @@ import { takeUntil } from "rxjs/operators";
 import * as moment from "moment";
 import { environment } from "src/environments/environment";
 
-interface StreamState {
+export interface StreamState {
   playing: boolean;
   readableCurrentTime: string;
   readableDuration: string;
@@ -19,7 +19,7 @@ interface StreamState {
 })
 export class AudioService {
   private stop$ = new Subject();
-  private audioObj = new Audio(`${environment.backend_address}/songs/blabla/file`);
+  private audioObj = new Audio();
   audioEvents = [
     "ended",
     "error",
@@ -52,6 +52,7 @@ export class AudioService {
       this.audioObj.play();
       console.log("Done");
       const handler = (event: Event) => {
+        this.updateStateEvents(event);
         observer.next(event);
       };
 
@@ -89,6 +90,7 @@ export class AudioService {
     }
     this.currentSongId = id;
     this.stop();
+    this.audioObj = new Audio(`${environment.backend_address}/songs/${id}/file`);
     this.playStream(`${environment.backend_address}/songs/${id}/file`);
     this.play();
   }

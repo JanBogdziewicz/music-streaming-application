@@ -85,28 +85,28 @@
   <button mat-menu-item (click)="logout()">Log out</button>
 </mat-menu>
 
-<div class="media-footer">
-  <mat-toolbar>
-    <mat-toolbar-row>
-       <mat-slider class="time-slider" min="0"></mat-slider>
-    </mat-toolbar-row>
+<mat-toolbar class="media-footer">
+  <mat-toolbar-row class="media-action-bar">
+    <button mat-button>
+      <mat-icon mat-list-icon>skip_previous</mat-icon>
+    </button>
 
-    <mat-toolbar-row class="media-action-bar">
-      <button mat-button>
-        <mat-icon mat-list-icon>skip_previous</mat-icon>
-      </button>
+    <button mat-button (click)="play()">
+      <mat-icon mat-list-icon>play_circle_filled</mat-icon>
+    </button>
 
-      <button mat-button (click)="play()">
-        <mat-icon mat-list-icon>play_circle_filled</mat-icon>
-      </button>
+    <button mat-button (click)="pause()">
+      <mat-icon mat-list-icon>pause</mat-icon>
+    </button>
 
-      <button mat-button (click)="pause()">
-        <mat-icon mat-list-icon>pause</mat-icon>
-      </button>
+    <button mat-button>
+      <mat-icon mat-list-icon>skip_next</mat-icon>
+    </button>
+  </mat-toolbar-row>
 
-      <button mat-button>
-        <mat-icon mat-list-icon>skip_next</mat-icon>
-      </button>
-    </mat-toolbar-row>
-  </mat-toolbar>
-</div>
+  <mat-toolbar-row class="progress-bar">
+      {{ state.readableCurrentTime }}
+      <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [value]="state?.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="state?.error || currentFile.index === undefined"></mat-slider>
+      {{ state.readableDuration }}
+  </mat-toolbar-row>
+</mat-toolbar>
