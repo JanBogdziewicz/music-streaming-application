@@ -7,6 +7,7 @@ import { UserService } from '../services/user.service';
 import { Emitter } from '../authEmitter';
 import { AuthenticationService } from '../services/authentication.service';
 import { getUsernameFromToken } from '../utils/jwt';
+import { AudioService } from '../services/audio.service';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -26,7 +27,8 @@ export class SidenavWrapperComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private audioService: AudioService
   ) {}
 
   ngOnInit(): void {
@@ -63,5 +65,13 @@ export class SidenavWrapperComponent implements OnInit {
 
   logout() {
     this.authenticationService.logout();
+  }
+
+  play() {
+    this.audioService.play();
+  }
+
+  pause() {
+    this.audioService.pause();
   }
 }

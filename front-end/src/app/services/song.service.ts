@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Album } from '../database-entities/album';
 import { MongoResponse } from '../database-entities/mongo_response';
 import { Song } from '../database-entities/song';
+import { AudioService } from './audio.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ import { Song } from '../database-entities/song';
 export class SongService {
   song_address: string = `${environment.backend_address}/songs`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private audio: AudioService) {}
 
   getSongs(): Observable<Song[]> {
     return this.http.get<MongoResponse>(`${this.song_address}`).pipe(
@@ -50,5 +51,6 @@ export class SongService {
   playSong(id: string) {
     console.log('Song played!');
     // for now empty
+    this.audio.loadSong(id);
   }
 }

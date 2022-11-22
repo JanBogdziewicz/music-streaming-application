@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import Response
+from fastapi.responses import Response, FileResponse
 
 from server.database.images import download_album_cover
 
@@ -44,6 +44,13 @@ async def get_songs():
 async def get_song_data(id):
     song = await retrieve_song(id)
     return ResponseModel(song, "Song retrieved successfully")
+
+
+# Get a song file with a matching ID
+@SongRouter.get("/{id}/file", response_description="Song retrieved")
+async def get_song_data(id):
+    #song = await retrieve_song(id)
+    return FileResponse("song_files/audio.mp3", media_type="audio/mpeg")
 
 
 # Update a song with a matching ID

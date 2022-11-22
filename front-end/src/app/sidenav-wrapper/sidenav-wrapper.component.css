@@ -1,5 +1,5 @@
 mat-sidenav-container {
-  height: 100vh;
+  height: 90vh;
 }
 mat-sidenav-container mat-sidenav mat-nav-list .menu-item {
   margin-left: 8px;
@@ -10,6 +10,17 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button {
 }
 mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   transform: rotate(180deg);
+}
+
+mat-toolbar
+
+.media-footer {
+  width: 100%;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 }
 
 .playlist_header {
@@ -40,7 +51,7 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   justify-content: center;
 }
 
-mat-toolbar {
+.search {
   height: 80px;
 }
 
