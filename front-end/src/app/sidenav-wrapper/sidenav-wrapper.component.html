@@ -24,7 +24,7 @@
 
       <mat-list-item [routerLink]="'home'">
         <mat-icon mat-list-icon>home</mat-icon>
-        <span *ngIf="isExpanded" class="menu-item">Home</span>
+        <span *ngIf="isExpanded" class="menu-item">Library</span>
       </mat-list-item>
 
       <mat-list-item [routerLink]="'explore'">
@@ -56,8 +56,9 @@
 
   <mat-sidenav-content role="main">
     <mat-toolbar>
-      <mat-form-field>
-        <input type="tel" matInput placeholder="Search" />
+      <mat-form-field floatLabel="never">
+        <input type="search" matInput />
+        <mat-placeholder class="placeholder">Search...</mat-placeholder>
       </mat-form-field>
       <span class="example-spacer"></span>
       <mat-list-item>

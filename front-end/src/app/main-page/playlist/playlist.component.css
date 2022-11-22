@@ -117,7 +117,7 @@ mat-nav-list.list-vertical div {
 }
 
 .song_image img {
-  width: calc(10px + 2.5vw);
+  width: calc(8px + 2.5vw);
   height: 100%;
   border-radius: 2%;
   object-fit: cover;
@@ -167,7 +167,7 @@ mat-nav-list.list-vertical div {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1%;
+  padding: calc(6px + 0.4vw) calc(10px + 0.4vw);
   box-sizing: border-box;
   width: 100%;
   opacity: 0.6;
@@ -177,6 +177,9 @@ mat-nav-list.list-vertical div {
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #song {
@@ -186,12 +189,15 @@ mat-nav-list.list-vertical div {
   padding: 0.2%;
 }
 
-.place {
-  width: 5%;
-  font-weight: 500;
+#song div {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.place {
+  width: 5%;
+  font-weight: 500;
 }
 
 .album,
@@ -199,16 +205,28 @@ mat-nav-list.list-vertical div {
 .title,
 .genre {
   width: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .length {
   width: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+.remove_song {
+  width: 5%;
+}
+
+.remove_song mat-icon {
+  transform: scale(0.7);
+  font-weight: 700;
+  opacity: 0.5;
+  color: rgb(178, 34, 34);
+  overflow: visible;
+}
+
+.remove_song mat-icon:hover {
+  transform: scale(0.8);
+  opacity: 1;
+  cursor: pointer;
 }
 
 .link:hover {

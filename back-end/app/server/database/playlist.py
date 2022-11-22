@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
-from server.config import playlists_collection, songs_collection
-from server.database.song import song_helper
+from server.config import playlists_collection
+from server.database.song import song_helper, retrieve_song
 import server.database.library as libraryService
 import server.database.user as userService
 
@@ -76,15 +76,15 @@ async def retrieve_playlist_songs(id: str):
         raise HTTPException(status_code=404, detail="playlist not found")
     songs = []
     for song_id in playlist["songs"]:
-        song = await songs_collection.find_one({"_id": ObjectId(song_id)})
+        song = await retrieve_song(ObjectId(song_id))
         if song:
-            songs.append(song_helper(song))
+            songs.append(song)
     return songs
 
 
 # Append song to a playlist
 async def append_song_to_playlist(playlist_id: str, song_id: str):
-    song = await songs_collection.find_one({"_id": ObjectId(song_id)})
+    song = await retrieve_song(ObjectId(song_id))
 
     if not song:
         raise HTTPException(status_code=404, detail="song not found")
@@ -97,7 +97,7 @@ async def append_song_to_playlist(playlist_id: str, song_id: str):
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="playlist not found")
 
-    return song_helper(song)
+    return song
 
 
 # Delete song from playlist
@@ -105,14 +105,13 @@ async def remove_song_from_playlist(playlist_id: str, song_index: int):
     playlist = await playlists_collection.find_one({"_id": ObjectId(playlist_id)})
     if not playlist:
         raise HTTPException(status_code=404, detail="playlist not found")
-    song = await songs_collection.find_one({"_id": playlist["songs"][song_index]})
-
+    song = await retrieve_song(ObjectId(playlist["songs"][song_index]))
     playlist["length"] -= song["length"]
     del playlist["songs"][song_index]
 
     await playlists_collection.replace_one({"_id": ObjectId(playlist_id)}, playlist)
 
-    return song_helper(song)
+    return song
 
 
 # Get all user's playlists

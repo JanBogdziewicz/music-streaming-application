@@ -11,7 +11,12 @@
     <div class="text">
       <h1>{{ playlist.name }}</h1>
       <div class="type">Playlist</div>
-      <div class="creator">By {{ playlist.user }}</div>
+      <div class="creator">
+        By
+        <div class="link" [routerLink]="['/user', playlist.user]">
+          {{ playlist.user }}
+        </div>
+      </div>
       <div class="size">
         <mat-icon>library_music</mat-icon>
         <ng-container *ngIf="playlist_songs.length > 0; else empty">
@@ -72,11 +77,12 @@
       <div class="artist">Artist</div>
       <div class="genre">Genres</div>
       <div class="length">Length</div>
+      <div class="remove_song" *ngIf="isUserPlaylist"></div>
     </div>
     <mat-divider></mat-divider>
     <mat-nav-list class="list-vertical">
       <div id="song" *ngFor="let song of playlist_songs; let i = index">
-        <mat-card (contextmenu)="onContextMenu($event, song.id, 'songs')">
+        <mat-card (contextmenu)="onContextMenu($event, song.id, 'songs', i)">
           <div class="place">{{ i + 1 }}.</div>
           <div class="song_image">
             <img
@@ -114,6 +120,13 @@
             {{ song.genres.join(", ") }}
           </div>
           <div class="length">{{ fancyTimeFormat(song.length) }}</div>
+          <div class="remove_song" *ngIf="isUserPlaylist">
+            <mat-icon
+              matTooltip="Remove from playlist"
+              (click)="removeFromPlaylist(playlist.id, i)"
+              >close</mat-icon
+            >
+          </div>
         </mat-card>
       </div>
     </mat-nav-list>
@@ -132,7 +145,7 @@
   [matMenuTriggerFor]="contextMenu"
 ></div>
 <mat-menu #contextMenu="matMenu" class="context_menu">
-  <ng-template matMenuContent let-id="id" let-type="type">
+  <ng-template matMenuContent let-id="id" let-type="type" let-index="index">
     <button mat-menu-item (click)="playSong(id)" *ngIf="type === 'songs'">
       Play song
     </button>
@@ -152,6 +165,13 @@
         Add to library
       </button>
     </ng-template>
+    <button
+      mat-menu-item
+      *ngIf="isUserPlaylist"
+      (click)="removeFromPlaylist(playlist.id, index)"
+    >
+      Remove from playlist
+    </button>
     <button
       mat-menu-item
       [matMenuTriggerFor]="playlistsMenu"

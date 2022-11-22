@@ -114,7 +114,7 @@ mat-nav-list.list-vertical div {
 }
 
 .song_image img {
-  width: calc(10px + 2.5vw);
+  width: calc(8px + 2.5vw);
   height: 100%;
   border-radius: 2%;
   object-fit: cover;
@@ -164,7 +164,7 @@ mat-nav-list.list-vertical div {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1%;
+  padding: calc(6px + 0.4vw) calc(10px + 0.4vw);
   box-sizing: border-box;
   width: 100%;
   opacity: 0.6;

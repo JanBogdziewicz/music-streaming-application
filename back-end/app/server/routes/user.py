@@ -347,12 +347,14 @@ async def get_me(user: UserSchemaNoPass = Depends(get_current_user)):
 
 
 # Update avatar of a user
-@UserRouter.put("/{id}/avatar", response_description="user avatar updated sucessfully")
+@UserRouter.put(
+    "/{username}/avatar", response_description="user avatar updated sucessfully"
+)
 async def update_user_avatar(username: str, file: UploadFile = File(...)):
     user = await retrieve_user(username)
-    updated_cover_id = await upload_user_avatar(user["avatar"], file.file)
-    user["avatar"] = updated_cover_id
+    updated_avatar_id = await upload_user_avatar(user["avatar"], file.file)
+    user["avatar"] = updated_avatar_id
     await update_user(username, user)
     return ResponseModel(
-        updated_cover_id, "user {0} update is successful".format(username)
+        updated_avatar_id, "user {0} update is successful".format(username)
     )

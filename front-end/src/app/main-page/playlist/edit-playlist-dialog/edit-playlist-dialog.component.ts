@@ -59,23 +59,21 @@ export class EditPlaylistDialogComponent {
     if (new_cover_id) {
       new_cover_id.subscribe((res) => {
         playlist.cover = res;
-        this.playlistService
-          .updatePlaylist(this.playlist.id, playlist)
-          .subscribe((res) => {
-            if (res) {
-              this.openSnackBar('Playlist updated', 'OK');
-            }
-          });
+        this.updatePlaylistRequest(playlist);
       });
     } else {
-      this.playlistService
-        .updatePlaylist(this.playlist.id, playlist)
-        .subscribe((res) => {
-          if (res) {
-            this.openSnackBar('Playlist updated', 'OK');
-          }
-        });
+      this.updatePlaylistRequest(playlist);
     }
+  }
+
+  updatePlaylistRequest(playlist: UpdatePlaylist) {
+    this.playlistService
+      .updatePlaylist(this.playlist.id, playlist)
+      .subscribe((res) => {
+        if (res) {
+          this.openSnackBar('Playlist updated', 'OK');
+        }
+      });
   }
 
   onFileSelected(e: Event) {
