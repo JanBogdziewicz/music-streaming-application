@@ -2,13 +2,35 @@ from fastapi import APIRouter, Body, Depends, File, UploadFile
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response
 from server.deps import get_current_user
-from server.database.images import download_playlist_cover, upload_playlist_cover
+from server.database.images import (
+    download_playlist_cover,
+    upload_playlist_cover,
+    download_default_playlist_cover,
+    retrieve_default_playlist_cover_id,
+)
 from server.database.playlist import *
-from server.database.user import retrieve_user, update_user
 from server.models.playlist import *
 from server.models.user import UserSchema
 
 PlaylistRouter = APIRouter()
+
+
+# Get a default playlist cover
+@PlaylistRouter.get("/cover", response_description="default playlist cover retrieved")
+async def get_default_playlist_cover():
+    default_cover = await download_default_playlist_cover()
+    return Response(default_cover)
+
+
+# Get a default playlist cover id
+@PlaylistRouter.get(
+    "/coverId", response_description="default playlist cover id retrieved"
+)
+async def get_default_playlist_cover():
+    default_cover_id = await retrieve_default_playlist_cover_id()
+    return ResponseModel(
+        default_cover_id, "efault playlist cover id retrieved successfully"
+    )
 
 
 # Add a new playlist

@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 from pymongo.collection import Collection
-from server.init_config import DEFAULT_AVATAR
+from server.init_config import DEFAULT_AVATAR, DEFAULT_PLAYLIST_COVER
 
 
 MONGO_DETAILS = "mongodb://music:music@mongodb:27017"
@@ -13,6 +13,7 @@ playlist_covers_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "pla
 user_avatars_fs = motor.motor_asyncio.AsyncIOMotorGridFSBucket(database, "user")
 
 default_avatar_id = None
+default_playlist_cover_id = None
 
 
 async def init_default_avatar():
@@ -24,6 +25,17 @@ async def init_default_avatar():
             )
         )
     return default_avatar_id
+
+
+async def init_default_playlist_cover():
+    global default_playlist_cover_id
+    if not default_playlist_cover_id:
+        default_playlist_cover_id = str(
+            await playlist_covers_fs.upload_from_stream(
+                "default.png", open(DEFAULT_PLAYLIST_COVER, "rb")
+            )
+        )
+    return default_playlist_cover_id
 
 
 artists_collection: Collection = database.get_collection("artists")

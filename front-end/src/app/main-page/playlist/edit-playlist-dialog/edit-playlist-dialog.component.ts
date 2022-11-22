@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Playlist } from 'src/app/database-entities/playlist';
 import { UpdatePlaylist } from 'src/app/database-entities/update_playlist';
@@ -20,6 +20,7 @@ export class EditPlaylistDialogComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<EditPlaylistDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     private playlistService: PlaylistService
@@ -44,36 +45,35 @@ export class EditPlaylistDialogComponent {
   }
 
   updatePlaylist() {
-    let new_cover_id;
     const formValue = this.updateForm.value;
     const playlist: UpdatePlaylist = {
       name: formValue.name,
       cover: this.playlist.cover,
     };
-    if (this.cover_file) {
-      new_cover_id = this.playlistService.updatePlaylistCover(
-        this.playlist.id,
-        this.cover_file
-      );
-    }
-    if (new_cover_id) {
-      new_cover_id.subscribe((res) => {
-        playlist.cover = res;
-        this.updatePlaylistRequest(playlist);
-      });
-    } else {
-      this.updatePlaylistRequest(playlist);
-    }
-  }
 
-  updatePlaylistRequest(playlist: UpdatePlaylist) {
-    this.playlistService
-      .updatePlaylist(this.playlist.id, playlist)
-      .subscribe((res) => {
-        if (res) {
+    this.playlistService.updatePlaylist(this.playlist.id, playlist).subscribe({
+      next: () => {
+        if (this.cover_file) {
+          this.playlistService
+            .updatePlaylistCover(this.playlist.id, this.cover_file)
+            .subscribe(() => {
+              this.openSnackBar('Playlist updated', 'OK');
+              this.dialogRef.close();
+            });
+        } else {
           this.openSnackBar('Playlist updated', 'OK');
+          this.dialogRef.close();
         }
-      });
+      },
+      error: (err) => {
+        if (err.error.error === 'DuplicateKeyError')
+          this.openSnackBar(
+            'Playlist with such name already exists in your library! Try something else.',
+            'OK'
+          );
+        else this.openSnackBar('Something went wrong!!', 'OK');
+      },
+    });
   }
 
   onFileSelected(e: Event) {

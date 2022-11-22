@@ -67,6 +67,12 @@ export class PlaylistService {
       .pipe(map((response) => response.data as Song));
   }
 
+  addPlaylist(playlist: UpdatePlaylist) {
+    return this.http
+      .post<MongoResponse>(this.playlist_address, playlist, this.httpOptions)
+      .pipe(map((response) => response.data as Playlist));
+  }
+
   removePlaylist(id: string) {
     return this.http
       .delete<MongoResponse>(`${this.playlist_address}/${id}`)
@@ -89,6 +95,18 @@ export class PlaylistService {
 
     return this.http
       .put<MongoResponse>(`${this.playlist_address}/${id}/cover`, formData)
+      .pipe(map((response) => response.data as string));
+  }
+
+  getDefaultPlaylistCover() {
+    return this.http.get(`${this.playlist_address}/cover`, {
+      responseType: 'blob',
+    });
+  }
+
+  getDefaultPlaylistCoverId() {
+    return this.http
+      .get<MongoResponse>(`${this.playlist_address}/coverId`)
       .pipe(map((response) => response.data as string));
   }
 }

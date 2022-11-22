@@ -61,7 +61,6 @@ export class EditUserDialogComponent {
   }
 
   updateUser() {
-    let new_avatar_id;
     const formValue = this.updateForm.value;
 
     if (new Date(formValue.birth_date).getTime() > this.maxDate.getTime()) {
@@ -75,27 +74,19 @@ export class EditUserDialogComponent {
       avatar: this.user.avatar,
     };
 
-    if (this.avatar_file) {
-      new_avatar_id = this.userService.updateUserAvatar(
-        this.user.username,
-        this.avatar_file
-      );
-    }
-    if (new_avatar_id) {
-      new_avatar_id.subscribe((res) => {
-        user.avatar = res;
-        this.updateUserRequest(user);
-      });
-    } else {
-      this.updateUserRequest(user);
-    }
-  }
-
-  updateUserRequest(user: UpdateUser) {
     this.userService.updateUser(this.user.username, user).subscribe({
       next: () => {
-        this.openSnackBar('User updated', 'OK');
-        this.dialogRef.close();
+        if (this.avatar_file) {
+          this.userService
+            .updateUserAvatar(this.user.username, this.avatar_file)
+            .subscribe(() => {
+              this.openSnackBar('User updated', 'OK');
+              this.dialogRef.close();
+            });
+        } else {
+          this.openSnackBar('User updated', 'OK');
+          this.dialogRef.close();
+        }
       },
       error: (err) => {
         if (err.error.error === 'DuplicateKeyError')

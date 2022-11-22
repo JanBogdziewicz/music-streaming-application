@@ -81,11 +81,11 @@ h1 {
 #album img,
 #artist img,
 #song img {
-  width: 100%;
   height: 85%;
   border-radius: 2%;
   object-fit: cover;
   width: calc(200px + 3vw);
+  max-height: calc(200px + 3vw);
 }
 
 #album img,
