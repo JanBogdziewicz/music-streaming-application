@@ -41,6 +41,14 @@ async def retrieve_song(id: str):
     return song_helper(song)
 
 
+# Retrieve a song path
+async def retrieve_song_path(id: str):
+    song = await songs_collection.find_one({"_id": ObjectId(id)})
+    if not song:
+        raise HTTPException(status_code=404, detail="Song not found")
+    return song["song_path"]
+
+
 # Update a song with a matching ID
 async def update_song(id: str, data: dict):
     update_status = await songs_collection.update_one(
