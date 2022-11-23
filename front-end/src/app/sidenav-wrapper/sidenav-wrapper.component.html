@@ -91,11 +91,11 @@
       <mat-icon mat-list-icon>skip_previous</mat-icon>
     </button>
 
-    <button mat-button (click)="play()">
+    <button mat-button (click)="play()" *ngIf="!state.playing">
       <mat-icon mat-list-icon>play_circle_filled</mat-icon>
     </button>
 
-    <button mat-button (click)="pause()">
+    <button mat-button (click)="pause()" *ngIf="state.playing">
       <mat-icon mat-list-icon>pause</mat-icon>
     </button>
 
@@ -105,8 +105,10 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="progress-bar">
-      {{ state.readableCurrentTime }}
-      <mat-slider class="time-slider" min="0" [max]="state?.duration" step="1" [value]="state?.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="state?.error || currentFile.index === undefined"></mat-slider>
-      {{ state.readableDuration }}
+      <p class="time">{{ state.readableCurrentTime }}</p>
+      <mat-slider class="time-slider" min="0" [max]="state.duration" step="1" [value]="state.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="!state.canplay">
+        <input matSliderThumb>
+      </mat-slider>
+      <p class="time">{{ state.readableDuration }}</p>
   </mat-toolbar-row>
 </mat-toolbar>

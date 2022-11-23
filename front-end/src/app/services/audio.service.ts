@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, BehaviorSubject, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { take, takeUntil, takeWhile } from "rxjs/operators";
 import * as moment from "moment";
 import { environment } from "src/environments/environment";
 
@@ -18,8 +18,8 @@ export interface StreamState {
   providedIn: 'root'
 })
 export class AudioService {
-  private stop$ = new Subject();
   private audioObj = new Audio();
+  private history: string[] = [];
   audioEvents = [
     "ended",
     "error",
@@ -31,7 +31,7 @@ export class AudioService {
     "loadedmetadata",
     "loadstart"
   ];
-  private currentSongId: string;
+  private currentSongId: string | undefined = undefined;
   private state: StreamState = {
     playing: false,
     readableCurrentTime: '',
@@ -46,11 +46,10 @@ export class AudioService {
 
   private streamObservable(url: string) {
     return new Observable(observer => {
-      // Play audio
       this.audioObj.src = url;
       this.audioObj.load();
       this.audioObj.play();
-      console.log("Done");
+
       const handler = (event: Event) => {
         this.updateStateEvents(event);
         observer.next(event);
@@ -58,11 +57,10 @@ export class AudioService {
 
       this.addEvents(this.audioObj, this.audioEvents, handler);
       return () => {
-        // Stop Playing
         this.audioObj.pause();
         this.audioObj.currentTime = 0;
-        // remove event listeners
         this.removeEvents(this.audioObj, this.audioEvents, handler);
+        this.resetState();
       };
     });
   }
@@ -80,19 +78,22 @@ export class AudioService {
   }
 
   playStream(url: string) {
-    return this.streamObservable(url).pipe(takeUntil(this.stop$));
+    return this.streamObservable(url).subscribe();
   }
 
   loadSong(id: string) {
-    if(this.currentSongId == id) {
+    if(!(this.currentSongId === undefined)) {
+      this.addToHistory(this.currentSongId);
+    }
+    if(this.currentSongId === id) {
       this.play();
       return;
     }
     this.currentSongId = id;
     this.stop();
-    this.audioObj = new Audio(`${environment.backend_address}/songs/${id}/file`);
+    // this.audioObj = new Audio(`${environment.backend_address}/songs/${id}/file`);
     this.playStream(`${environment.backend_address}/songs/${id}/file`);
-    this.play();
+    // this.play();
   }
 
   play() {
@@ -108,8 +109,9 @@ export class AudioService {
     this.audioObj.currentTime = 0;
   }
 
-  seekTo(seconds: any) {
-    this.audioObj.currentTime = seconds;
+  seekTo(seconds: number | null) {
+    if(seconds !== null)
+      this.audioObj.currentTime = seconds;
   }
 
   formatTime(time: number, format: string = "HH:mm:ss") {
@@ -158,5 +160,13 @@ export class AudioService {
 
   getState(): Observable<StreamState> {
     return this.stateChange.asObservable();
+  }
+
+  addToHistory(id: string) {
+    this.history.push(id);
+  }
+
+  getFromHistory(): string | undefined {
+    return this.history.pop();
   }
 }

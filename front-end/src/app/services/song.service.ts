@@ -50,7 +50,6 @@ export class SongService {
 
   playSong(id: string) {
     console.log('Song played!');
-    // for now empty
     this.audio.loadSong(id);
   }
 }

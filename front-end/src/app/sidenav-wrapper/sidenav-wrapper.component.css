@@ -12,6 +12,11 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   transform: rotate(180deg);
 }
 
+.time {
+  font-size: 80%;
+  align-self: left;
+}
+
 .media-footer {
   border-top: 1px solid rgb(209, 203, 203);
   width: 100%;
@@ -25,11 +30,14 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 .progress-bar {
   border: 0px solid black;
   height: 25%;
-  width: 30%;
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .mat-slider {
-  width: 100%;
+  width: 50%;
 }
 
 .media-action-bar {
