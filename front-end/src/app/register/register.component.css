@@ -17,6 +17,11 @@
   padding: 10px;
 }
 
+.registerbox p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
 section {
   display: table;
 }
@@ -52,4 +57,17 @@ section {
 .submit {
   width: 100%;
   background-color: cornflowerblue;
+}
+
+.log_in {
+  font-size: 15px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.log_in a {
+  font-weight: 500;
+  text-decoration: none;
 }
