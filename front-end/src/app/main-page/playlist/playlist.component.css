@@ -249,10 +249,16 @@ mat-nav-list.list-vertical div {
   align-items: center;
 }
 
-.no_content mat-icon {
+.no_content button {
+  width: 120px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.no_content mat-icon {
+  margin-right: 5px;
 }
 
 .context_menu_trigger {

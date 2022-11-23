@@ -1,5 +1,5 @@
 mat-grid-list {
-  min-width: 1000px;
+  min-width: 800px;
   height: 45vh;
 }
 
@@ -117,6 +117,18 @@ mat-card:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.no_content button {
+  width: 120px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no_content mat-icon {
+  margin-right: 5px;
 }
 
 .context_menu_trigger {

@@ -25,10 +25,14 @@
           </div>
         </mat-card>
       </mat-grid-tile>
+      <div class="no_content" *ngIf="!playlists.length">
+        <h1>No playlists added to library</h1>
+        <button mat-raised-button routerLink="/explore">
+          <mat-icon>explore</mat-icon>
+          Explore
+        </button>
+      </div>
     </mat-grid-list>
-    <div class="no_content" *ngIf="!playlists.length">
-      <h1>No added playlists in library</h1>
-    </div>
   </mat-tab>
   <mat-tab label="Albums">
     <mat-grid-list cols="4" rowHeight="5:4">
@@ -53,10 +57,14 @@
           </div>
         </mat-card>
       </mat-grid-tile>
+      <div class="no_content" *ngIf="!albums.length">
+        <h1>No albums added to library</h1>
+        <button mat-raised-button routerLink="/explore">
+          <mat-icon>explore</mat-icon>
+          Explore
+        </button>
+      </div>
     </mat-grid-list>
-    <div class="no_content" *ngIf="!albums.length">
-      <h1>No added albums in library</h1>
-    </div>
   </mat-tab>
   <mat-tab label="Artists">
     <mat-grid-list cols="4" rowHeight="5:4">
@@ -73,7 +81,11 @@
         </mat-card>
       </mat-grid-tile>
       <div class="no_content" *ngIf="!artists.length">
-        <h1>No added artists in library</h1>
+        <h1>No artists added to library</h1>
+        <button mat-raised-button routerLink="/explore">
+          <mat-icon>explore</mat-icon>
+          Explore
+        </button>
       </div>
     </mat-grid-list>
   </mat-tab>
@@ -98,10 +110,14 @@
           </div>
         </mat-card>
       </mat-grid-tile>
+      <div class="no_content" *ngIf="!songs.length">
+        <h1>No songs added to library</h1>
+        <button mat-raised-button routerLink="/explore">
+          <mat-icon>explore</mat-icon>
+          Explore
+        </button>
+      </div>
     </mat-grid-list>
-    <div class="no_content" *ngIf="!songs.length">
-      <h1>No added songs in library</h1>
-    </div>
   </mat-tab>
 </mat-tab-group>
 <div

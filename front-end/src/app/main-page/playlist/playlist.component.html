@@ -38,14 +38,15 @@
         color="basic"
         #play_button
         (click)="playSong(playlist_songs[0].id)"
+        disabled="playlist_songs.length === 0"
       >
         <mat-icon>play_arrow</mat-icon>
       </button>
     </div>
     <div class="edit_playlist" *ngIf="isUserPlaylist; else otherUserPlaylist">
-      <mat-icon matTooltip="Edit playlist" (click)="openDialog()"
-        >settings</mat-icon
-      >
+      <mat-icon matTooltip="Edit playlist" (click)="openDialog()">
+        settings
+      </mat-icon>
     </div>
     <ng-template #otherUserPlaylist>
       <div class="add_library">
@@ -131,9 +132,10 @@
       </div>
     </mat-nav-list>
     <div class="no_content" *ngIf="!playlist_songs.length">
-      <h1>Add some songs</h1>
-      <button mat-mini-fab color="basic">
-        <mat-icon>playlist_add</mat-icon>
+      <h1>No songs added to playlist</h1>
+      <button mat-raised-button routerLink="/explore">
+        <mat-icon>explore</mat-icon>
+        Explore
       </button>
     </div>
   </div>
