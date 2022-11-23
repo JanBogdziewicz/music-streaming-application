@@ -12,6 +12,7 @@ from server.database.song import (
     retrieve_song,
     retrieve_songs,
     update_song,
+    retrieve_song_path
 )
 
 from server.models.song import (
@@ -49,8 +50,8 @@ async def get_song_data(id):
 # Get a song file with a matching ID
 @SongRouter.get("/{id}/file", response_description="Song retrieved")
 async def get_song_data(id):
-    #song = await retrieve_song(id)
-    return FileResponse("song_files/audio.mp3", media_type="audio/mpeg")
+    song_path = await retrieve_song_path(id)
+    return FileResponse(song_path, media_type="audio/mpeg")
 
 
 # Update a song with a matching ID
