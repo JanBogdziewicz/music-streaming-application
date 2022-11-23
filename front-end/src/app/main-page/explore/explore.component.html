@@ -18,7 +18,9 @@
           </button>
         </div>
         <div class="title">
-          {{ song.name }}
+          <div class="name">
+            {{ song.name }}
+          </div>
           <div class="link" [routerLink]="['/artist', song.artist]">
             {{ song.artist }}
           </div>
@@ -49,7 +51,9 @@
           alt="Album Cover"
         />
         <div class="title">
-          {{ album.name }}
+          <div class="name">
+            {{ album.name }}
+          </div>
           <div
             class="link"
             [routerLink]="['/artist', album.artist]"
@@ -83,7 +87,9 @@
           [src]="images.get(artist.logo) | safeResourceUrl"
           alt="Artist Logo"
         />
-        <div class="title">{{ artist.name }}</div>
+        <div class="title">
+          <div class="name">{{ artist.name }}</div>
+        </div>
       </mat-card>
     </div>
   </mat-nav-list>
@@ -92,6 +98,44 @@
       <mat-icon>chevron_left</mat-icon>
     </button>
     <button mat-mini-fab color="basic" (click)="scrollRight(artist_scroll)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <h1>Playlists</h1>
+  <mat-nav-list class="list-horizontal">
+    <div
+      scrollable
+      id="playlist"
+      *ngFor="let playlist of playlists"
+      [routerLink]="['/playlist', playlist.id]"
+    >
+      <mat-card (contextmenu)="onContextMenu($event, playlist.id, 'playlists')">
+        <img
+          [src]="images.get(playlist.cover) | safeResourceUrl"
+          alt="Playlist Cover"
+        />
+        <div class="title">
+          <div class="name" matTooltip="{{ playlist.name }}">
+            {{ playlist.name }}
+          </div>
+          <div
+            class="link"
+            [routerLink]="['/user', playlist.user]"
+            (click)="$event.stopPropagation()"
+            matTooltip="{{ playlist.user }}"
+          >
+            {{ playlist.user }}
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </mat-nav-list>
+  <div class="scroll">
+    <button mat-mini-fab color="basic" (click)="scrollLeft(playlist_scroll)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-mini-fab color="basic" (click)="scrollRight(playlist_scroll)">
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>
@@ -117,7 +161,16 @@
       </ng-container>
     </ng-template>
     <ng-template #artist>
-      <button mat-menu-item [routerLink]="['/artist', id]">Go to artist</button>
+      <ng-container *ngIf="type === 'artists'; else playlist">
+        <button mat-menu-item [routerLink]="['/artist', id]">
+          Go to artist
+        </button>
+      </ng-container>
+    </ng-template>
+    <ng-template #playlist>
+      <button mat-menu-item [routerLink]="['/playlist', id]">
+        Go to playlist
+      </button>
     </ng-template>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="addToQueue([id])" *ngIf="type === 'songs'">
