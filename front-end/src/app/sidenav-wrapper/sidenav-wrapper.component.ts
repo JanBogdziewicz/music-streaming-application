@@ -33,7 +33,7 @@ export class SidenavWrapperComponent implements OnInit {
     this.playlists$ = this.userService.getUserPlaylists(this.username);
     this.playlists$.subscribe(
       (res) =>
-        (this.playlists = res.sort(() => 0.5 - Math.random()).slice(0, 8))
+        (this.playlists = res.sort(() => 0.5 - Math.random()).slice(0, 12))
     );
 
     this.getUserAvatar(this.username);

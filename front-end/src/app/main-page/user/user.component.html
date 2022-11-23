@@ -33,7 +33,7 @@
   </div>
   <div class="user_buttons">
     <div class="edit_user" *ngIf="isOwner">
-      <mat-icon matTooltip="Edit profile" (click)="openDialog()">
+      <mat-icon matTooltip="Edit profile" (click)="openEditUserDialog()">
         settings
       </mat-icon>
     </div>
@@ -42,6 +42,14 @@
   <div class="playlists">
     <h1 class="header">User Playlists</h1>
     <mat-nav-list class="list-horizontal">
+      <div scrollable id="playlist" class="add_playlist" *ngIf="isOwner">
+        <mat-card (click)="openAddPlaylistDialog()">
+          <div>
+            <mat-icon>playlist_add</mat-icon>
+            Add new playlist
+          </div>
+        </mat-card>
+      </div>
       <div scrollable id="playlist" *ngFor="let playlist of playlists">
         <mat-card
           [routerLink]="['/playlist', playlist.id]"
@@ -66,7 +74,7 @@
         mat-mini-fab
         color="basic"
         (click)="scrollLeft(playlist_scroll)"
-        [disabled]="playlists.length <= 6"
+        [disabled]="playlists.length <= 5"
       >
         <mat-icon>chevron_left</mat-icon>
       </button>
@@ -74,7 +82,7 @@
         mat-mini-fab
         color="basic"
         (click)="scrollRight(playlist_scroll)"
-        [disabled]="playlists.length <= 6"
+        [disabled]="playlists.length <= 5"
       >
         <mat-icon>chevron_right</mat-icon>
       </button>

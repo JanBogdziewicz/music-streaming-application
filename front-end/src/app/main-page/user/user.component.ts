@@ -23,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AddPlaylistDialogComponent } from './add-playlist-dialog/add-playlist-dialog.component';
 
 @Component({
   selector: 'app-user',
@@ -409,7 +410,7 @@ export class UserComponent implements OnInit {
     });
   }
 
-  openDialog() {
+  openEditUserDialog() {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       data: {
         user_avatar: this.images.get(this.user.avatar),
@@ -418,6 +419,14 @@ export class UserComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.username = getUsernameFromToken();
+      this.ngOnInit();
+    });
+  }
+
+  openAddPlaylistDialog() {
+    const dialogRef = this.dialog.open(AddPlaylistDialogComponent);
+
+    dialogRef.afterClosed().subscribe(() => {
       this.ngOnInit();
     });
   }

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
-from server.config import playlists_collection
-from server.database.song import song_helper, retrieve_song
+from server.config import playlists_collection, init_default_playlist_cover
+from server.database.song import retrieve_song
 import server.database.library as libraryService
 import server.database.user as userService
 
@@ -29,6 +29,8 @@ async def retrieve_playlists():
 
 # Add a new playlist to the database
 async def add_playlist(playlist_data: dict) -> dict:
+    if not playlist_data["cover"]:
+        playlist_data["cover"] = await init_default_playlist_cover()
     playlist = await playlists_collection.insert_one(playlist_data)
     new_playlist = await playlists_collection.find_one({"_id": playlist.inserted_id})
     playlist_user = await userService.retrieve_user(new_playlist["user"])
