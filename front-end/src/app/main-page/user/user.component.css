@@ -46,6 +46,8 @@ mat-nav-list.list-horizontal div {
   object-fit: cover;
   width: calc(200px + 3vw);
   max-height: calc(200px + 3vw);
+  min-height: calc(180px + 3vw);
+  margin-top: 10px;
 }
 
 .add_playlist mat-icon {
@@ -64,14 +66,14 @@ mat-nav-list.list-horizontal div {
 }
 
 .title {
-  width: 100%;
   height: 15%;
   font-weight: 500;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+  margin-top: 10px;
 }
 
 .header {
@@ -128,6 +130,8 @@ mat-nav-list.list-horizontal div {
   line-height: calc(14px + 2vw);
   word-wrap: break-word;
   font-weight: 750;
+  margin-top: 10px;
+  margin-bottom: 0;
   padding-bottom: 1%;
   margin-left: 0;
 }

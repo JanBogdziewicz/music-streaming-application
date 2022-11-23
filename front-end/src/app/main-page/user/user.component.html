@@ -59,7 +59,9 @@
             [src]="images.get(playlist.cover) | safeResourceUrl"
             alt="Playlist Cover"
           />
-          <div class="title">{{ playlist.name }}</div>
+          <div class="title" matTooltip="{{ playlist.name }}">
+            {{ playlist.name }}
+          </div>
         </mat-card>
       </div>
     </mat-nav-list>

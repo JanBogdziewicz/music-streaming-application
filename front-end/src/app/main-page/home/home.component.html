@@ -1,6 +1,6 @@
 <mat-tab-group mat-stretch-tabs [@.disabled]="true">
   <mat-tab label="Playlists">
-    <mat-grid-list cols="4" rowHeight="5:4">
+    <mat-grid-list cols="5" rowHeight="5:4">
       <mat-grid-tile id="playlist" *ngFor="let playlist of playlists">
         <mat-card
           [routerLink]="['/playlist', playlist.id]"
@@ -19,6 +19,7 @@
               class="link"
               [routerLink]="['/user', playlist.user]"
               (click)="$event.stopPropagation()"
+              matTooltip="{{ playlist.user }}"
             >
               {{ playlist.user }}
             </div>
@@ -35,7 +36,7 @@
     </mat-grid-list>
   </mat-tab>
   <mat-tab label="Albums">
-    <mat-grid-list cols="4" rowHeight="5:4">
+    <mat-grid-list cols="5" rowHeight="5:4">
       <mat-grid-tile id="album" *ngFor="let album of albums">
         <mat-card
           [routerLink]="['/album', album.id]"
@@ -46,7 +47,7 @@
             alt="Album Cover"
           />
           <div class="title">
-            {{ album.name }}
+            <div class="name">{{ album.name }}</div>
             <div
               class="link"
               [routerLink]="['/artist', album.artist]"
@@ -67,7 +68,7 @@
     </mat-grid-list>
   </mat-tab>
   <mat-tab label="Artists">
-    <mat-grid-list cols="4" rowHeight="5:4">
+    <mat-grid-list cols="5" rowHeight="5:4">
       <mat-grid-tile id="artist" *ngFor="let artist of artists">
         <mat-card
           [routerLink]="['/artist', artist.name]"
@@ -77,7 +78,9 @@
             [src]="images.get(artist.logo) | safeResourceUrl"
             alt="Artist Logo"
           />
-          <div class="title">{{ artist.name }}</div>
+          <div class="title">
+            <div class="name">{{ artist.name }}</div>
+          </div>
         </mat-card>
       </mat-grid-tile>
       <div class="no_content" *ngIf="!artists.length">
@@ -90,7 +93,7 @@
     </mat-grid-list>
   </mat-tab>
   <mat-tab label="Songs">
-    <mat-grid-list cols="4" rowHeight="5:4">
+    <mat-grid-list cols="5" rowHeight="5:4">
       <mat-grid-tile id="song" *ngFor="let song of songs" id="song">
         <mat-card (contextmenu)="onContextMenu($event, song.id, 'songs')">
           <img
@@ -103,7 +106,7 @@
             </button>
           </div>
           <div class="title">
-            {{ song.name }}
+            <div class="name">{{ song.name }}</div>
             <div class="link" [routerLink]="['/artist', song.artist]">
               {{ song.artist }}
             </div>
