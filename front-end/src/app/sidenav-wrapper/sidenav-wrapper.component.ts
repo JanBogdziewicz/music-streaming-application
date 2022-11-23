@@ -7,6 +7,8 @@ import { UserService } from '../services/user.service';
 import { Emitter } from '../authEmitter';
 import { AuthenticationService } from '../services/authentication.service';
 import { getUsernameFromToken } from '../utils/jwt';
+import { AudioService, StreamState } from '../services/audio.service';
+import { MatSliderChange } from '@angular/material/slider';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -16,17 +18,35 @@ import { getUsernameFromToken } from '../utils/jwt';
 export class SidenavWrapperComponent implements OnInit {
   public username: string = getUsernameFromToken();
   public avatar: string;
-
   public isExpanded: boolean = false;
-
   private playlists$!: Observable<Playlist[]>;
-
   public playlists: Playlist[] = [];
+  public state: StreamState;
+
+  currentFile: any = {};
+
+  pause() {
+    this.audioService.pause();
+  }
+
+  play() {
+    this.audioService.play();
+  }
+
+  stop() {
+    this.audioService.stop();
+  }
+
+  onSliderChangeEnd(change: MatSliderChange) {
+    console.log(this.state);
+    this.audioService.seekTo(change.value);
+  }
 
   constructor(
     private userService: UserService,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private audioService: AudioService
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +55,9 @@ export class SidenavWrapperComponent implements OnInit {
       (res) =>
         (this.playlists = res.sort(() => 0.5 - Math.random()).slice(0, 12))
     );
-
+    this.audioService.getState().subscribe(state => {
+      this.state = state;
+    });
     this.getUserAvatar(this.username);
   }
 

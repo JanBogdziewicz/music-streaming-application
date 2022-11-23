@@ -137,6 +137,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
                 "release_date": album["release_date"],
                 "cover": album["cover"],
                 "listenings": 0,
+                "song_path": f"assets/song_files/song_{random.randint(1, 5)}.mp3"
             }
             song = await add_song(song_data)
             song_ids.append(song["id"])

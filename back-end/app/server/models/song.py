@@ -12,6 +12,7 @@ class SongSchema(BaseModel):
     release_date: date = Field(...)
     cover: str = Field(None)
     listenings: int = Field(0)
+    song_path: str = Field(...)
 
     @validator("release_date")
     def ensure_date(cls, v):
@@ -28,6 +29,7 @@ class SongSchema(BaseModel):
                 "album": "Aftermath",
                 "length": 225,
                 "release_date": date(1966, 5, 6),
+                "song_path": "assets/song_files/song_2.mp3"
             }
         }
 
