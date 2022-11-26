@@ -1,16 +1,27 @@
-<form [formGroup]='loginForm' (submit)="login()">
+<form [formGroup]="loginForm" (submit)="login()">
   <div class="login">
     <div class="logbox">
       <p>Login</p>
       <mat-form-field appearance="fill">
         <mat-label>Username</mat-label>
-        <input matInput formControlName="username">
+        <input matInput formControlName="username" />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type="button">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          formControlName="password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+          type="button"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
         </button>
       </mat-form-field>
       <section>
@@ -18,9 +29,10 @@
           <button mat-raised-button type="submit" class="submit">Login</button>
         </div>
       </section>
-      <a routerLink="/register">Create new account</a>
-      <p *ngIf="message" class="alert alert-danger alert-dismissible fade show">{{message}}</p>
+      <div class="new_account">
+        Not a member? &nbsp;
+        <a routerLink="/register">Register</a>
+      </div>
     </div>
   </div>
-  </form>
-  
+</form>

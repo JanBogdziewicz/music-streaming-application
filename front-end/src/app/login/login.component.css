@@ -9,6 +9,11 @@
   border-width: 10px;
 }
 
+.logbox p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .logbox {
   display: flex;
   flex-direction: column;
@@ -52,4 +57,17 @@ section {
 .submit {
   width: 100%;
   background-color: cornflowerblue;
+}
+
+.new_account {
+  font-size: 15px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.new_account a {
+  font-weight: 500;
+  text-decoration: none;
 }

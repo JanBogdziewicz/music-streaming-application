@@ -25,9 +25,14 @@
   font-weight: 750;
   padding-bottom: 1%;
   margin-left: 0;
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
-.text div {
+.type,
+.creator,
+.size,
+.time {
   display: flex;
   align-items: center;
   padding: 0.5%;
@@ -43,6 +48,14 @@
 .creator {
   font-style: italic;
   font-size: calc(12px + 0.3vw);
+}
+
+.creator .link {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: calc(120px + 12vw);
+  margin-left: 4px;
 }
 
 .size {
@@ -249,10 +262,16 @@ mat-nav-list.list-vertical div {
   align-items: center;
 }
 
-.no_content mat-icon {
+.no_content button {
+  width: 120px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.no_content mat-icon {
+  margin-right: 5px;
 }
 
 .context_menu_trigger {

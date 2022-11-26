@@ -114,6 +114,9 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   display: inline-block;
   width: 400px;
   padding: 5%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu_avatar img {

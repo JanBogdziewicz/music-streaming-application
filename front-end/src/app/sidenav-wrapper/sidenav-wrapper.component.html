@@ -78,7 +78,7 @@
 <mat-menu #menu="matMenu">
   <div class="menu_avatar">
     <img [src]="avatar | safeResourceUrl" alt="User Avatar" />
-    <div>{{ username }}</div>
+    <div matTooltip="{{ username }}">{{ username }}</div>
   </div>
   <mat-divider></mat-divider>
   <button mat-menu-item [routerLink]="['user', username]">Profile</button>
@@ -105,10 +105,18 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="progress-bar">
-      <p class="time">{{ state.readableCurrentTime }}</p>
-      <mat-slider class="time-slider" min="0" [max]="state.duration" step="1" [value]="state.currentTime" (input)="onSliderChangeEnd($event)" [disabled]="!state.canplay">
-        <input matSliderThumb>
-      </mat-slider>
-      <p class="time">{{ state.readableDuration }}</p>
+    <p class="time">{{ state.readableCurrentTime }}</p>
+    <mat-slider
+      class="time-slider"
+      min="0"
+      [max]="state.duration"
+      step="1"
+      [value]="state.currentTime"
+      (input)="onSliderChangeEnd($event)"
+      [disabled]="!state.canplay"
+    >
+      <input matSliderThumb />
+    </mat-slider>
+    <p class="time">{{ state.readableDuration }}</p>
   </mat-toolbar-row>
 </mat-toolbar>
