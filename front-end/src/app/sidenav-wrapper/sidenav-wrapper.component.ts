@@ -25,23 +25,6 @@ export class SidenavWrapperComponent implements OnInit {
 
   currentFile: any = {};
 
-  pause() {
-    this.audioService.pause();
-  }
-
-  play() {
-    this.audioService.play();
-  }
-
-  stop() {
-    this.audioService.stop();
-  }
-
-  onSliderChangeEnd(change: MatSliderChange) {
-    console.log(this.state);
-    this.audioService.seekTo(change.value);
-  }
-
   constructor(
     private userService: UserService,
     private router: Router,
@@ -55,7 +38,7 @@ export class SidenavWrapperComponent implements OnInit {
       (res) =>
         (this.playlists = res.sort(() => 0.5 - Math.random()).slice(0, 12))
     );
-    this.audioService.getState().subscribe(state => {
+    this.audioService.getState().subscribe((state) => {
       this.state = state;
     });
     this.getUserAvatar(this.username);
@@ -63,6 +46,22 @@ export class SidenavWrapperComponent implements OnInit {
 
   ngOnDestroy() {
     URL.revokeObjectURL(this.avatar);
+  }
+
+  pause() {
+    this.audioService.pause();
+  }
+
+  play() {
+    this.audioService.play();
+  }
+
+  stop() {
+    this.audioService.stop();
+  }
+
+  onSliderChangeEnd(change: MatSliderChange) {
+    this.audioService.seekTo(change.value);
   }
 
   goToPlaylist(playlist: Playlist) {

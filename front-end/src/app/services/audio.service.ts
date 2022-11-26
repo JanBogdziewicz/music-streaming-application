@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Observable, BehaviorSubject, Subject } from "rxjs";
-import { take, takeUntil, takeWhile } from "rxjs/operators";
-import * as moment from "moment";
-import { environment } from "src/environments/environment";
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { take, takeUntil, takeWhile } from 'rxjs/operators';
+import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 export interface StreamState {
   playing: boolean;
@@ -15,21 +15,21 @@ export interface StreamState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AudioService {
   private audioObj = new Audio();
   private history: string[] = [];
   audioEvents = [
-    "ended",
-    "error",
-    "play",
-    "playing",
-    "pause",
-    "timeupdate",
-    "canplay",
-    "loadedmetadata",
-    "loadstart"
+    'ended',
+    'error',
+    'play',
+    'playing',
+    'pause',
+    'timeupdate',
+    'canplay',
+    'loadedmetadata',
+    'loadstart',
   ];
   private currentSongId: string | undefined = undefined;
   private state: StreamState = {
@@ -42,10 +42,10 @@ export class AudioService {
     error: false,
   };
 
-  constructor() { }
+  constructor() {}
 
   private streamObservable(url: string) {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.audioObj.src = url;
       this.audioObj.load();
       this.audioObj.play();
@@ -66,13 +66,13 @@ export class AudioService {
   }
 
   private addEvents(obj: HTMLAudioElement, events: string[], handler: any) {
-    events.forEach(event => {
+    events.forEach((event) => {
       obj.addEventListener(event, handler);
     });
   }
 
   private removeEvents(obj: HTMLAudioElement, events: string[], handler: any) {
-    events.forEach(event => {
+    events.forEach((event) => {
       obj.removeEventListener(event, handler);
     });
   }
@@ -82,18 +82,16 @@ export class AudioService {
   }
 
   loadSong(id: string) {
-    if(!(this.currentSongId === undefined)) {
+    if (!(this.currentSongId === undefined)) {
       this.addToHistory(this.currentSongId);
     }
-    if(this.currentSongId === id) {
+    if (this.currentSongId === id) {
       this.play();
       return;
     }
     this.currentSongId = id;
     this.stop();
-    // this.audioObj = new Audio(`${environment.backend_address}/songs/${id}/file`);
     this.playStream(`${environment.backend_address}/songs/${id}/file`);
-    // this.play();
   }
 
   play() {
@@ -110,16 +108,19 @@ export class AudioService {
   }
 
   seekTo(seconds: number | null) {
-    if(seconds !== null)
+    if (seconds !== null) {
       this.audioObj.currentTime = seconds;
+    }
   }
 
-  formatTime(time: number, format: string = "HH:mm:ss") {
+  formatTime(time: number, format: string = 'HH:mm:ss') {
     const momentTime = time * 1000;
     return moment.utc(momentTime).format(format);
   }
 
-  private stateChange: BehaviorSubject<StreamState> = new BehaviorSubject(this.state);
+  private stateChange: BehaviorSubject<StreamState> = new BehaviorSubject(
+    this.state
+  );
 
   private updateStateEvents(event: Event): void {
     switch (event.type) {
@@ -136,7 +137,9 @@ export class AudioService {
         break;
       case 'timeupdate':
         this.state.currentTime = this.audioObj.currentTime;
-        this.state.readableCurrentTime = this.formatTime(this.state.currentTime);
+        this.state.readableCurrentTime = this.formatTime(
+          this.state.currentTime
+        );
         break;
       case 'error':
         this.resetState();
@@ -154,7 +157,7 @@ export class AudioService {
       duration: undefined,
       currentTime: undefined,
       canplay: false,
-      error: false
+      error: false,
     };
   }
 

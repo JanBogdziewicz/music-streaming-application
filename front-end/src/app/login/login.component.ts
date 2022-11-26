@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    new Audio()
     const formValue = this.loginForm.value;
     this.loginService.login(formValue.username, formValue.password).subscribe({
       next: (res) => {

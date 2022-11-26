@@ -49,7 +49,6 @@ export class SongService {
   }
 
   playSong(id: string) {
-    console.log('Song played!');
     this.audio.loadSong(id);
   }
 }
