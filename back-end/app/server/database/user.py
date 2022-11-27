@@ -165,6 +165,18 @@ async def pull_queue(username: str, ids: list[str]):
     await users_collection.replace_one({"username": username}, user)
 
 
+# Pop first song from user's queue
+async def pop_queue(username: str):
+    user = await users_collection.find_one({"username": username})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    if not user["queue"]:
+        raise HTTPException(status_code=404, detail="User's queue is empty")
+    song = await songs_collection.find_one({"_id": user["queue"][0]}) 
+    await users_collection.update_one({"username": username}, {"$pop": {"queue": -1}})
+    song
+    return song_helper(song)
+
 # Clear a queue of the user
 async def clear_queue(username: str):
     updated = await users_collection.update_one(

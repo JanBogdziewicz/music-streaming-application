@@ -163,37 +163,51 @@
 </mat-menu>
 
 <mat-toolbar class="media-footer">
-  <mat-toolbar-row class="media-action-bar">
-    <button mat-button>
-      <mat-icon mat-list-icon>skip_previous</mat-icon>
-    </button>
+  <div class="song-info">
+    <img [src]="song_image | safeResourceUrl" class="song-cover">
+    <div class="title">
+      <div class="name">
+        {{ current_song.name }}
+      </div>
+      <div class="link" [routerLink]="['/artist', current_song.artist]">
+        {{ current_song.artist }}
+      </div>
+    </div>
+  </div>
+  <div class="player-controls">
+    <mat-toolbar-row class="media-action-bar">
+      <button mat-button (click)="prevSong()">
+        <mat-icon mat-list-icon>skip_previous</mat-icon>
+      </button>
 
-    <button mat-button (click)="play()" *ngIf="!state.playing">
-      <mat-icon mat-list-icon>play_circle_filled</mat-icon>
-    </button>
+      <button mat-button (click)="play()" *ngIf="!state.playing">
+        <mat-icon mat-list-icon>play_circle_filled</mat-icon>
+      </button>
 
-    <button mat-button (click)="pause()" *ngIf="state.playing">
-      <mat-icon mat-list-icon>pause</mat-icon>
-    </button>
+      <button mat-button (click)="pause()" *ngIf="state.playing">
+        <mat-icon mat-list-icon>pause</mat-icon>
+      </button>
 
-    <button mat-button>
-      <mat-icon mat-list-icon>skip_next</mat-icon>
-    </button>
-  </mat-toolbar-row>
+      <button mat-button (click)="nextSong()">
+        <mat-icon mat-list-icon>skip_next</mat-icon>
+      </button>
+    </mat-toolbar-row>
 
-  <mat-toolbar-row class="progress-bar">
-    <p class="time">{{ state.readableCurrentTime }}</p>
-    <mat-slider
-      class="time-slider"
-      min="0"
-      [max]="state.duration"
-      step="1"
-      [value]="state.currentTime"
-      (input)="onSliderChangeEnd($event)"
-      [disabled]="!state.canplay"
-    >
-      <input matSliderThumb />
-    </mat-slider>
-    <p class="time">{{ state.readableDuration }}</p>
-  </mat-toolbar-row>
+    <mat-toolbar-row class="progress-bar">
+      <p class="time">{{ state.readableCurrentTime }}</p>
+      <mat-slider
+        class="time-slider"
+        min="0"
+        [max]="state.duration"
+        step="1"
+        [value]="state.currentTime"
+        (input)="onSliderChangeEnd($event)"
+        [disabled]="!state.canplay"
+      >
+        <input matSliderThumb />
+      </mat-slider>
+      <p class="time">{{ state.readableDuration }}</p>
+    </mat-toolbar-row>
+  </div>
+  <div class="song-info"></div>
 </mat-toolbar>

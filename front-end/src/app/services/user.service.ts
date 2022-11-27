@@ -122,4 +122,20 @@ export class UserService {
       .put<MongoResponse>(`${this.user_address}/${id}/avatar`, formData)
       .pipe(map((response) => response.data as string));
   }
+
+  popQueue(username: string) {
+    return this.http
+      .get<MongoResponse>(`${this.user_address}/${username}/queue/pop`)
+      .pipe(map((response) => response.data as Song));
+  }
+
+  prependQueue(username: string, song_id: string[]) {
+    return this.http
+      .post<MongoResponse>(
+        `${this.user_address}/${username}/queue/prepend`,
+        song_id,
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
+  }
 }

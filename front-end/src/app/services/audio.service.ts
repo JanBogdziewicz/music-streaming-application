@@ -19,7 +19,7 @@ export interface StreamState {
 })
 export class AudioService {
   private audioObj = new Audio();
-  private history: string[] = [];
+  public history: string[] = [];
   audioEvents = [
     'ended',
     'error',
@@ -31,7 +31,7 @@ export class AudioService {
     'loadedmetadata',
     'loadstart',
   ];
-  private currentSongId: string | undefined = undefined;
+  public currentSongId: string | undefined = undefined;
   private state: StreamState = {
     playing: false,
     readableCurrentTime: '',
@@ -81,17 +81,18 @@ export class AudioService {
     return this.streamObservable(url).subscribe();
   }
 
-  loadSong(id: string) {
-    if (!(this.currentSongId === undefined)) {
+  loadSong(id: string, add: boolean = true, forceChange: boolean = false) {
+    if (!(this.currentSongId === undefined) && add === true) {
       this.addToHistory(this.currentSongId);
     }
-    if (this.currentSongId === id) {
+    if (this.currentSongId === id && !forceChange) {
       this.play();
       return;
     }
     this.currentSongId = id;
     this.stop();
     this.playStream(`${environment.backend_address}/songs/${id}/file`);
+    return this.currentSongId;
   }
 
   play() {
