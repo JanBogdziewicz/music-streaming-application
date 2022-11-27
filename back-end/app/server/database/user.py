@@ -172,9 +172,10 @@ async def pop_queue(username: str):
         raise HTTPException(status_code=404, detail="User not found")
     if not user["queue"]:
         raise HTTPException(status_code=404, detail="User's queue is empty")
-    song = user["queue"][0]
+    song = await songs_collection.find_one({"_id": user["queue"][0]}) 
     await users_collection.update_one({"username": username}, {"$pop": {"queue": -1}})
-    return str(song)
+    song
+    return song_helper(song)
 
 # Clear a queue of the user
 async def clear_queue(username: str):
