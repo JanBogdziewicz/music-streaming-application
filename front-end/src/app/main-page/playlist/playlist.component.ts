@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { Observable, switchMap } from 'rxjs';
 import { Playlist } from 'src/app/database-entities/playlist';
@@ -47,8 +47,11 @@ export class PlaylistComponent implements OnInit {
     private songService: SongService,
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private router: Router
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.playlist$ = this.getPlaylist();

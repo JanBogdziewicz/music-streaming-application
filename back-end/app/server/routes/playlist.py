@@ -35,7 +35,9 @@ async def get_default_playlist_cover():
 
 # Add a new playlist
 @PlaylistRouter.post("/", response_description="playlist added into the database")
-async def add_playlist_data(playlist: PlaylistSchema = Body(...), user: UserSchema = Depends(get_current_user)):
+async def add_playlist_data(
+    playlist: PlaylistSchema = Body(...), user: UserSchema = Depends(get_current_user)
+):
     if not playlist.user == user.username:
         raise HTTPException(
             status_code=401, detail="user not authorized to perform operation"
@@ -63,7 +65,11 @@ async def get_playlist_data(id):
 
 # Update a playlist with a matching ID
 @PlaylistRouter.put("/{id}")
-async def update_playlist_data(id: str, req: UpdatePlaylistModel = Body(...), user: UserSchema = Depends(get_current_user)):
+async def update_playlist_data(
+    id: str,
+    req: UpdatePlaylistModel = Body(...),
+    user: UserSchema = Depends(get_current_user),
+):
     playlist = await retrieve_playlist(id)
     if not playlist["user"] == user.username:
         raise HTTPException(
@@ -129,7 +135,9 @@ async def add_song_to_playlist(
 
 # Remove song from playlist
 @PlaylistRouter.delete("/{id}/songs/{song_index}")
-async def delete_song_from_playlist(id: str, song_index: int, user: UserSchema = Depends(get_current_user)):
+async def delete_song_from_playlist(
+    id: str, song_index: int, user: UserSchema = Depends(get_current_user)
+):
     playlist = await retrieve_playlist(id)
     if not playlist["user"] == user.username:
         raise HTTPException(
@@ -153,7 +161,9 @@ async def get_playlist_cover(id: str):
 @PlaylistRouter.put(
     "/{id}/cover", response_description="playlist cover updated sucessfully"
 )
-async def update_playlist_cover(id: str, file: UploadFile = File(...), user: UserSchema = Depends(get_current_user)):
+async def update_playlist_cover(
+    id: str, file: UploadFile = File(...), user: UserSchema = Depends(get_current_user)
+):
     playlist = await retrieve_playlist(id)
     if not playlist["user"] == user.username:
         raise HTTPException(

@@ -13,6 +13,10 @@ class SongSchema(BaseModel):
     cover: str = Field(None)
     listenings: int = Field(0)
     song_path: str = Field(...)
+    ngrams: list[str] = Field([])
+    prefix_ngrams: list[str] = Field([])
+    artist_ngrams: list[str] = Field([])
+    album_ngrams: list[str] = Field([])
 
     @validator("release_date")
     def ensure_date(cls, v):
@@ -29,7 +33,7 @@ class SongSchema(BaseModel):
                 "album": "Aftermath",
                 "length": 225,
                 "release_date": date(1966, 5, 6),
-                "song_path": "assets/song_files/song_2.mp3"
+                "song_path": "assets/song_files/song_2.mp3",
             }
         }
 

@@ -56,10 +56,87 @@
 
   <mat-sidenav-content role="main">
     <mat-toolbar class="search">
-      <mat-form-field floatLabel="never">
-        <input type="search" matInput />
-        <mat-placeholder class="placeholder">Search...</mat-placeholder>
-      </mat-form-field>
+      <form [formGroup]="searchForm">
+        <mat-form-field floatLabel="never" id="search">
+          <input
+            type="search"
+            matInput
+            formControlName="content"
+            [matAutocomplete]="auto"
+            maxlength="50"
+          />
+          <mat-placeholder class="placeholder">Search...</mat-placeholder>
+          <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            class="autocomplete"
+            (optionSelected)="test($event)"
+          >
+            <ng-container *ngIf="searchResult">
+              <mat-option *ngIf="noResults()"> No results found </mat-option>
+              <mat-optgroup
+                label="Artists"
+                *ngIf="searchResult.artists.length > 0"
+              >
+                <mat-option
+                  *ngFor="let artist of searchResult.artists"
+                  [value]="artist.name"
+                  [routerLink]="['/artist', artist.name]"
+                >
+                  <small>
+                    <b>{{ artist.name }}</b>
+                  </small>
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup label="Songs" *ngIf="searchResult.songs.length > 0">
+                <mat-option
+                  *ngFor="let song of searchResult.songs"
+                  [value]="song.name"
+                  (click)="playSong(song.id)"
+                >
+                  <small>
+                    <b>{{ song.name }}</b>
+                  </small>
+                  |
+                  <small>By {{ song.artist }}</small>
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup
+                label="Playlists"
+                *ngIf="searchResult.playlists.length > 0"
+              >
+                <mat-option
+                  *ngFor="let playlist of searchResult.playlists"
+                  [value]="playlist.name"
+                  [routerLink]="['/playlist', playlist.id]"
+                >
+                  <small>
+                    <b>{{ playlist.name }}</b>
+                  </small>
+                  |
+                  <small>By {{ playlist.user }}</small>
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup
+                label="Albums"
+                *ngIf="searchResult.albums.length > 0"
+              >
+                <mat-option
+                  *ngFor="let album of searchResult.albums"
+                  [value]="album.name"
+                  [routerLink]="['/album', album.id]"
+                >
+                  <small>
+                    <b>{{ album.name }}</b>
+                  </small>
+                  |
+                  <small>By {{ album.artist }}</small>
+                </mat-option>
+              </mat-optgroup>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
       <span class="example-spacer"></span>
       <mat-list-item>
         <div class="avatar_div">

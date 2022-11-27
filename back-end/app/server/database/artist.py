@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from server.config import artists_collection, albums_collection, songs_collection
 from server.database.album import album_helper
 from server.database.song import song_helper
+from server.utils import make_ngrams
+
 
 # helper
 def artist_helper(artist) -> dict:
@@ -24,6 +26,8 @@ async def retrieve_artists():
 
 # Add a new artist to the database
 async def add_artist(artist_data: dict) -> dict:
+    artist_data["ngrams"] = make_ngrams(artist_data["name"])
+    artist_data["prefix_ngrams"] = make_ngrams(artist_data["name"], prefix_only=True)
     artist = await artists_collection.insert_one(artist_data)
     new_artist = await artists_collection.find_one({"_id": artist.inserted_id})
     return artist_helper(new_artist)
@@ -39,6 +43,9 @@ async def retrieve_artist(name: str):
 
 # Update a artist with a matching name
 async def update_artist(name: str, data: dict):
+    if data.get("name", None):
+        data["ngrams"] = make_ngrams(data["name"])
+        data["prefix_ngrams"] = make_ngrams(data["name"], prefix_only=True)
     update_status = await artists_collection.update_one({"name": name}, {"$set": data})
     if update_status.matched_count < 1:
         raise HTTPException(status_code=404, detail="Artist not found")
@@ -62,6 +69,7 @@ async def retrieve_artist_albums(name: str):
         albums.append(album_helper(album))
     return albums
 
+
 async def retrieve_artist_songs(name: str):
     artist = await artists_collection.find_one({"name": name})
     if not artist:
@@ -70,3 +78,20 @@ async def retrieve_artist_songs(name: str):
     async for song in songs_collection.find({"artist": name}):
         songs.append(song_helper(song))
     return songs
+
+
+# Search artists
+async def search_artists(query: str):
+    artists = []
+    async for artist in artists_collection.find(
+        {"$text": {"$search": query}},
+        {
+            "name": True,
+            "logo": True,
+            "score": {"$meta": "textScore"},
+        },
+    ).sort([("score", {"$meta": "textScore"})]):
+        artist["id"] = str(artist["_id"])
+        del artist["_id"]
+        artists.append(artist)
+    return artists[:3]

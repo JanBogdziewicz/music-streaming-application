@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from bson.objectid import ObjectId
 from server.config import albums_collection, songs_collection
 from server.database.song import song_helper, retrieve_song
+from server.utils import make_ngrams
 
 
 # helper
@@ -28,6 +29,9 @@ async def retrieve_albums():
 
 # Add a new album to the database
 async def add_album(album_data: dict) -> dict:
+    album_data["ngrams"] = make_ngrams(album_data["name"])
+    album_data["prefix_ngrams"] = make_ngrams(album_data["name"], prefix_only=True)
+    album_data["artist_ngrams"] = make_ngrams(album_data["artist"], prefix_only=True)
     album = await albums_collection.insert_one(album_data)
     new_album = await albums_collection.find_one({"_id": album.inserted_id})
     return album_helper(new_album)
@@ -43,6 +47,11 @@ async def retrieve_album(id: str):
 
 # Update a album with a matching ID
 async def update_album(id: str, data: dict):
+    if data.get("name", None):
+        data["ngrams"] = make_ngrams(data["name"])
+        data["prefix_ngrams"] = make_ngrams(data["name"], prefix_only=True)
+    if data.get("artist", None):
+        data["artist_ngrams"] = make_ngrams(data["artist"], prefix_only=True)
     update_status = await albums_collection.update_one(
         {"_id": ObjectId(id)}, {"$set": data}
     )
@@ -78,3 +87,21 @@ async def retrieve_song_album(song_id: str):
         {"name": song["album"], "artist": song["artist"]}
     )
     return album_helper(album)
+
+
+# Search albums
+async def search_albums(query: str):
+    albums = []
+    async for album in albums_collection.find(
+        {"$text": {"$search": query}},
+        {
+            "name": True,
+            "artist": True,
+            "cover": True,
+            "score": {"$meta": "textScore"},
+        },
+    ).sort([("score", {"$meta": "textScore"})]):
+        album["id"] = str(album["_id"])
+        del album["_id"]
+        albums.append(album)
+    return albums[:3]

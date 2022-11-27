@@ -18,6 +18,7 @@ from server.config import (
     users_collection,
 )
 from server.init_config import *
+from server.utils import make_ngrams
 import pymongo
 import logging
 from faker import Faker
@@ -52,15 +53,52 @@ async def create_unique_constraint(collection: Collection, fields: list[str]):
     await collection.create_index(fields_array, unique=True)
 
 
+async def create_text_index(collection: Collection, text_fields: list[dict]):
+    logger.info("creating text index")
+    await collection.create_index(
+        [(field["name"], "text") for field in text_fields],
+        default_language="none",
+        weights={field["name"]: field["weight"] for field in text_fields},
+    )
+
+
 async def initialize_db_schema():
     await create_unique_constraint(songs_collection, ["name", "artist"])
     await create_unique_constraint(artists_collection, ["name"])
     await create_unique_constraint(albums_collection, ["name", "artist"])
     await create_unique_constraint(playlists_collection, ["name", "user"])
     await create_unique_constraint(users_collection, ["username"])
-    await create_unique_constraint(searches_collection, ["user", "timestamp"])
-    # still have to figure out time
-    # await create_unique_constraint("time", [])
+    await create_unique_constraint(searches_collection, ["user", "time"])
+
+    await create_text_index(
+        songs_collection,
+        [
+            {"name": "ngrams", "weight": 50},
+            {"name": "prefix_ngrams", "weight": 200},
+            {"name": "artist_ngrams", "weight": 100},
+            {"name": "album_ngrams", "weight": 50},
+        ],
+    )
+    await create_text_index(
+        albums_collection,
+        [
+            {"name": "ngrams", "weight": 50},
+            {"name": "prefix_ngrams", "weight": 200},
+            {"name": "artist_ngrams", "weight": 100},
+        ],
+    )
+    await create_text_index(
+        artists_collection,
+        [{"name": "ngrams", "weight": 50}, {"name": "prefix_ngrams", "weight": 200}],
+    )
+    await create_text_index(
+        playlists_collection,
+        [
+            {"name": "ngrams", "weight": 50},
+            {"name": "prefix_ngrams", "weight": 200},
+            {"name": "user_ngrams", "weight": 50},
+        ],
+    )
 
 
 async def upload_images(images_path: str, fs):
@@ -137,7 +175,7 @@ async def init_songs(fake: Faker, album_ids: list[str]):
                 "release_date": album["release_date"],
                 "cover": album["cover"],
                 "listenings": 0,
-                "song_path": f"assets/song_files/song_{random.randint(1, 5)}.mp3"
+                "song_path": f"assets/song_files/song_{random.randint(1, 5)}.mp3",
             }
             song = await add_song(song_data)
             song_ids.append(song["id"])

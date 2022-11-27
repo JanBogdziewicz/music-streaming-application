@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { Album } from 'src/app/database-entities/album';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Song } from 'src/app/database-entities/song';
 import { AlbumService } from 'src/app/services/album.service';
 import { SongService } from 'src/app/services/song.service';
@@ -45,8 +45,11 @@ export class AlbumComponent implements OnInit {
     private songService: SongService,
     private userService: UserService,
     private playlistService: PlaylistService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.album_songs$ = this.getAlbumSongs();

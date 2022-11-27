@@ -5,7 +5,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Album } from '../../database-entities/album';
 import { Observable, switchMap } from 'rxjs';
 import { Song } from '../../database-entities/song';
@@ -69,8 +69,11 @@ export class ArtistComponent implements OnInit {
     private songService: SongService,
     private userService: UserService,
     private playlistService: PlaylistService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.artist$ = this.getArtist();

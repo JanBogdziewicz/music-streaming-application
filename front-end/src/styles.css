@@ -65,3 +65,7 @@ mat-list,
 mat-toolbar {
   min-width: 400px;
 }
+
+.autocomplete {
+  max-height: 400px !important;
+}

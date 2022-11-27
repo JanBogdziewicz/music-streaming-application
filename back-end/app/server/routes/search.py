@@ -1,5 +1,9 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from server.database.album import search_albums
+from server.database.artist import search_artists
+from server.database.playlist import search_playlists
+from server.database.song import search_songs
 
 from server.database.search import (
     add_search,
@@ -19,8 +23,18 @@ SearchRouter = APIRouter()
 @SearchRouter.post("/", response_description="Search request created")
 async def add_search_data(search: SearchSchema = Body(...)):
     search = jsonable_encoder(search)
-    new_search = await add_search(search)
-    return ResponseModel(new_search, "Search request created successfully.")
+    await add_search(search)
+    albums = await search_albums(search["content"])
+    artists = await search_artists(search["content"])
+    playlists = await search_playlists(search["content"])
+    songs = await search_songs(search["content"])
+    search_result = {
+        "artists": artists,
+        "songs": songs,
+        "playlists": playlists,
+        "albums": albums,
+    }
+    return ResponseModel(search_result, "Search request created successfully.")
 
 
 # Get all search requests
