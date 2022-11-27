@@ -1,5 +1,5 @@
 import { EventEmitter } from "@angular/core";
 
 export class Emitter {
-    static authEmitter = new EventEmitter<boolean>()
+    static authEmitter = new EventEmitter<boolean>();
 }
