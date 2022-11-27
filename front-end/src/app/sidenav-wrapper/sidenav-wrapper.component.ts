@@ -60,12 +60,24 @@ export class SidenavWrapperComponent implements OnInit {
 
     this.song_emitter = SongEmitter.currentSongEmitter;
     this.song_emitter.subscribe((next) => {
+      localStorage.setItem('current_song_id', next);
       this.current_song_id = next;
       this.songService.getSong(next).subscribe((val) => {
         this.current_song = val;
       });
       this.getCurrentSongImage();
     });
+    if (!this.current_song_id) {
+      const saved_id = localStorage.getItem('current_song_id');
+      if (saved_id) {
+        this.current_song_id = saved_id;
+        this.songService.getSong(saved_id).subscribe((val) => {
+          this.current_song = val;
+        });
+        this.getCurrentSongImage();
+      }
+    }
+
     this.playlists$ = this.userService.getUserPlaylists(this.username);
     this.playlists$.subscribe(
       (res) =>
