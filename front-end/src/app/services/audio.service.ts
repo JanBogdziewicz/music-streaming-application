@@ -114,7 +114,7 @@ export class AudioService {
     }
   }
 
-  formatTime(time: number, format: string = 'HH:mm:ss') {
+  formatTime(time: number, format: string = 'mm:ss') {
     const momentTime = time * 1000;
     return moment.utc(momentTime).format(format);
   }

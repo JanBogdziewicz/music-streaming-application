@@ -176,9 +176,10 @@ export class SidenavWrapperComponent implements OnInit {
     });
   }
 
-  test(a: MatAutocompleteSelectedEvent) {
-    a.option['_element'].nativeElement.click();
+  clickOption(event: MatAutocompleteSelectedEvent) {
+    event.option['_element'].nativeElement.click();
   }
+
   nextSong() {
     this.userService.popQueue(this.username).subscribe((data) => {
       let nextSong = data;
