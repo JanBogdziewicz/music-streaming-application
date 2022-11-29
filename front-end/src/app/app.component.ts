@@ -1,4 +1,7 @@
 import { Component, HostListener } from '@angular/core';
+import { NavigationStart, Router } from '@angular/router';
+
+export let browserRefresh = false;
 
 @Component({
   selector: 'app-root',
@@ -11,5 +14,13 @@ export class AppComponent {
   @HostListener('contextmenu', ['$event'])
   preventDefaultContextMenu(event: Event) {
     event.preventDefault();
+  }
+
+  constructor(private router: Router) {
+    router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        browserRefresh = !router.navigated;
+      }
+    });
   }
 }

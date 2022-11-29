@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Playlist } from '../database-entities/playlist';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { getUsernameFromToken } from '../utils/jwt';
@@ -16,6 +16,7 @@ import { SongService } from '../services/song.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Song } from '../database-entities/song';
 import { SongEmitter } from '../currentSongEmitter';
+import { browserRefresh } from '../app.component';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -60,15 +61,15 @@ export class SidenavWrapperComponent implements OnInit {
 
     this.song_emitter = SongEmitter.currentSongEmitter;
     this.song_emitter.subscribe((next) => {
-      localStorage.setItem('current_song_id', next);
+      sessionStorage.setItem('current_song_id', next);
       this.current_song_id = next;
       this.songService.getSong(next).subscribe((val) => {
         this.current_song = val;
       });
       this.getCurrentSongImage();
     });
-    if (!this.current_song_id) {
-      const saved_id = localStorage.getItem('current_song_id');
+    if (!this.current_song_id && !browserRefresh) {
+      const saved_id = sessionStorage.getItem('current_song_id');
       if (saved_id) {
         this.current_song_id = saved_id;
         this.songService.getSong(saved_id).subscribe((val) => {
