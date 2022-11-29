@@ -49,8 +49,8 @@ export class SongService {
       .pipe(map((response) => response.data as Album));
   }
 
-  playSong(id: string, add: boolean = true, forceChange = false) {
+  playSong(id: string, addToHistory: boolean = true, forceChange = false) {
     SongEmitter.currentSongEmitter.emit(id);
-    return this.audio.loadSong(id, add, forceChange);
+    return this.audio.loadSong(id, addToHistory, forceChange);
   }
 }

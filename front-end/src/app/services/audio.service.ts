@@ -3,6 +3,9 @@ import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { take, takeUntil, takeWhile } from 'rxjs/operators';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
+import { UserService } from './user.service';
+import { getUsernameFromToken } from '../utils/jwt';
+import { SongEmitter } from '../currentSongEmitter';
 
 export interface StreamState {
   playing: boolean;
@@ -18,6 +21,7 @@ export interface StreamState {
   providedIn: 'root',
 })
 export class AudioService {
+  public username: string = getUsernameFromToken();
   private audioObj = new Audio();
   public history: string[] = [];
   audioEvents = [
@@ -42,7 +46,7 @@ export class AudioService {
     error: false,
   };
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   private streamObservable(url: string) {
     return new Observable((observer) => {
@@ -81,8 +85,8 @@ export class AudioService {
     return this.streamObservable(url).subscribe();
   }
 
-  loadSong(id: string, add: boolean = true, forceChange: boolean = false) {
-    if (!(this.currentSongId === undefined) && add === true) {
+  loadSong(id: string, addToHsitory: boolean = true, forceChange: boolean = false) {
+    if (!(this.currentSongId === undefined) && addToHsitory === true) {
       this.addToHistory(this.currentSongId);
     }
     if (this.currentSongId === id && !forceChange) {
@@ -147,6 +151,11 @@ export class AudioService {
         this.resetState();
         this.state.error = true;
         break;
+      case 'ended':
+        this.userService.popQueue(this.username).subscribe((data) => {
+          SongEmitter.currentSongEmitter.emit(data.id);
+          return this.loadSong(data.id, true, true);
+        });
     }
     this.stateChange.next(this.state);
   }
