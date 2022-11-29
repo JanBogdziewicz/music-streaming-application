@@ -106,6 +106,7 @@ export class AudioService {
   stop() {
     this.audioObj.pause();
     this.audioObj.currentTime = 0;
+    this.resetState();
   }
 
   seekTo(seconds: number | null) {
