@@ -15,6 +15,10 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   transform: rotate(180deg);
 }
 
+mat-sidenav-content {
+  /* height: 105%; */
+}
+
 .time {
   font-size: 16px;
   padding: 4px;
@@ -159,7 +163,7 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .search {
-  height: 80px;
+  height: 70px;
 }
 
 #search {
