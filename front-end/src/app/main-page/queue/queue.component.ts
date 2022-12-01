@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { getUsernameFromToken } from 'src/app/utils/jwt';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { PlaylistService } from 'src/app/services/playlist.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-queue',
@@ -37,7 +38,8 @@ export class QueueComponent implements OnInit {
     private playlistService: PlaylistService,
     private songService: SongService,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -156,6 +158,15 @@ export class QueueComponent implements OnInit {
           this.openSnackBar('Song removed from queue', 'OK');
         }
       });
+  }
+
+  clearQueue() {
+    this.userService.clearQueue(this.username).subscribe((res) => {
+      if (res) {
+        this.queue_songs = [];
+        this.openSnackBar('Queue cleared', 'OK');
+      }
+    });
   }
 
   fancyTimeFormat(duration: number) {

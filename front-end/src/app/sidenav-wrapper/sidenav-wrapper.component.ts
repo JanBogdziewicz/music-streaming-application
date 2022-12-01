@@ -16,8 +16,8 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Song } from '../database-entities/song';
 import { SongEmitter } from '../currentSongEmitter';
 import { browserRefresh } from '../app.component';
-import { ActivatedRoute, Router } from '@angular/router';
 import { QueueComponent } from '../main-page/queue/queue.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav-wrapper',
@@ -51,7 +51,10 @@ export class SidenavWrapperComponent implements OnInit {
     private searchService: SearchService,
     private songService: SongService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+  }
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
@@ -199,7 +202,9 @@ export class SidenavWrapperComponent implements OnInit {
       let nextSong = data;
       const newSongId = this.songService.playSong(nextSong.id, true, true);
     });
-    this.redirectTo(this.router.url);
+    if (this.router.url.split('/').pop() === 'queue') {
+      this.redirectTo(this.router.url);
+    }
   }
 
   prevSong() {
@@ -213,7 +218,9 @@ export class SidenavWrapperComponent implements OnInit {
     this.userService.prependQueue(this.username, [current_id]).subscribe();
     const songToPlay = this.audioService.history.pop();
     this.songService.playSong(songToPlay as string, false, true);
-    this.redirectTo(this.router.url);
+    if (this.router.url.split('/').pop() === 'queue') {
+      this.redirectTo(this.router.url);
+    }
   }
 
   redirectTo(uri: string) {

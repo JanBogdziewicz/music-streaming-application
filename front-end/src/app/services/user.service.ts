@@ -154,4 +154,10 @@ export class UserService {
       )
       .pipe(map((response) => response.data as string));
   }
+
+  clearQueue(username: string) {
+    return this.http
+      .delete<MongoResponse>(`${this.user_address}/${username}/queue/clear`)
+      .pipe(map((response) => response.data as string));
+  }
 }

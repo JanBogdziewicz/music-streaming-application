@@ -8,7 +8,11 @@
       <div class="artist">Artist</div>
       <div class="genre">Genres</div>
       <div class="length">Length</div>
-      <div class="remove_song"></div>
+      <div class="remove_song" matTooltip="Clear queue" (click)="clearQueue()">
+        <mat-icon *ngIf="queue_songs.length > 0" class="delete">
+          delete
+        </mat-icon>
+      </div>
     </div>
     <mat-divider></mat-divider>
     <mat-nav-list class="list-vertical">

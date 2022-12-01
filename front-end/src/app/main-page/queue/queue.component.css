@@ -139,6 +139,10 @@ mat-nav-list.list-vertical div {
   overflow: visible;
 }
 
+.delete {
+  transform: scale(1.2);
+}
+
 .remove_song mat-icon:hover {
   transform: scale(0.8);
   opacity: 1;
