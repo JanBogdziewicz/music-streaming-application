@@ -61,7 +61,7 @@ export class SidenavWrapperComponent implements OnInit {
 
     this.song_emitter = SongEmitter.currentSongEmitter;
     this.song_emitter.subscribe((next) => {
-      sessionStorage.setItem('current_song_id', next);
+      localStorage.setItem('current_song_id', next);
       this.current_song_id = next;
       this.songService.getSong(next).subscribe((val) => {
         this.current_song = val;
@@ -69,7 +69,7 @@ export class SidenavWrapperComponent implements OnInit {
       this.getCurrentSongImage();
     });
     if (!this.current_song_id && !browserRefresh) {
-      const saved_id = sessionStorage.getItem('current_song_id');
+      const saved_id = localStorage.getItem('current_song_id');
       if (saved_id) {
         this.current_song_id = saved_id;
         this.songService.getSong(saved_id).subscribe((val) => {
@@ -88,7 +88,6 @@ export class SidenavWrapperComponent implements OnInit {
       this.state = state;
     });
     this.getUserAvatar(this.username);
-    this.getCurrentSongImage();
   }
 
   ngOnDestroy() {

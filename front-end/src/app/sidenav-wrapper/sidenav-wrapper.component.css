@@ -48,13 +48,26 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   align-items: center;
 }
 
-.filler {
+.filler .queue {
+  transform: scale(1.5);
+}
+
+.filler .queue:hover {
+  transform: scale(1.6);
+  cursor: pointer;
+}
+
+.filler .title {
   opacity: 0;
 }
 
-@media only screen and (max-width: 1200px) {
-  .filler {
+@media only screen and (max-width: 800px) {
+  .filler .title {
     opacity: 1;
+  }
+
+  .filler .queue {
+    display: none;
   }
 
   .song-info .title div {
@@ -114,7 +127,7 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .mat-slider {
-  width: 80%;
+  width: 70%;
 }
 
 .media-action-bar {
@@ -127,7 +140,7 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .media-action-bar mat-icon {
-  font-size: calc(20px + 0.5vw);
+  transform: scale(1.2);
 }
 
 .playlist_header {
@@ -225,4 +238,5 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 mat-button {
   display: flex;
   justify-content: center;
+  align-items: center;
 }

@@ -19,6 +19,9 @@ export class AppComponent {
   constructor(private router: Router) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
+        if (!router.navigated) {
+          localStorage.removeItem('current_song_id');
+        }
         browserRefresh = !router.navigated;
       }
     });

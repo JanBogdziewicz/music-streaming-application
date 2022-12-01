@@ -66,6 +66,12 @@ export class UserService {
       .pipe(map((response) => response.data as Listening[]));
   }
 
+  getUserQueueSongs(username: string): Observable<Song[]> {
+    return this.http
+      .get<MongoResponse>(`${this.user_address}/${username}/queue/songs`)
+      .pipe(map((response) => response.data as Song[]));
+  }
+
   getUserAvatar(username: string): Observable<Blob> {
     return this.http.get(`${this.user_address}/${username}/avatar`, {
       responseType: 'blob',
@@ -76,6 +82,16 @@ export class UserService {
     return this.http
       .post<MongoResponse>(
         `${this.user_address}/${username}/queue/append`,
+        song_ids,
+        this.httpOptions
+      )
+      .pipe(map((response) => response.data as string));
+  }
+
+  removeFromQueue(username: string, song_ids: number[]) {
+    return this.http
+      .post<MongoResponse>(
+        `${this.user_address}/${username}/queue/pull`,
         song_ids,
         this.httpOptions
       )
