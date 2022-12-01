@@ -215,6 +215,16 @@ export class ArtistComponent implements OnInit {
     this.songService.playSong(song_id);
   }
 
+  playArtist() {
+    this.playSong(this.songs[0].id);
+    let song_ids = this.songs.map((song) => song.id).slice(1);
+    this.prependQueue(song_ids);
+  }
+
+  prependQueue(song_ids: string[]) {
+    this.userService.prependQueue(this.username, song_ids).subscribe(() => {});
+  }
+
   addToQueue(song_ids: string[]) {
     this.userService.addToQueue(this.username, song_ids).subscribe((res) => {
       if (res) {

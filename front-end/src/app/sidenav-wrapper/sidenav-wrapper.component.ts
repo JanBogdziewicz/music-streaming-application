@@ -1,7 +1,6 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, EventEmitter, ContentChild } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { Playlist } from '../database-entities/playlist';
-import { NavigationStart, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { getUsernameFromToken } from '../utils/jwt';
@@ -17,11 +16,14 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Song } from '../database-entities/song';
 import { SongEmitter } from '../currentSongEmitter';
 import { browserRefresh } from '../app.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { QueueComponent } from '../main-page/queue/queue.component';
 
 @Component({
   selector: 'app-sidenav-wrapper',
   templateUrl: './sidenav-wrapper.component.html',
   styleUrls: ['./sidenav-wrapper.component.css'],
+  providers: [QueueComponent],
 })
 export class SidenavWrapperComponent implements OnInit {
   searchForm: FormGroup;
@@ -197,6 +199,7 @@ export class SidenavWrapperComponent implements OnInit {
       let nextSong = data;
       const newSongId = this.songService.playSong(nextSong.id, true, true);
     });
+    this.redirectTo(this.router.url);
   }
 
   prevSong() {
@@ -210,5 +213,12 @@ export class SidenavWrapperComponent implements OnInit {
     this.userService.prependQueue(this.username, [current_id]).subscribe();
     const songToPlay = this.audioService.history.pop();
     this.songService.playSong(songToPlay as string, false, true);
+    this.redirectTo(this.router.url);
+  }
+
+  redirectTo(uri: string) {
+    this.router
+      .navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([uri]));
   }
 }

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, switchMap } from 'rxjs';
 import { Playlist } from 'src/app/database-entities/playlist';
 import { Song } from 'src/app/database-entities/song';
@@ -48,14 +47,12 @@ export class QueueComponent implements OnInit {
     this.queue_songs$ = this.getQueueSongs();
     this.library_songs$ = this.queue_songs$.pipe(
       switchMap((source) => {
-        console.log(source);
         this.queue_songs = source;
         this.queue_songs.forEach((song) => {
           let album$ = this.songService.getSongAlbum(song.id);
           album$.subscribe((res) => {
             this.queue_songs_albums.set(song.id, res);
           });
-          console.log(song.id, song.cover);
           this.getSongCover(song.id, song.cover);
         });
         return this.userService.getUserLibrarySongs(this.username);
@@ -186,5 +183,9 @@ export class QueueComponent implements OnInit {
       duration: 2000,
       panelClass: ['snackbar'],
     });
+  }
+
+  public refreshQueue() {
+    this.ngOnInit();
   }
 }
