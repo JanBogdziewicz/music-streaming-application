@@ -41,24 +41,29 @@ export class ExploreComponent implements OnInit {
   private songs$!: Observable<Song[]>;
   private albums$!: Observable<Album[]>;
   private artists$!: Observable<Artist[]>;
+  private playlists$!: Observable<Playlist[]>;
   private user_playlists$!: Observable<Playlist[]>;
   private library_songs$!: Observable<Song[]>;
   private library_albums$!: Observable<Album[]>;
   private library_artists$!: Observable<Artist[]>;
+  private library_playlists$!: Observable<Playlist[]>;
 
   public songs: Song[] = [];
   public albums: Album[] = [];
   public artists: Artist[] = [];
+  public playlists: Playlist[] = [];
   public user_playlists: Playlist[] = [];
   public library_songs: Song[] = [];
   public library_albums: Album[] = [];
   public library_artists: Artist[] = [];
+  public library_playlists: Playlist[] = [];
   public images: Map<string, string> = new Map<string, string>();
   public elementInLibrary: Map<string, boolean> = new Map<string, boolean>();
 
   public song_scroll: Scroll = { item_list: [], index: 0 };
   public album_scroll: Scroll = { item_list: [], index: 0 };
   public artist_scroll: Scroll = { item_list: [], index: 0 };
+  public playlist_scroll: Scroll = { item_list: [], index: 0 };
 
   constructor(
     private songService: SongService,
@@ -131,8 +136,37 @@ export class ExploreComponent implements OnInit {
     });
 
     this.user_playlists$ = this.userService.getUserPlaylists(this.username);
-    this.user_playlists$.subscribe((res) => {
-      this.user_playlists = res;
+    this.playlists$ = this.user_playlists$.pipe(
+      switchMap((source) => {
+        this.user_playlists = source;
+        return this.playlistService.getPlaylists();
+      })
+    );
+    this.library_playlists$ = this.playlists$.pipe(
+      switchMap((source) => {
+        this.playlists = source
+          .filter(
+            (playlist) =>
+              !this.user_playlists
+                .map((user_playlist) => user_playlist.id)
+                .includes(playlist.id)
+          )
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 12);
+        this.playlists.forEach((playlist) => {
+          this.getPlaylistCover(playlist.id, playlist.cover);
+        });
+        return this.userService.getUserLibraryPlaylists(this.username);
+      })
+    );
+    this.library_playlists$.subscribe((res) => {
+      this.library_playlists = res;
+      this.playlists.forEach((playlist) => {
+        this.elementInLibrary.set(
+          playlist.id,
+          this.inLibrary(this.library_playlists, playlist.id)
+        );
+      });
     });
   }
 
@@ -156,6 +190,9 @@ export class ExploreComponent implements OnInit {
     );
     this.artist_scroll.item_list = this.listItems.filter(
       (item) => item.element.id === 'artist'
+    );
+    this.playlist_scroll.item_list = this.listItems.filter(
+      (item) => item.element.id === 'playlist'
     );
   }
 
@@ -198,6 +235,11 @@ export class ExploreComponent implements OnInit {
 
   getArtistLogo(artist_name: string, image_id: string) {
     let image = this.artistService.getArtistLogo(artist_name);
+    this.createUrl(image, image_id);
+  }
+
+  getPlaylistCover(playlist_id: string, image_id: string) {
+    let image = this.playlistService.getPlaylistCover(playlist_id);
     this.createUrl(image, image_id);
   }
 

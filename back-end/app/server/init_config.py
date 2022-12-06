@@ -55,6 +55,7 @@ SONG_LENGTH_MAX = 300
 
 PLAYLIST_SONG_NR_MIN = 5
 PLAYLIST_SONG_NR_MAX = 20
-PLAYLIST_COVERS_PATH = "./assets/playlist_images/"
+PLAYLIST_COVERS_PATH = "./assets/playlist_images/non_default/"
 
 DEFAULT_AVATAR = "./assets/user_images/default/default.png"
+DEFAULT_PLAYLIST_COVER = "./assets/playlist_images/default/default.jpg"

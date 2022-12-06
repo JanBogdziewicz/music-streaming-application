@@ -6,6 +6,7 @@ import { Album } from '../database-entities/album';
 import { MongoResponse } from '../database-entities/mongo_response';
 import { Song } from '../database-entities/song';
 import { AudioService } from './audio.service';
+import { SongEmitter } from '../currentSongEmitter';
 
 @Injectable({
   providedIn: 'root',
@@ -48,8 +49,8 @@ export class SongService {
       .pipe(map((response) => response.data as Album));
   }
 
-  playSong(id: string) {
-    console.log('Song played!');
-    this.audio.loadSong(id);
+  playSong(id: string, addToHistory: boolean = true, forceChange = false) {
+    SongEmitter.currentSongEmitter.emit(id);
+    return this.audio.loadSong(id, addToHistory, forceChange);
   }
 }

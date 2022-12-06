@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Add Playlist</h2>
+<form [formGroup]="addForm" (submit)="addPlaylist()">
+  <div class="add_form">
+    <img
+      id="playlist_cover"
+      [src]="playlist_cover | safeResourceUrl"
+      alt="Playlist Cover"
+    />
+    <div class="change_cover">
+      <button type="button" mat-raised-button (click)="fileInput.click()">
+        Select Playlist Cover
+      </button>
+      <input
+        hidden
+        (change)="onFileSelected($event)"
+        #fileInput
+        type="file"
+        id="file"
+        accept=".jpg, .jpeg, .png"
+      />
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Playlist name</mat-label>
+      <input matInput #input maxlength="50" formControlName="name" />
+    </mat-form-field>
+    <div class="action">
+      <button type="submit" mat-raised-button>Add</button>
+      <div class="spacer"></div>
+      <button type="button" mat-raised-button (click)="resetForm()">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>

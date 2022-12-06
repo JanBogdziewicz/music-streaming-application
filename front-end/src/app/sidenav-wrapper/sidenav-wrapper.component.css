@@ -1,26 +1,116 @@
 mat-sidenav-container {
-  height: 90vh;
+  height: calc(100vh - 100px);
 }
+
 mat-sidenav-container mat-sidenav mat-nav-list .menu-item {
   margin-left: 8px;
 }
+
 mat-sidenav-container mat-sidenav mat-nav-list .chevron-button {
   transition: 300ms ease-in-out;
   transform: rotate(0deg);
 }
+
 mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   transform: rotate(180deg);
 }
 
 .time {
-  font-size: 80%;
-  align-self: left;
+  font-size: 16px;
+  padding: 4px;
 }
 
 .media-footer {
   border-top: 1px solid rgb(209, 203, 203);
   width: 100%;
-  height: 10vh;
+  height: 100px;
+  min-height: 100px;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.media_wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.song-info,
+.filler {
+  width: 20%;
+  height: 100%;
+  border: 0px solid black;
+  display: flex;
+  align-items: center;
+}
+
+.filler .queue {
+  transform: scale(1.5);
+}
+
+.filler .queue:hover {
+  transform: scale(1.6);
+  cursor: pointer;
+}
+
+.filler .title {
+  opacity: 0;
+}
+
+@media only screen and (max-width: 800px) {
+  .filler .title {
+    opacity: 1;
+  }
+
+  .filler .queue {
+    display: none;
+  }
+
+  .song-info .title div {
+    display: none;
+  }
+}
+
+.title {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+.title .name {
+  font-weight: 500;
+}
+
+.title .link {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.song-cover {
+  border-radius: 10%;
+  height: 80%;
+  object-fit: cover;
+  margin-left: calc(10px + 2vw);
+}
+
+.player-controls {
+  border: 0px solid black;
+  width: 60%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,24 +119,28 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 
 .progress-bar {
   border: 0px solid black;
-  height: 25%;
-  width: 40%;
+  height: 40%;
+  width: 80%;
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  align-items: center;
 }
 
 .mat-slider {
-  width: 50%;
+  width: 70%;
 }
 
 .media-action-bar {
   width: 30%;
-  height: 40%;
+  height: 30%;
   display: flex;
-  flex-direction: row;
   justify-content: center;
+  align-items: center;
   border: 0px solid black;
+}
+
+.media-action-bar mat-icon {
+  transform: scale(1.2);
 }
 
 .playlist_header {
@@ -71,14 +165,18 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 
 .logo {
   cursor: pointer;
-  height: 80px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .search {
-  height: 80px;
+  height: 70px;
+}
+
+#search {
+  width: calc(200px + 5vw);
 }
 
 .example-spacer {
@@ -92,10 +190,11 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 }
 
 .avatar_div img {
-  width: calc(50px + 0.6vw);
-  height: calc(50px + 0.6vw);
+  width: calc(45px + 0.6vw);
+  height: calc(45px + 0.6vw);
   border-radius: 50%;
   object-fit: cover;
+  margin-top: 5px;
 }
 
 .avatar_div img:hover {
@@ -114,6 +213,9 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
   display: inline-block;
   width: 400px;
   padding: 5%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .menu_avatar img {
@@ -136,4 +238,5 @@ mat-sidenav-container mat-sidenav mat-nav-list .chevron-button.rotated {
 mat-button {
   display: flex;
   justify-content: center;
+  align-items: center;
 }

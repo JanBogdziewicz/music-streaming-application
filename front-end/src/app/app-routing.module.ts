@@ -10,11 +10,11 @@ import { ArtistComponent } from './main-page/artist/artist.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/authGuard';
-
+import { QueueComponent } from './main-page/queue/queue.component';
 
 const routes: Routes = [
-  {path: 'register', component: RegisterComponent},
-  {path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent },
+  { path: 'login', component: LoginComponent },
   {
     path: '',
     redirectTo: 'home',
@@ -26,11 +26,32 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-      { path: 'explore', component: ExploreComponent, canActivate: [AuthGuard] },
-      { path: 'user/:username', component: UserComponent, canActivate: [AuthGuard] },
-      { path: 'playlist/:id', component: PlaylistComponent, canActivate: [AuthGuard] },
-      { path: 'album/:id', component: AlbumComponent, canActivate: [AuthGuard] },
-      { path: 'artist/:name', component: ArtistComponent, canActivate: [AuthGuard] },
+      {
+        path: 'explore',
+        component: ExploreComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'user/:username',
+        component: UserComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'playlist/:id',
+        component: PlaylistComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'album/:id',
+        component: AlbumComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'artist/:name',
+        component: ArtistComponent,
+        canActivate: [AuthGuard],
+      },
+      { path: 'queue', component: QueueComponent, canActivate: [AuthGuard] },
     ],
   },
   {

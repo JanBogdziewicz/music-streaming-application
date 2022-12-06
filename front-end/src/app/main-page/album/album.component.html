@@ -30,12 +30,7 @@
   </div>
   <div class="album_buttons">
     <div class="play_album">
-      <button
-        mat-fab
-        color="basic"
-        #play_button
-        (click)="playSong(album_songs[0].id)"
-      >
+      <button mat-fab color="basic" #play_button (click)="playAlbum()">
         <mat-icon>play_arrow</mat-icon>
       </button>
     </div>

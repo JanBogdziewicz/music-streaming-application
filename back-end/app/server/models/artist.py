@@ -7,6 +7,8 @@ class ArtistSchema(BaseModel):
     join_date: datetime = Field(default_factory=datetime.now)
     bio: str = Field(...)
     logo: str = Field(None)
+    ngrams: list[str] = Field([])
+    prefix_ngrams: list[str] = Field([])
 
     @validator("join_date")
     def ensure_join_date(cls, v):

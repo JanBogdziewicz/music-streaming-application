@@ -5,7 +5,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Album } from '../../database-entities/album';
 import { Observable, switchMap } from 'rxjs';
 import { Song } from '../../database-entities/song';
@@ -69,8 +69,11 @@ export class ArtistComponent implements OnInit {
     private songService: SongService,
     private userService: UserService,
     private playlistService: PlaylistService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.artist$ = this.getArtist();
@@ -210,6 +213,16 @@ export class ArtistComponent implements OnInit {
 
   playSong(song_id: string) {
     this.songService.playSong(song_id);
+  }
+
+  playArtist() {
+    this.playSong(this.songs[0].id);
+    let song_ids = this.songs.map((song) => song.id).slice(1);
+    this.prependQueue(song_ids);
+  }
+
+  prependQueue(song_ids: string[]) {
+    this.userService.prependQueue(this.username, song_ids).subscribe(() => {});
   }
 
   addToQueue(song_ids: string[]) {

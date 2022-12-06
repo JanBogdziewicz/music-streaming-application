@@ -28,7 +28,8 @@ mat-card:hover {
 }
 
 #album mat-card:hover,
-#artist mat-card:hover {
+#artist mat-card:hover,
+#playlist mat-card:hover {
   cursor: pointer;
 }
 
@@ -80,37 +81,49 @@ h1 {
 
 #album img,
 #artist img,
-#song img {
-  width: 100%;
+#song img,
+#playlist img {
   height: 85%;
   border-radius: 2%;
   object-fit: cover;
   width: calc(200px + 3vw);
+  max-height: calc(200px + 3vw);
 }
 
 #album img,
-#song img {
+#song img,
+#playlist img {
   padding-bottom: 4px;
 }
 
 .title {
-  width: 100%;
+  width: 90%;
   height: 15%;
-  font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 14px;
+  max-width: 200px;
 }
 
-.title div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.title .name {
+  font-weight: 500;
+  min-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+
+.title .link {
   font-style: italic;
   font-weight: 400;
-  font-size: 14px;
+  min-height: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
 }
 
 .link:hover {

@@ -9,6 +9,9 @@ class PlaylistSchema(BaseModel):
     length: int = Field(0)
     user: str = Field(...)
     cover: str = Field(None)
+    ngrams: list[str] = Field([])
+    prefix_ngrams: list[str] = Field([])
+    user_ngrams: list[str] = Field([])
 
     @validator("creation_date")
     def ensure_date(cls, v):

@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
 from server.config import songs_collection
+from server.utils import make_ngrams
 
 
 # helper
@@ -28,6 +29,10 @@ async def retrieve_songs():
 
 # Add a new song to the database
 async def add_song(song_data: dict) -> dict:
+    song_data["ngrams"] = make_ngrams(song_data["name"])
+    song_data["prefix_ngrams"] = make_ngrams(song_data["name"], prefix_only=True)
+    song_data["artist_ngrams"] = make_ngrams(song_data["artist"], prefix_only=True)
+    song_data["album_ngrams"] = make_ngrams(song_data["album"], prefix_only=True)
     song = await songs_collection.insert_one(song_data)
     new_song = await songs_collection.find_one({"_id": song.inserted_id})
     return song_helper(new_song)
@@ -51,6 +56,13 @@ async def retrieve_song_path(id: str):
 
 # Update a song with a matching ID
 async def update_song(id: str, data: dict):
+    if data.get("name", None):
+        data["ngrams"] = make_ngrams(data["name"])
+        data["prefix_ngrams"] = make_ngrams(data["name"], prefix_only=True)
+    if data.get("artist", None):
+        data["artist_ngrams"] = make_ngrams(data["artist"], prefix_only=True)
+    if data.get("album", None):
+        data["album_ngrams"] = make_ngrams(data["album"], prefix_only=True)
     update_status = await songs_collection.update_one(
         {"_id": ObjectId(id)}, {"$set": data}
     )
@@ -64,3 +76,22 @@ async def delete_song(id: str):
     deleted = await songs_collection.delete_one({"_id": ObjectId(id)})
     if deleted.deleted_count < 1:
         raise HTTPException(status_code=404, detail="song not found")
+
+
+# Search songs
+async def search_songs(query: str):
+    songs = []
+    async for song in songs_collection.find(
+        {"$text": {"$search": query}},
+        {
+            "name": True,
+            "artist": True,
+            "album": True,
+            "cover": True,
+            "score": {"$meta": "textScore"},
+        },
+    ).sort([("score", {"$meta": "textScore"})]):
+        song["id"] = str(song["_id"])
+        del song["_id"]
+        songs.append(song)
+    return songs[:3]

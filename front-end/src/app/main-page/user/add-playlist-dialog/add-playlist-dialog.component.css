@@ -1,0 +1,37 @@
+.add_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: calc(4px + 1vw) calc(8px + 2vw);
+}
+
+mat-form-field {
+  width: calc(150px + 6vw);
+}
+
+#playlist_cover {
+  height: calc(100px + 6vw);
+  width: calc(100px + 6vw);
+  object-fit: cover;
+  border-radius: 2%;
+}
+
+.change_cover {
+  padding: 20px;
+}
+
+.action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.action button {
+  width: 40%;
+}
+
+.spacer {
+  width: 10%;
+}

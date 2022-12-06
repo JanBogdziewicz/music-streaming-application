@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from bson.objectid import ObjectId
-from server.config import playlists_collection
-from server.database.song import song_helper, retrieve_song
+from server.config import playlists_collection, init_default_playlist_cover
+from server.database.song import retrieve_song
 import server.database.library as libraryService
 import server.database.user as userService
+from server.utils import make_ngrams
 
 
 # helper
@@ -29,6 +30,13 @@ async def retrieve_playlists():
 
 # Add a new playlist to the database
 async def add_playlist(playlist_data: dict) -> dict:
+    if not playlist_data["cover"]:
+        playlist_data["cover"] = await init_default_playlist_cover()
+    playlist_data["ngrams"] = make_ngrams(playlist_data["name"])
+    playlist_data["prefix_ngrams"] = make_ngrams(
+        playlist_data["name"], prefix_only=True
+    )
+    playlist_data["user_ngrams"] = make_ngrams(playlist_data["user"], prefix_only=True)
     playlist = await playlists_collection.insert_one(playlist_data)
     new_playlist = await playlists_collection.find_one({"_id": playlist.inserted_id})
     playlist_user = await userService.retrieve_user(new_playlist["user"])
@@ -49,6 +57,11 @@ async def retrieve_playlist(id: str):
 
 # Update a playlist with a matching ID
 async def update_playlist(id: str, data: dict):
+    if data.get("name", None):
+        data["ngrams"] = make_ngrams(data["name"])
+        data["prefix_ngrams"] = make_ngrams(data["name"], prefix_only=True)
+    if data.get("user", None):
+        data["user_ngrams"] = make_ngrams(data["user"], prefix_only=True)
     update_status = await playlists_collection.update_one(
         {"_id": ObjectId(id)}, {"$set": data}
     )
@@ -128,3 +141,21 @@ async def update_users_playlists(username: str, new_username: str):
     await playlists_collection.update_many(
         {"user": username}, {"$set": {"user": new_username}}
     )
+
+
+# Search plalists
+async def search_playlists(query: str):
+    playlists = []
+    async for playlist in playlists_collection.find(
+        {"$text": {"$search": query}},
+        {
+            "name": True,
+            "user": True,
+            "cover": True,
+            "score": {"$meta": "textScore"},
+        },
+    ).sort([("score", {"$meta": "textScore"})]):
+        playlist["id"] = str(playlist["_id"])
+        del playlist["_id"]
+        playlists.append(playlist)
+    return playlists[:3]

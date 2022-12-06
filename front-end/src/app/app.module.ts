@@ -24,6 +24,8 @@ import { AuthInterceptor } from './auth.interceptor';
 import { AuthGuard } from './guards/authGuard';
 import { EditPlaylistDialogComponent } from './main-page/playlist/edit-playlist-dialog/edit-playlist-dialog.component';
 import { EditUserDialogComponent } from './main-page/user/edit-user-dialog/edit-user-dialog.component';
+import { AddPlaylistDialogComponent } from './main-page/user/add-playlist-dialog/add-playlist-dialog.component';
+import { QueueComponent } from './main-page/queue/queue.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { EditUserDialogComponent } from './main-page/user/edit-user-dialog/edit-
     LoginComponent,
     EditPlaylistDialogComponent,
     EditUserDialogComponent,
+    AddPlaylistDialogComponent,
+    QueueComponent,
   ],
   imports: [
     CommonModule,

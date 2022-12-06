@@ -45,6 +45,7 @@ from server.database.user import (
     pull_queue,
     clear_queue,
     retrieve_queue_songs,
+    pop_queue
 )
 
 from server.models.user import (
@@ -109,7 +110,6 @@ async def get_user_data(username: str):
 # Update a user with a matching username
 @UserRouter.put("/{username}")
 async def update_user_data(username: str, req: UpdateUserModel = Body(...)):
-    print(req)
     req = jsonable_encoder(req)
     await update_user(username, req)
     return ResponseModel(
@@ -208,6 +208,13 @@ async def pull_queue_data(username: str, req: list[int] = Body(...)):
         "Song/s with indexes: {0} pulled from queue of user {1}".format(req, username),
         "Song/s pulled succesfully from user's queue",
     )
+
+
+# Pop first song of user's queue
+@UserRouter.get("/{username}/queue/pop")
+async def pop_user_queue(username: str):
+    song = await pop_queue(username)
+    return ResponseModel(song, "Song succesfully popped from user's queue")
 
 
 # Clear queue of the user

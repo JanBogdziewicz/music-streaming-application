@@ -11,6 +11,9 @@ class AlbumSchema(BaseModel):
     genres: list[str] = Field([], unique_items=True)
     artist: str = Field(...)
     cover: str = Field(None)
+    ngrams: list[str] = Field([])
+    prefix_ngrams: list[str] = Field([])
+    artist_ngrams: list[str] = Field([])
 
     @validator("release_date")
     def ensure_date(cls, v):
