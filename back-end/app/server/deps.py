@@ -9,7 +9,7 @@ from .utils import (
 
 from jose import jwt
 from pydantic import ValidationError
-from server.models.user import TokenPayload, SystemUser, UserSchemaNoPass
+from server.models.user import TokenPayload, UserSchemaNoPass
 from server.database.user import *
 import logging
 

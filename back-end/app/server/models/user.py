@@ -2,7 +2,6 @@ from datetime import date, datetime
 from typing import Optional
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel, Field, validator
-from uuid import UUID
 
 
 class UserSchemaNoPass(BaseModel):
@@ -87,20 +86,6 @@ class TokenSchema(BaseModel):
 class TokenPayload(BaseModel):
     sub: str = None
     exp: int = None
-
-
-class UserAuth(BaseModel):
-    email: str = Field(..., description="user email")
-    password: str = Field(..., min_length=5, max_length=24, description="user password")
-
-
-class UserOut(BaseModel):
-    auth_id: UUID
-    username: str
-
-
-class SystemUser(UserSchema):
-    password: str
 
 
 def ResponseModel(data, message):
