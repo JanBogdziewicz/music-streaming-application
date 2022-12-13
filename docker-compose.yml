@@ -12,7 +12,7 @@ services:
       - ./back-end/app:/code/app
     ports:
       - "8090:8090"
-    restart: on-failure
+    restart: unless-stopped
     environment:
       - JWT_SECRET_KEY=music
       
