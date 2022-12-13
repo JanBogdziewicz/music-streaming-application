@@ -169,7 +169,7 @@ export class SidenavWrapperComponent implements OnInit {
   }
 
   playSong(song_id: string) {
-    this.songService.playSong(song_id);
+    this.songService.playSong(song_id, this.username);
   }
 
   noResults() {
@@ -200,7 +200,12 @@ export class SidenavWrapperComponent implements OnInit {
   nextSong() {
     this.userService.popQueue(this.username).subscribe((data) => {
       let nextSong = data;
-      const newSongId = this.songService.playSong(nextSong.id, true, true);
+      const newSongId = this.songService.playSong(
+        nextSong.id,
+        this.username,
+        true,
+        true
+      );
     });
     if (this.router.url.split('/').pop() === 'queue') {
       this.redirectTo(this.router.url);
@@ -217,7 +222,7 @@ export class SidenavWrapperComponent implements OnInit {
     }
     this.userService.prependQueue(this.username, [current_id]).subscribe();
     const songToPlay = this.audioService.history.pop();
-    this.songService.playSong(songToPlay as string, false, true);
+    this.songService.playSong(songToPlay as string, this.username, false, true);
     if (this.router.url.split('/').pop() === 'queue') {
       this.redirectTo(this.router.url);
     }

@@ -49,8 +49,23 @@ export class SongService {
       .pipe(map((response) => response.data as Album));
   }
 
-  playSong(id: string, addToHistory: boolean = true, forceChange = false) {
+  playSong(
+    id: string,
+    username: string,
+    addToHistory: boolean = true,
+    forceChange = false
+  ) {
     SongEmitter.currentSongEmitter.emit(id);
-    return this.audio.loadSong(id, addToHistory, forceChange);
+    let currentSongId = this.audio.loadSong(id, addToHistory, forceChange);
+    if (currentSongId) {
+      this.updateListeningNumber(id, username).subscribe();
+    }
+    return currentSongId;
+  }
+
+  updateListeningNumber(id: string, user: string) {
+    return this.http
+      .put<MongoResponse>(`${this.song_address}/${id}/updateListening`, user)
+      .pipe(map((response) => response.data as Song));
   }
 }

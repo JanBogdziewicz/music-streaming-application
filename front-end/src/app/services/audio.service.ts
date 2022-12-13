@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import { take, takeUntil, takeWhile } from 'rxjs/operators';
+import { map, take, takeUntil, takeWhile } from 'rxjs/operators';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { UserService } from './user.service';
 import { getUsernameFromToken } from '../utils/jwt';
 import { SongEmitter } from '../currentSongEmitter';
+import { MongoResponse } from '../database-entities/mongo_response';
+import { HttpClient } from '@angular/common/http';
+import { Song } from '../database-entities/song';
 
 export interface StreamState {
   playing: boolean;
@@ -85,7 +88,11 @@ export class AudioService {
     return this.streamObservable(url).subscribe();
   }
 
-  loadSong(id: string, addToHsitory: boolean = true, forceChange: boolean = false) {
+  loadSong(
+    id: string,
+    addToHsitory: boolean = true,
+    forceChange: boolean = false
+  ) {
     if (!(this.currentSongId === undefined) && addToHsitory === true) {
       this.addToHistory(this.currentSongId);
     }

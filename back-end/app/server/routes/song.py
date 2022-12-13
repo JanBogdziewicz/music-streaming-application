@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import Response, FileResponse
+from datetime import datetime
 
 from server.database.images import download_album_cover
 
@@ -14,6 +15,7 @@ from server.database.song import (
     update_song,
     retrieve_song_path,
 )
+from server.database.listening import add_listening
 
 from server.models.song import (
     ResponseModel,
@@ -55,6 +57,20 @@ async def get_song_data(id):
         song_path,
         media_type="audio/mpeg",
         headers={"Accept-Ranges": "bytes", "Connection": "keep-alive"},
+    )
+
+
+# Update a song listening number
+@SongRouter.put("/{id}/updateListening")
+async def update_song_listening(id: str, username: str = Body(...)):
+    song = await retrieve_song(id)
+    song["listenings"] += 1
+    updated_song = await update_song(id, song)
+    listening_dict = {"song": updated_song, "user": username, "time": datetime.now()}
+    await add_listening(listening_dict)
+    return ResponseModel(
+        updated_song,
+        "Song with ID: {0} update of listening number is successful".format(id),
     )
 
 

@@ -244,7 +244,7 @@ export class ExploreComponent implements OnInit {
   }
 
   playSong(song_id: string) {
-    this.songService.playSong(song_id);
+    this.songService.playSong(song_id, this.username);
   }
 
   addToQueue(song_ids: string[]) {
