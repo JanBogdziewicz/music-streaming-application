@@ -7,12 +7,12 @@ services:
     container_name: music-streaming-back-end
     build: ./back-end
     working_dir: /code/app
-    command: uvicorn server.app:app --proxy-headers --host 0.0.0.0 --port 8090 --reload
+    command: uvicorn server.app:app --proxy-headers --host 0.0.0.0 --port 8090
     volumes:
       - ./back-end/app:/code/app
     ports:
       - "8090:8090"
-    restart: unless-stopped
+    restart: on-failure
     environment:
       - JWT_SECRET_KEY=music
       
