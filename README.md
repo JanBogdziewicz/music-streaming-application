@@ -9,7 +9,8 @@
 * [Prerequisites](#prerequisites)
 
 ## About
-As part of the engineering thesis project we developed a music streaming application. Although it is not perfect and still needs some enhancments it has most of the expected functionalities. Images below present couple of the pages from the application:
+As part of the engineering thesis project we developed a music streaming application.
+Images below present couple of the pages from the application:
 
 ### Library page
 ![image](https://user-images.githubusercontent.com/43424109/207547560-ea5a1012-8b95-4514-b89a-899e94a51590.png)
